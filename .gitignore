@@ -1,0 +1,12 @@
+# builds
+dist/
+
+# npm
+node_modules
+.npm
+npm-debug.log
+
+# config
+.env
+.plugin-id
+manifest.json

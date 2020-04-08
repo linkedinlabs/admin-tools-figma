@@ -1,0 +1,168 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ content layer line component
+
+@mixin content-widget(
+  $selectWidth: 100,
+  $iconWidthBuffered: 35
+) {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: calc(100% - #{em($selectWidth + 10)});
+}
+
+@mixin text-widget(
+  $selectWidth: 100,
+  $iconWidthBuffered: 35
+) {
+  @include content-widget($selectWidth, $iconWidthBuffered);
+
+  &.original-text {
+    .text {
+      @include type-02;
+    }
+  }
+
+  &.new-text {
+    width: calc(100% - #{em($iconWidthBuffered)});
+
+    .text {
+      @include type-03;
+    }
+  }
+
+  .text {
+    @include ellipsis;
+  }
+
+  .inline-control {
+    margin-left: em(3);
+  }
+}
+
+@mixin image-treatment($size: 50) {
+  display: block;
+  margin-right: em(3);
+
+  .shape {
+    display: block;
+    width: em($size);
+    height: em($size);
+    border-radius: em($size/6);
+    background-color: $wl-action-tertiary;
+    background-image: linear-gradient(0deg, $wl-accent-tertiary 0%, $wl-action-tertiary 100%);
+    background-size: cover;
+    border: 1px solid $wl-accent-tertiary;
+  }
+}
+
+@mixin shape-widget(
+  $selectWidth: 100,
+  $iconWidthBuffered: 35
+) {
+  @include content-widget($selectWidth, $iconWidthBuffered);
+
+  &.original-shape {
+    @include image-treatment(18);
+    display: flex;
+    flex-direction: row;
+
+    .shape {
+      margin-left: em(3);
+    }
+  }
+
+  &.new-shape {
+    width: em(50);
+    @include image-treatment(50);
+  }
+
+  .reset-control {
+    #{$all-buttons} {
+      &:disabled {
+        display: none;
+      }
+    }
+  }
+}
+
+@mixin content-layer-holder {
+  $selectWidth: 105;
+  $iconWidthBuffered: 35;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .select {
+      width: em($selectWidth);
+    }
+  }
+
+  &.shape-layer-holder {
+    flex-direction: row;
+
+    .column-holder {
+      width: calc(100% - #{em(50)});
+    }
+  }
+
+  .text-widget {
+    @include text-widget($selectWidth, $iconWidthBuffered);
+  }
+
+  .shape-widget {
+    @include shape-widget($selectWidth, $iconWidthBuffered);
+  }
+
+  .locking-control {
+    span {
+      &.unlocked { display: inline-block; }
+      &.locked { display: none; }
+
+      svg {
+        path {
+          fill: $wl-action-tertiary;
+        }
+      }
+    }
+  }
+
+  &.locked {
+    .shape-widget,
+    .text-widget {
+      &.new-shape,
+      &.new-text {
+        .shape,
+        .text {
+          color: $wl-type-02;
+        }
+      }
+    }
+
+    .locking-control {
+      span {
+        &.unlocked { display: none; }
+        &.locked { display: inline-block; }
+
+        svg {
+          path {
+            fill: $wl-action-secondary-accent;
+          }
+        }
+      }
+    }
+  }
+}
+
+.shape-layer-holder,
+.text-layer-holder {
+  @include content-layer-holder;
+}
