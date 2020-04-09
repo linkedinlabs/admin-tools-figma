@@ -1,0 +1,27 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ status bar
+
+@mixin status-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: em(4) em(12);
+  width: 100%;
+  border-top: 1px solid $wl-accent-tertiary;
+  background: $wl-canvas;
+
+  p {
+    margin: 0;
+    padding: 0;
+    @include type-02;
+  }
+}
+
+footer {
+  &.status-bar {
+    @include status-bar;
+  }
+}

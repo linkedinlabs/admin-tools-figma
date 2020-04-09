@@ -1,4 +1,4 @@
-// ++++++++++++++++++++++++++++++++++++++++++++++ navigator
+// ++++++++++++++++++++++++++++++++++++++++++++++ scene navigator
 
 @mixin scene-navigator-button {
   margin: 0;
@@ -107,6 +107,8 @@
   }
 }
 
-.scene-navigator {
-  @include scene-navigator;
+nav {
+  &.scene-navigator {
+    @include scene-navigator;
+  }
 }
