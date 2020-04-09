@@ -11,13 +11,13 @@
   color: rgba($wl-type-01, 0.8);
 }
 
-@mixin type-02 {
-  @include type-01;
+@mixin type-02($weight: 400) {
+  @include type-01($weight);
   color: $wl-type-02;
 }
 
-@mixin type-03 {
-  @include type-01;
+@mixin type-03($weight: 400) {
+  @include type-01($weight);
   font-size: 15px;
   line-height: 22px;
   letter-spacing: -0.15;

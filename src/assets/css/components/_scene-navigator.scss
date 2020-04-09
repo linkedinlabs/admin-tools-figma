@@ -1,0 +1,73 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ navigator
+
+@mixin scene-navigator-button {
+  margin: 0;
+  padding: em(15/2) em(10);
+  height: em(40);
+  background: none;
+  border: 0;
+  outline: 0;
+}
+
+@mixin scene-navigator-button-text {
+  @include scene-navigator-button;
+  display: block;
+  white-space: nowrap;
+  width: auto;
+  @include type-02(500);
+
+  &.selected {
+    @include type-01(500);
+  }
+
+  @include hover {
+    @include type-01(500);
+  }
+}
+
+@mixin scene-navigator-button-icon {
+  @include scene-navigator-button;
+  background: lightblue;
+}
+
+@mixin scene-navigator {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  ul, p {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    list-style-type: none;
+
+    li {
+      margin: 0;
+      padding: 0;
+
+      #{$all-buttons} {
+        @include scene-navigator-button-text;
+      }
+    }
+  }
+
+  p {
+    #{$all-buttons} {
+      @include scene-navigator-button-icon;
+    }
+  }
+}
+
+.scene-navigator {
+  @include scene-navigator;
+}
