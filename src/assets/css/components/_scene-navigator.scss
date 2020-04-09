@@ -14,20 +14,42 @@
   display: block;
   white-space: nowrap;
   width: auto;
-  @include type-02(500);
+  @include type-02(600);
 
   &.selected {
-    @include type-01(500);
+    @include type-01(600);
   }
 
   @include hover {
-    @include type-01(500);
+    @include type-01(600);
   }
 }
 
 @mixin scene-navigator-button-icon {
   @include scene-navigator-button;
-  background: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: em(36);
+
+  span {
+    display: block;
+
+    &.icon {
+      width: em(8);
+
+      svg {
+        path {
+          stroke: $wl-ctrl-primary;
+          fill: none;
+        }
+      }
+    }
+
+    &.text {
+      @include hide-visually;
+    }
+  }
 }
 
 @mixin scene-navigator {
@@ -39,6 +61,7 @@
   width: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
+  border-bottom: 1px solid $wl-accent-tertiary;
 
   ul, p {
     margin: 0;
@@ -46,7 +69,7 @@
   }
 
   ul {
-    display: flex;
+    display: none;
     flex-direction: row;
     flex-wrap: nowrap;
     list-style-type: none;
@@ -64,6 +87,22 @@
   p {
     #{$all-buttons} {
       @include scene-navigator-button-icon;
+    }
+  }
+
+  &.components {
+    ul {
+      &.list-components {
+        display: flex;
+      }
+    }
+  }
+
+  &.styles {
+    ul {
+      &.list-styles {
+        display: flex;
+      }
     }
   }
 }
