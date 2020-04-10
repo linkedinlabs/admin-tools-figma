@@ -174,7 +174,7 @@ const main = async () => {
 
   // watch selection changes on the Figma level -------------------------------
   figma.on('selectionchange', () => {
-    App.refreshGUI(SESSION_KEY);
+    // App.refreshGUI(SESSION_KEY); // temp
   });
 };
 
