@@ -28,6 +28,8 @@ svg {
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
+  padding-top: em(41); // scene-navigator height
+  padding-bottom: em(41); // status bar height
 
   ul#layer-list,
   ul#layer-list li.shape-layer-holder,
@@ -109,6 +111,23 @@ svg {
       ul {
         padding: 8px 0 8px 0;
       }
+    }
+  }
+
+  // new layout stuff - temp
+  nav {
+    &.scene-navigator {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  footer {
+    &.status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
     }
   }
 }

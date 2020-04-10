@@ -61,6 +61,7 @@
   width: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
+  background-color: $wl-canvas;
   border-bottom: 1px solid $wl-accent-tertiary;
 
   ul, p {
@@ -107,6 +108,7 @@
   }
 }
 
+// apply the styles
 nav {
   &.scene-navigator {
     @include scene-navigator;
