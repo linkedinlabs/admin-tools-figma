@@ -4,15 +4,30 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: em(7) em(16);
+  padding: em(4) em(16);
   width: 100%;
   background-color: $wl-canvas;
 
   span {
-    display: block;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
 
     &.text {
       @include type-01;
+    }
+
+    &.actions {
+      height: em(24);
+
+      #{$all-buttons} {
+        &.item-toggle {
+          &.action-lock-toggle,
+          &.action-open-close {
+            @include button-icon($wl-action-tertiary, 16);
+          }
+        }
+      }
     }
   }
 
