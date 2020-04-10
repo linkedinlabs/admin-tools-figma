@@ -3,7 +3,12 @@
 $footer-height-px: 64px;
 
 * {
+  // border box default
   box-sizing: border-box;
+
+  // disable selection highlighting and cursor
+  cursor: default;
+  user-select: none;
 }
 
 body {
