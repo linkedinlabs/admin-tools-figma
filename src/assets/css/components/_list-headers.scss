@@ -64,7 +64,7 @@
   @include list-header-base;
   padding-top: em(12);
   padding-bottom: em(12);
-  border-bottom: 1px solid lightblue; // temp
+  border-bottom: 1px solid $wl-accent-tertiary; // temp
 
   span {
     &.text {
@@ -87,20 +87,29 @@
   }
 }
 
+// apply the styles
 li {
   &.bulk-editor {
-    @include list-header-editor;
+    .item-group-header {
+      @include list-header-editor;
+    }
   }
 
   &.style-type {
-    @include list-header-type;
+    .item-group-header {
+      @include list-header-type;
+    }
   }
 
   &.group-type {
-    @include list-header-group;
+    .item-group-header {
+      @include list-header-group;
+    }
   }
 
   &.master-item {
-    @include list-header-single;
+    .item-group-header {
+      @include list-header-single;
+    }
   }
 }
