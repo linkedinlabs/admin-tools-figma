@@ -3,13 +3,14 @@
 
 @mixin button-icon(
   $iconColor: $wl-action-tertiary,
-  $iconSize-px: 12
+  $iconSize-px: 12,
+  $iconColorHover: $wl-action-secondary-accent,
 ) {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: $wl-action-secondary;
+  background: none;
   width: em(24);
   height: em(24);
   outline: none;
@@ -35,7 +36,7 @@
     .icon {
       svg {
         path {
-          fill: $wl-action-secondary-accent;
+          fill: $iconColorHover;
         }
       }
     }

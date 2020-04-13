@@ -19,22 +19,47 @@
 
     &.actions {
       height: em(24);
+      opacity: 0;
 
       #{$all-buttons} {
         &.item-toggle {
-          &.action-lock-toggle,
-          &.action-open-close {
-            @include button-icon($wl-action-tertiary, 16);
+          @include button-icon($wl-action-tertiary, 16);
+          width: em(16);
+          height: em(16);
+        }
+      }
+    }
+
+    &.right {
+      .actions {
+        margin-right: em(-2);
+
+        #{$all-buttons} {
+          &.item-toggle {
+            margin-left: em(4);
+
+            &:first-child {
+              margin-left: 0;
+            }
           }
         }
       }
     }
   }
 
-  button {
+  #{$all-buttons} {
     span {
       &.text {
         @include hide-visually;
+      }
+    }
+  }
+
+  // show / hide actions
+  @include hover {
+    span {
+      &.actions {
+        opacity: 1;
       }
     }
   }
@@ -49,6 +74,16 @@
     &.text {
       @include type-01(600);
       color: $wl-type-01-invert;
+    }
+
+    &.actions {
+      #{$all-buttons} {
+        &.item-toggle {
+          @include button-icon($wl-ctrl-primary-invert, 16, $wl-ctrl-tertiary);
+          width: em(16);
+          height: em(16);
+        }
+      }
     }
   }
 }
@@ -98,6 +133,16 @@
     &.text {
       @include type-01(600);
       color: $wl-type-01-invert;
+    }
+
+    &.actions {
+      #{$all-buttons} {
+        &.item-toggle {
+          @include button-icon($wl-ctrl-primary-invert, 16);
+          width: em(16);
+          height: em(16);
+        }
+      }
     }
   }
 }
