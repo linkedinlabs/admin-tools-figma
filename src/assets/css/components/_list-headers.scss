@@ -19,13 +19,36 @@
 
     &.actions {
       height: em(24);
-      opacity: 0;
 
       #{$all-buttons} {
         &.item-toggle {
           @include button-icon($wl-action-tertiary, 16);
           width: em(16);
           height: em(16);
+          opacity: 0;
+
+          // keep expanded toggle visible
+          &.action-open-close {
+            transform: rotate(-90deg);
+
+            &.open {
+              transform: rotate(0);
+              opacity: 1;
+            }
+          }
+
+          // manage lock state
+          &.action-lock-toggle {
+            .icon.locked { display: none; }
+
+            // keep locked icon visible
+            &.locked {
+              opacity: 1;
+
+              .icon.unlocked { display: none; }
+              .icon.locked { display: block; }
+            }
+          }
         }
       }
     }
@@ -59,7 +82,11 @@
   @include hover {
     span {
       &.actions {
-        opacity: 1;
+        #{$all-buttons} {
+          &.item-toggle {
+            opacity: 1;
+          }
+        }
       }
     }
   }
