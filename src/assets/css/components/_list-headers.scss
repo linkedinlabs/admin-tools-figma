@@ -136,6 +136,22 @@
   }
 }
 
+@mixin list-header-single-expanded {
+  @include list-header-single;
+  padding-top: em(11);
+  border-bottom: 0;
+
+  span {
+    &.text {
+      @include type-01(600);
+
+      em {
+        color: $wl-type-01;
+      }
+    }
+  }
+}
+
 // example “Container / color-bg-container”
 @mixin list-header-group {
   @include list-header-base;
@@ -197,6 +213,12 @@ li {
   &.master-item {
     .item-group-header {
       @include list-header-single;
+    }
+
+    &.expanded {
+      .item-group-header {
+        @include list-header-single-expanded;
+      }
     }
   }
 }
