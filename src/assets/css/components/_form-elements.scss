@@ -104,15 +104,23 @@
     @include form-label;
   }
 
+  // style form element types
   .form-element {
     &.element-type-text,
-    &.element-type-text-new {
+    &.element-type-text-new,
+    &.element-type-textarea {
       #{$all-text-inputs} { @include figma-input; }
     }
 
     &.element-type-text-new {
       #{$all-text-inputs} {
         border: 1px solid rgba($wl-ctrl-primary, 0.1);
+      }
+    }
+
+    &.element-type-textarea {
+      #{$all-text-inputs} {
+        min-height: em(68);
       }
     }
   }
