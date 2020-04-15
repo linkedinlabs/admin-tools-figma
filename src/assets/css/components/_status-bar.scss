@@ -9,6 +9,7 @@
   width: 100%;
   border-top: 1px solid $wl-accent-tertiary;
   background: $wl-canvas;
+  z-index: $z-status-bar;
 
   p {
     margin: 0;

@@ -1,6 +1,7 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++ list headers
 
 @mixin list-header-base {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -96,6 +97,7 @@
 @mixin list-header-editor {
   @include list-header-base;
   background-color: rgba($wl-accent, 0.8);
+  z-index: $z-list-header-editor;
 
   span {
     &.text {
@@ -158,6 +160,7 @@
   padding-top: em(12);
   padding-bottom: em(12);
   border-bottom: 1px solid $wl-accent-tertiary; // temp
+  z-index: $z-list-header-group;
 
   span {
     &.text {
@@ -171,6 +174,7 @@
 @mixin list-header-type {
   @include list-header-base;
   background-color: $wl-accent-secondary;
+  z-index: $z-list-header-type;
 
   span {
     &.text {
