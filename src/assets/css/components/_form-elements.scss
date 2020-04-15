@@ -34,13 +34,19 @@
         @include hide-visually;
       }
 
+      .item-toggle {
+        opacity: 0;
+
+        &.inactive {
+          display: none;
+        }
+      }
+
       #{$all-buttons} {
         @include button-icon($wl-action-tertiary, 16);
         margin-right: em(3);
         width: em(16);
         height: em(16);
-        // opacity: 0;
-        opacity: 1; // temp
 
         &:last-child {
           margin-right: 0;
@@ -77,6 +83,20 @@
       }
     }
   }
+
+  @include hover {
+    span {
+      &.actions {
+        .item-toggle {
+          opacity: 1;
+        }
+
+        #{$all-buttons} {
+          display: flex;
+        }
+      }
+    }
+  }
 }
 
 .form-element-holder {
@@ -84,7 +104,16 @@
     @include form-label;
   }
 
-  .form-input {
-    #{$all-text-inputs} { @include figma-input; }
+  .form-element {
+    &.element-type-text,
+    &.element-type-text-new {
+      #{$all-text-inputs} { @include figma-input; }
+    }
+
+    &.element-type-text-new {
+      #{$all-text-inputs} {
+        border: 1px solid rgba($wl-ctrl-primary, 0.1);
+      }
+    }
   }
 }
