@@ -126,8 +126,7 @@
   flex-direction: column;
   margin: 0;
   padding: em(8) 0 em(8) 0;
-  width: em(130);
-  left: em(-20);
+  width: 100%;
   border-radius: 2px;
   background-color: $wl-ctrl-secondary-invert;
   box-shadow: 0 em(5) em(17) rgba($wl-ctrl-primary, 0.2), 0 em(2) em(7) rgba($wl-ctrl-primary, 0.15);

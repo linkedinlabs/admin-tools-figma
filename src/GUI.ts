@@ -41,6 +41,13 @@ const sendMsgToMain = (
  * @returns {null}
  */
 const sendLoadedMsg = (): void => {
+  // temp
+  // set the Figma version of the menu
+  selectMenu.init({
+    position: 'positionToSelection',
+    selector: 'styled-select',
+  });
+
   // send message to main thread indicating UI has loaded
   parent.postMessage({ pluginMessage: { loaded: true } }, '*');
 

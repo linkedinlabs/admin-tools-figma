@@ -509,7 +509,7 @@
     init: function(opts) {
 
     if (init == true) {
-      // selectMenu.destroy();
+      selectMenu.destroy();
     }
 
     settings = Object.assign({}, defaults, opts);
