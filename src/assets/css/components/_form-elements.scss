@@ -123,5 +123,12 @@
         min-height: em(68);
       }
     }
+
+    &.element-type-switch {
+      @include figma-switch-base;
+
+      .switch__toggle { @include figma-switch-toggle-grey; }
+      .switch__label { @include figma-switch-label; }
+    }
   }
 }

@@ -491,7 +491,7 @@
           <span class="form-element-holder">
             <span class="form-label">
               <span class="text">
-                Label text here
+                <label for="test-label-link">Label text here</label>
               </span>
               <span class="actions">
                 <button class="item-toggle action-restore inactive">
@@ -540,13 +540,28 @@
               </span>
             </span>
             <span class="form-element element-type-text">
-              <input type="text" value="I am some text to measure against">
+              <input type="text" id="test-label-link" value="I am some text to measure against">
             </span>
             <span class="form-element element-type-text-new">
               <input type="text" placeholder="Add stuff to me…">
             </span>
             <span class="form-element element-type-textarea">
               <textarea placeholder="Description">Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal.</textarea>
+            </span>
+            <span class="form-element element-type-switch">
+              <input
+                class="switch__toggle"
+                id="watch-selection"
+                name="watch-selection"
+                type="checkbox"
+                value="watch-selection"
+              >
+              <label
+                class="switch__label"
+                for="watch-selection"
+              >
+                Interactive?
+              </label>
             </span>
           </span>
         </section>
