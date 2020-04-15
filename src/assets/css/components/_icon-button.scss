@@ -28,6 +28,12 @@
     svg {
       path {
         fill: $iconColor;
+
+        &.stroke {
+          fill: none;
+          stroke: $iconColor;
+          stroke-width: 1px;
+        }
       }
     }
   }
@@ -37,6 +43,12 @@
       svg {
         path {
           fill: $iconColorHover;
+
+          &.stroke {
+            fill: none;
+            stroke: $iconColorHover;
+            stroke-width: 1px;
+          }
         }
       }
     }
@@ -48,6 +60,12 @@
       svg {
         path {
           fill: $wl-action-primary;
+
+          &.stroke {
+            fill: none;
+            stroke: $wl-action-primary;
+            stroke-width: 1px;
+          }
         }
       }
     }
@@ -60,6 +78,12 @@
       svg {
         path {
           fill: $iconColor;
+
+          &.stroke {
+            fill: none;
+            stroke: blue;
+            stroke-width: 1px;
+          }
         }
       }
     }

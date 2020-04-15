@@ -1,0 +1,90 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ form elements
+
+@mixin form-element-base {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: em(4) em(16);
+  width: 100%;
+  background-color: $wl-canvas;
+}
+
+@mixin form-label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: em(8);
+  padding-right: em(8);
+
+  span {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+
+    &.text {
+      @include type-01;
+      color: $wl-type-02;
+    }
+
+    &.actions {
+      margin-left: em(4);
+      height: em(24);
+
+      &.text {
+        @include hide-visually;
+      }
+
+      #{$all-buttons} {
+        @include button-icon($wl-action-tertiary, 16);
+        margin-right: em(3);
+        width: em(16);
+        height: em(16);
+        // opacity: 0;
+        opacity: 1; // temp
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        span {
+          &.text {
+            @include hide-visually;
+          }
+        }
+
+        // re-size restore icon
+        &.action-restore {
+          span {
+            &.icon {
+              width: em(12);
+              height: em(12);
+            }
+          }
+        }
+
+        // manage lock state
+        &.action-lock-toggle {
+          .icon.locked { display: none; }
+
+          // keep locked icon visible
+          &.locked {
+            opacity: 1;
+
+            .icon.unlocked { display: none; }
+            .icon.locked { display: block; }
+          }
+        }
+      }
+    }
+  }
+}
+
+.form-element-holder {
+  .form-label {
+    @include form-label;
+  }
+
+  .form-input {
+    #{$all-text-inputs} { @include figma-input; }
+  }
+}
