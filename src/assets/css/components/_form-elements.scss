@@ -2,11 +2,9 @@
 
 @mixin form-element-base {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  padding: em(4) em(16);
   width: 100%;
-  background-color: $wl-canvas;
 }
 
 @mixin form-label {
@@ -15,6 +13,8 @@
   align-items: center;
   padding-left: em(8);
   padding-right: em(8);
+  width: 100%;
+  min-height: em(30);
 
   span {
     display: flex;
@@ -106,6 +106,8 @@
 
   // style form element types
   .form-element {
+    @include form-element-base;
+
     &.element-type-text,
     &.element-type-text-new,
     &.element-type-textarea {

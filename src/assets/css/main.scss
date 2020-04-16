@@ -10,8 +10,8 @@
 @import "shared/mixins";
 @import "shared/colors";
 @import "shared/typography";
-@import "shared/layout";
 @import "components/mini-components";
+@import "shared/layout";
 
 // components
 @import "components/figma-button";
@@ -25,4 +25,3 @@
 @import "components/list-headers";
 @import "components/blank-state";
 @import "components/content-layer-holder";
-@import "components/expanded-content-holder";

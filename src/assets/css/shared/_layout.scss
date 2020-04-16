@@ -109,14 +109,14 @@ svg {
       }
     }
 
-    .styled-select {
-      margin-top: -4px;
-      margin-bottom: -4px;
+    // .styled-select {
+    //   margin-top: -4px;
+    //   margin-bottom: -4px;
 
-      ul {
-        padding: 8px 0 8px 0;
-      }
-    }
+    //   ul {
+    //     padding: 8px 0 8px 0;
+    //   }
+    // }
   }
 
   // new layout stuff - temp
@@ -133,6 +133,43 @@ svg {
       position: fixed;
       bottom: 0;
       left: 0;
+    }
+  }
+}
+
+.master-item.expanded {
+  .expanded-content {
+    border-bottom: 1px solid $wl-accent-tertiary;
+
+    .divider-top {
+      @include divider-base(100%, #{em(15.5)});
+      margin-bottom: em(8);
+    }
+
+    .form-element-holder {
+      .form-row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: em(2) em(10);
+        width: 100%;
+
+        .form-unit,
+        .form-element,
+        .form-label, {
+          &.split-40 {
+            width: calc(40% - #{em(3)});
+          }
+
+          &.split-50 {
+            width: calc(50% - #{em(3)});
+          }
+
+          &.split-60 {
+            width: calc(60% - #{em(3)});
+          }
+        }
+      }
     }
   }
 }
