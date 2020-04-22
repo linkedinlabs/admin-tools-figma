@@ -6,4 +6,5 @@
 
 <div>
   <Title name={name}/>
+  <Title override={true}/>
 </div>

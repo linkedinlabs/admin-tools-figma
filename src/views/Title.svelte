@@ -1,5 +1,16 @@
 <script>
   export let name = 'bob';
+  export let override = false;
 </script>
 
-<h1>hello {name}</h1>
+<style>
+  h1 {
+    color: red;
+  }
+</style>
+
+<h1>
+  <span class:override="{override}">
+    hello {name}
+  </span>
+</h1>

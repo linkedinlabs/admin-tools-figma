@@ -18,12 +18,6 @@ module.exports = (env, argv) => [{
     rules: [
       // Converts TypeScript code to JavaScript
       { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
-
-      // Enables including CSS by doing "import './file.css'" in your TypeScript code
-      { test: /\.(s*)css$/, loader: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }] },
-
-      // Allows you to use "<%= require('./file.svg') %>" in your HTML code to get a data URI
-      { test: /\.(png|jpg|gif|webp|svg)$/, loader: [{ loader: 'url-loader' }] },
     ],
   },
 
@@ -54,19 +48,19 @@ module.exports = (env, argv) => [{
   devtool: argv.mode === 'production' ? false : 'inline-source-map',
 
   entry: {
-    bundle: ['./src/main.js']
+    bundle: ['./src/main.js'],
   },
   resolve: {
     alias: {
-      svelte: path.resolve('node_modules', 'svelte')
+      svelte: path.resolve('node_modules', 'svelte'),
     },
     extensions: ['.mjs', '.js', '.svelte'],
-    mainFields: ['svelte', 'browser', 'module', 'main']
+    mainFields: ['svelte', 'browser', 'module', 'main'],
   },
   output: {
-    path: __dirname + '/dist',
+    path: path.resolve(__dirname, 'dist'), // Compile into a folder called "dist"
     filename: '[name].js',
-    chunkFilename: '[name].[id].js'
+    chunkFilename: '[name].[id].js',
   },
   module: {
     rules: [
@@ -76,27 +70,19 @@ module.exports = (env, argv) => [{
           loader: 'svelte-loader',
           options: {
             emitCss: true,
-            hotReload: true
-          }
-        }
+            hotReload: false,
+          },
+        },
       },
-      {
-        test: /\.css$/,
-        use: [
-          /**
-           * MiniCssExtractPlugin doesn't support HMR.
-           * For developing, use 'style-loader' instead.
-           * */
-          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
-          'css-loader'
-        ]
-      }
-    ]
+
+      // Enables including CSS by doing "import './file.css'" in your TypeScript code
+      { test: /\.(s*)css$/, loader: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }] },
+
+      // Allows you to use "<%= require('./file.svg') %>" in your HTML code to get a data URI
+      { test: /\.(png|jpg|gif|webp|svg)$/, loader: [{ loader: 'url-loader' }] },
+    ],
   },
   plugins: [
-    // new MiniCssExtractPlugin({
-    //   filename: '[name].css'
-    // })
     new HtmlWebpackPlugin({
       template: './src/views/webview.html',
       filename: 'webview.html',

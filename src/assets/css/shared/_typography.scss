@@ -46,3 +46,12 @@ h2, h3, p, ul {
   margin: 0 0 12px 0;
   padding: 0;
 }
+
+// temp
+h1 {
+  span {
+    &.override {
+      color: blue;
+    }
+  }
+}
