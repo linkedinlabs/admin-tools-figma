@@ -4,15 +4,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
-module.exports = (env, argv) => ({
+module.exports = (env, argv) => [{
   mode: argv.mode === 'production' ? 'production' : 'development',
 
   // This is necessary because Figma's 'eval' works differently than normal eval
   devtool: argv.mode === 'production' ? false : 'inline-source-map',
 
   entry: {
-    ui: './src/GUI.ts', // The entry point for your UI code
-    main: './src/main.ts', // The entry point for your plugin code
+    main: './src/code.ts', // The entry point for your plugin code
   },
 
   module: {
@@ -29,7 +28,10 @@ module.exports = (env, argv) => ({
   },
 
   // Webpack tries these extensions for you if you omit the extension like "import './file'"
-  resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    mainFields: ['browser', 'module', 'main'],
+  },
 
   output: {
     filename: '[name].js',
@@ -43,12 +45,64 @@ module.exports = (env, argv) => ({
       FEATURESET: (env && env.featureset && env.featureset === 'public' ? 'public' : 'internal'),
     }),
     new Dotenv(),
+  ],
+},
+{
+  mode: argv.mode === 'production' ? 'production' : 'development',
+
+  // This is necessary because Figma's 'eval' works differently than normal eval
+  devtool: argv.mode === 'production' ? false : 'inline-source-map',
+
+  entry: {
+    bundle: ['./src/main.js']
+  },
+  resolve: {
+    alias: {
+      svelte: path.resolve('node_modules', 'svelte')
+    },
+    extensions: ['.mjs', '.js', '.svelte'],
+    mainFields: ['svelte', 'browser', 'module', 'main']
+  },
+  output: {
+    path: __dirname + '/dist',
+    filename: '[name].js',
+    chunkFilename: '[name].[id].js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.svelte$/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            emitCss: true,
+            hotReload: true
+          }
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          /**
+           * MiniCssExtractPlugin doesn't support HMR.
+           * For developing, use 'style-loader' instead.
+           * */
+          argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader'
+        ]
+      }
+    ]
+  },
+  plugins: [
+    // new MiniCssExtractPlugin({
+    //   filename: '[name].css'
+    // })
     new HtmlWebpackPlugin({
       template: './src/views/webview.html',
       filename: 'webview.html',
       inlineSource: '.(js)$',
-      chunks: ['ui'],
+      chunks: ['bundle'],
     }),
     new HtmlWebpackInlineSourcePlugin(),
   ],
-});
+}];
