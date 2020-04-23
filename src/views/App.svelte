@@ -1,5 +1,5 @@
 <script>
-  import Title from './views/Title';
+  import Title from './Title';
 
   export let name;
 </script>

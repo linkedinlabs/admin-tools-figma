@@ -1,7 +1,7 @@
 import './assets/css/main.scss';
-import GUI from './GUI.svelte';
+import App from './views/App.svelte';
 
-const app = new GUI({
+const app = new App({
   target: document.body,
   props: {
     name: 'dude',

@@ -48,7 +48,7 @@ module.exports = (env, argv) => [{
   devtool: argv.mode === 'production' ? false : 'inline-source-map',
 
   entry: {
-    bundle: ['./src/main.js'],
+    ui: ['./src/GUI.ts'],
   },
   resolve: {
     alias: {
@@ -87,7 +87,7 @@ module.exports = (env, argv) => [{
       template: './src/views/webview.html',
       filename: 'webview.html',
       inlineSource: '.(js)$',
-      chunks: ['bundle'],
+      chunks: ['ui'],
     }),
     new HtmlWebpackInlineSourcePlugin(),
   ],

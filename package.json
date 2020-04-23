@@ -33,6 +33,9 @@
   },
   "pre-commit": "lint:staged",
   "devDependencies": {
+    "@pyoner/svelte-ts-preprocess": "^1.2.1",
+    "@pyoner/svelte-types": "^3.4.4-2",
+    "@types/node": "^13.13.2",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "bourbon": "^6.0.0",
