@@ -199,7 +199,7 @@ const awaitUIReadiness = async (messenger?) => {
     if (msg && msg.loaded) { ready = true; }
   });
 
-  // await pollWithPromise(isUIReady, messenger);
+  await pollWithPromise(isUIReady, messenger);
 };
 
 /**

@@ -18,13 +18,14 @@
      },
      "import/resolver": {
        "node": {
-         "extensions": [".js",".jsx",".ts",".tsx"]
+         "extensions": [".js",".jsx",".ts",".tsx",".svelte"]
        }
      }
   },
   "plugins": [
     "@typescript-eslint",
-    "jsdoc"
+    "jsdoc",
+    "svelte3"
   ],
   "rules": {
     "no-console": "error",
@@ -81,6 +82,17 @@
       "jsx": "never",
       "ts": "never",
       "tsx": "never",
+      "svelte": "never"
     }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.svelte"],
+      "processor": "svelte3/svelte3",
+      "rules": {
+        "import/no-mutable-exports": 0,
+        "import/prefer-default-export": 0
+      }
+    }
+  ]
 }
