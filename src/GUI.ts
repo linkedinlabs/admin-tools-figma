@@ -1,5 +1,5 @@
 import './assets/css/main.scss';
-import App from './views/App';
+import App from './views/App.svelte'; // eslint-disable-line import/extensions
 
 const app = new App({
   target: document.body,
