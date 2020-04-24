@@ -56,15 +56,15 @@
     },
   ];
 
-  const setCurrentItems = (isStyles) => {
+  const setCurrentItems = (useStyles) => {
     currentItems = menuItems.filter(
-      (item) => item.type === (isStyles ? 'styles' : 'components'),
-    )
-  }
+      item => item.type === (useStyles ? 'styles' : 'components'),
+    );
+  };
 
   const handleItemClick = (selectedId) => {
     selected = selectedId;
-  }
+  };
 
   // temp
   const handleBackClick = () => {
@@ -73,7 +73,7 @@
     // reset menu
     setCurrentItems(isStyles);
     selected = isStyles ? 'all-styles' : 'all-components';
-  }
+  };
 
   onMount(() => {
     setCurrentItems(isStyles);
