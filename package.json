@@ -28,7 +28,7 @@
     "lint:staged": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,tsx,ts}": "eslint",
+    "*.{js,jsx,tsx,ts,svelte}": "eslint",
     "*.{css,scss}": "stylelint"
   },
   "pre-commit": "lint:staged",
