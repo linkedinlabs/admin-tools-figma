@@ -71,7 +71,7 @@
   }
 
   ul {
-    display: none;
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     list-style-type: none;
@@ -85,33 +85,20 @@
       }
     }
   }
-
-  p {
-    #{$all-buttons} {
-      @include scene-navigator-button-icon;
-    }
-  }
-
-  &.components {
-    ul {
-      &.list-components {
-        display: flex;
-      }
-    }
-  }
-
-  &.styles {
-    ul {
-      &.list-styles {
-        display: flex;
-      }
-    }
-  }
 }
 
 // apply the styles
 nav {
   &.scene-navigator {
     @include scene-navigator;
+  }
+}
+
+// back button
+p {
+  &.scene-navigator-back-arrow {
+    #{$all-buttons} {
+      @include scene-navigator-button-icon;
+    }
   }
 }

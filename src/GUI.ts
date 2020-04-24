@@ -4,6 +4,7 @@ import App from './views/App.svelte'; // eslint-disable-line import/extensions
 const app = new App({
   target: document.body,
   props: {
+    inspect: 'styles', // 'styles' or 'components'
     name: 'dude',
   },
 });
