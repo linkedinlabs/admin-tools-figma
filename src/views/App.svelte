@@ -3,9 +3,7 @@
   import FontPreload from './FontPreload';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
-  import Title from './Title';
 
-  export let name;
   export let numberSelected;
 </script>
 
