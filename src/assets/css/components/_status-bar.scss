@@ -11,7 +11,7 @@
   background: $wl-canvas;
   z-index: $z-status-bar;
 
-  p {
+  p, span {
     margin: 0;
     padding: 0;
     @include type-02;

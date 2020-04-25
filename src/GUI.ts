@@ -6,6 +6,7 @@ const app = new App({
   props: {
     inspect: 'styles', // 'styles' or 'components'
     name: 'dude',
+    numberSelected: 18,
   },
 });
 

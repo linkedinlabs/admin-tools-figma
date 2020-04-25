@@ -1,10 +1,12 @@
 <script>
   import { onMount } from 'svelte';
-  import SceneBackArrow from './controls/SceneBackArrow';
+
+  import { isStyles } from './stores';
+
+  import SceneBackArrow from './forms-controls/SceneBackArrow';
 
   let currentItems = [];
   let selected = 'all-components';
-  let isStyles = false;
 
   const menuItems = [
     // components menu
@@ -68,15 +70,15 @@
 
   // temp
   const handleBackClick = () => {
-    isStyles = !isStyles;
+    isStyles.set(!$isStyles);
 
     // reset menu
-    setCurrentItems(isStyles);
-    selected = isStyles ? 'all-styles' : 'all-components';
+    setCurrentItems($isStyles);
+    selected = $isStyles ? 'all-styles' : 'all-components';
   };
 
   onMount(() => {
-    setCurrentItems(isStyles);
+    setCurrentItems($isStyles);
   });
 </script>
 
