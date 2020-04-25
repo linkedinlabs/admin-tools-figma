@@ -1,6 +1,7 @@
 <script>
   import BlankState from './BlankState';
   import FontPreload from './FontPreload';
+  import SampleOptions from './SampleOptions';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
 
@@ -12,7 +13,7 @@
   <SceneNavigator/>
 
   {#if numberSelected > 0}
-    <ul id="layer-list"></ul>
+    <SampleOptions/>
   {:else}
     <BlankState/>
   {/if}

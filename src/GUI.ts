@@ -5,7 +5,7 @@ const app = new App({
   target: document.body,
   props: {
     inspect: 'styles', // 'styles' or 'components'
-    numberSelected: 0,
+    numberSelected: 18,
   },
 });
 
