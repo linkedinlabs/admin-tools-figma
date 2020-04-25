@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-
   import { isStyles } from './stores';
 
   import SceneBackArrow from './forms-controls/SceneBackArrow';

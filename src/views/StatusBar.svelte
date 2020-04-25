@@ -1,6 +1,7 @@
 <script>
-  import FigmaSwitch from './forms-controls/FigmaSwitch';
   import { isStyles } from './stores';
+
+  import FigmaSwitch from './forms-controls/FigmaSwitch';
 
   export let watchSelection = false;
   export let numberSelected = 0;
@@ -9,8 +10,11 @@
     watchSelection = true;
   }
 
-  const labelType = $isStyles ? 'style' : 'component';
-  $: statusText = numberSelected === 1 ? labelType : `${labelType}s`;
+  const statusText = (isStyle) => {
+    const labelType = isStyle ? 'style' : 'component';
+    const newStatusText = numberSelected === 1 ? labelType : `${labelType}s`;
+    return newStatusText;
+  };
 </script>
 
 <style>
@@ -25,7 +29,7 @@
 
 <footer class="status-bar">
   <p>
-    {numberSelected} {statusText} {watchSelection ? 'selected' : ''}
+    {numberSelected} {statusText($isStyles)} {watchSelection ? 'selected' : ''}
   </p>
   {#if $isStyles}
   <FigmaSwitch
