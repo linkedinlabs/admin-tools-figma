@@ -1,4 +1,5 @@
 <script>
+  import BlankState from './BlankState';
   import FontPreload from './FontPreload';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
@@ -11,7 +12,12 @@
 <div>
   <FontPreload/>
   <SceneNavigator/>
-  <Title name={name}/>
-  <Title override={true}/>
+
+  {#if numberSelected > 0}
+    <ul id="layer-list"></ul>
+  {:else}
+    <BlankState/>
+  {/if}
+
   <StatusBar numberSelected={numberSelected}/>
 </div>

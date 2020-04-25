@@ -15,6 +15,12 @@
 
 <style>
   /* components/status-bar */
+
+  .status-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+  }
 </style>
 
 <footer class="status-bar">
