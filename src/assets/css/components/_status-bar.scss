@@ -7,6 +7,7 @@
   margin: 0;
   padding: em(4) em(12);
   width: 100%;
+  min-height: em(41);
   border-top: 1px solid $wl-accent-tertiary;
   background: $wl-canvas;
   z-index: $z-status-bar;
