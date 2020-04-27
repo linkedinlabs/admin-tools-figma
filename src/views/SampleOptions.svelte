@@ -1,5 +1,7 @@
 <script>
+  import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
+  import FigmaTextarea from './forms-controls/FigmaTextarea';
 </script>
 
 <section class="options" id="action-options">
@@ -310,9 +312,11 @@
                   </button>
                 </span>
               </span>
-              <span class="form-element element-type-text">
-                <input type="text" id="test-group" value="Container">
-              </span>
+              <FigmaInput
+                className="form-element element-type-text"
+                nameId="test-group"
+                value="Container"
+              />
             </span>
             <span class="form-unit split-60">
               <span class="form-label">
@@ -365,9 +369,11 @@
                   </button>
                 </span>
               </span>
-              <span class="form-element element-type-text">
-                <input type="text" id="test-name" value="color-bg-container-dark">
-              </span>
+              <FigmaInput
+                className="form-element element-type-text"
+                nameId="test-name"
+                value="color-bg-container-dark"
+              />
             </span>
           </span>
 
@@ -422,23 +428,29 @@
                 </button>
               </span>
             </span>
-            <span class="form-element element-type-text">
-              <input type="text" id="test-label-link" value="I am some text to measure against">
-            </span>
+            <FigmaInput
+              className="form-element element-type-text"
+              nameId="test-label-link"
+              value="I am some text to measure against"
+            />
           </span>
           
           <span class="form-row">
             <span class="form-label">
               <span class="text">
-                <label>Add new…</label>
+                <label for="add-new-label">Add new…</label>
               </span>
             </span>
-            <span class="form-element element-type-text-new split-40">
-              <input type="text" placeholder="Add stuff to me…">
-            </span>
-            <span class="form-element element-type-text-new split-60">
-              <input type="text" placeholder="Add other stuff to me…">
-            </span>
+            <FigmaInput
+              className="form-element element-type-text-new split-40"
+              nameId="add-new-label"
+              placeholder="Add stuff to me…"
+            />
+            <FigmaInput
+              className="form-element element-type-text-new split-60"
+              nameId="add-new-text"
+              placeholder="Add other stuff to me…"
+            />
           </span>
 
           <span class="form-row">
@@ -492,9 +504,11 @@
                 </button>
               </span>
             </span>
-            <span class="form-element element-type-textarea">
-              <textarea placeholder="Description">Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal.</textarea>
-            </span>
+            <FigmaTextarea
+              className="form-element element-type-textarea"
+              placeholder="Description"
+              value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
+            />
           </span>
           
           <span class="form-row">

@@ -4,6 +4,7 @@
   export let labelText = null;
   export let nameId = null;
 </script>
+
 <style>
   /* components/figma-switch */
 </style>
