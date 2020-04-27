@@ -1,3 +1,7 @@
+<script>
+  import FigmaSwitch from './forms-controls/FigmaSwitch';
+</script>
+
 <section class="options" id="action-options">
   <ul id="sample-list">
     <li class="bulk-editor">
@@ -554,21 +558,11 @@
           </span>
           
           <span class="form-row">
-            <span class="form-element element-type-switch">
-              <input
-                class="switch__toggle"
-                id="watch-selection"
-                name="watch-selection"
-                type="checkbox"
-                value="watch-selection"
-              >
-              <label
-                class="switch__label"
-                for="watch-selection"
-              >
-                Interactive?
-              </label>
-            </span>
+            <FigmaSwitch
+              className="form-element element-type-switch"
+              labelText="Interactive?"
+              nameId="is-interactive"
+            />
           </span>
           
         </span>

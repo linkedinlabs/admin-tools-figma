@@ -35,6 +35,7 @@
   <FigmaSwitch
     bind:checked={watchSelection}
     labelText="Watch selection"
+    nameId="watch-selection"
   />
   {/if}
 </footer>

@@ -1,23 +1,24 @@
 <script>
   export let checked = false;
+  export let className = 'switch';
   export let labelText = null;
+  export let nameId = null;
 </script>
 <style>
   /* components/figma-switch */
 </style>
 
-<span class="switch">
+<span class={className}>
   <input
     class="switch__toggle"
-    id="watch-selection"
-    name="watch-selection"
+    id={nameId}
+    name={nameId}
     type="checkbox"
-    value="watch-selection"
     bind:checked={checked}
   >
   <label
     class="switch__label"
-    for="watch-selection"
+    for={nameId}
   >
     {#if labelText}{labelText}{/if}
   </label>
