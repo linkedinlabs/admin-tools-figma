@@ -1,105 +1,60 @@
 <script>
-  import ButtonLock from './forms-controls/ButtonLock';
-  import ButtonOpenClose from './forms-controls/ButtonOpenClose';
   import FigmaInput from './forms-controls/FigmaInput';
   import FormLabel from './forms-controls/FormLabel';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FigmaTextarea from './forms-controls/FigmaTextarea';
+  import ItemGroupHeader from './ItemGroupHeader';
 </script>
 
 <section class="options" id="action-options">
   <ul id="sample-list">
     <li class="bulk-editor">
-      <header class="item-group-header">
-        <span class="left">
-          <span class="text">
-            Modify all unlocked
-          </span>
-        </span>
-        <span class="right">
-          <span class="actions">
-            <ButtonOpenClose isOpen={true}/>
-          </span>
-        </span>
-      </header>
+      <ItemGroupHeader
+        isOpen={true}
+        labelText="Modify all unlocked"
+        type="bulk-editor"
+      />
     </li>
 
     <li class="style-type">
-      <header class="item-group-header">
-        <span class="left">
-          <span class="text">
-            Typography
-          </span>
-        </span>
-        <span class="right">
-          <span class="actions">
-            <ButtonLock/>
-            <ButtonOpenClose isOpen={true}/>
-          </span>
-        </span>
-      </header>
+      <ItemGroupHeader
+        isOpen={true}
+        labelText="Typography"
+        type="style-type"
+      />
     </li>
 
     <li class="group-type">
-      <header class="item-group-header">
-        <span class="left">
-          <span class="text">
-            Display Typography
-          </span>
-        </span>
-        <span class="right">
-          <span class="actions">
-            <ButtonLock/>
-            <ButtonOpenClose isOpen={true}/>
-          </span>
-        </span>
-      </header>
+      <ItemGroupHeader
+        isOpen={true}
+        labelText="Display Typography"
+        type="group-type"
+      />
     </li>
     
     <li class="master-item">
-      <header class="item-group-header">
-        <span class="left">
-          <span class="text">
-            <em>Display</em> Display Large
-          </span>
-        </span>
-        <span class="right">
-          <span class="actions">
-            <ButtonLock isLocked={true}/>
-            <ButtonOpenClose/>
-          </span>
-        </span>
-      </header>
+      <ItemGroupHeader
+        isLocked={true}
+        labelGroupText="Display"
+        labelText="Display Large"
+        type="master-item"
+      />
     </li>
     <li class="master-item">
-      <header class="item-group-header">
-        <span class="left">
-          <span class="text">
-            <em>Display</em> Display Large Bold
-          </span>
-        </span>
-        <span class="right">
-          <span class="actions">
-            <ButtonLock/>
-            <ButtonOpenClose/>
-          </span>
-        </span>
-      </header>
+      <ItemGroupHeader
+        isLocked={true}
+        labelGroupText="Display"
+        labelText="Display Large Bold"
+        type="master-item"
+      />
     </li>
     <li class="master-item expanded">
-      <header class="item-group-header">
-        <span class="left">
-          <span class="text">
-            <em>Display</em> Display XLarge
-          </span>
-        </span>
-        <span class="right">
-          <span class="actions">
-            <ButtonLock/>
-            <ButtonOpenClose isOpen={true}/>
-          </span>
-        </span>
-      </header>
+      <ItemGroupHeader
+        isOpen={true}
+        labelGroupText="Display"
+        labelText="Display XLarge"
+        type="master-item"
+      />
       <section class="expanded-content">
         <span class="divider-top"><hr class="inner"></span>
 

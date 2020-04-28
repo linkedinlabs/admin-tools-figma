@@ -195,34 +195,28 @@
 }
 
 // apply the styles
-li {
+.item-group-header {
   &.bulk-editor {
-    .item-group-header {
-      @include list-header-editor;
-    }
+    @include list-header-editor;
   }
 
   &.style-type {
-    .item-group-header {
-      @include list-header-type;
-    }
+    @include list-header-type;
   }
 
   &.group-type {
-    .item-group-header {
-      @include list-header-group;
-    }
+    @include list-header-group;
   }
 
   &.master-item {
-    .item-group-header {
-      @include list-header-single;
-    }
+    @include list-header-single;
 
-    &.expanded {
-      .item-group-header {
-        @include list-header-single-expanded;
-      }
+    &.isOpen {
+      @include list-header-single-expanded;
     }
   }
 }
+
+// li {
+
+// }
