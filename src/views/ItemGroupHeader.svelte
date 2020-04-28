@@ -1,4 +1,6 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+
   import ButtonLock from './forms-controls/ButtonLock';
   import ButtonOpenClose from './forms-controls/ButtonOpenClose';
 
@@ -7,6 +9,8 @@
   export let labelGroupText = null;
   export let labelText = 'Item name here';
   export let type = 'master-item';
+
+  const dispatch = createEventDispatcher();
 </script>
 
 <style>
@@ -29,7 +33,10 @@
       {#if type !== 'bulk-editor'}
         <ButtonLock isLocked={isLocked}/>
       {/if}
-      <ButtonOpenClose isOpen={isOpen}/>
+      <ButtonOpenClose
+        on:handleUpdate={() => dispatch('handleUpdate')}
+        isOpen={isOpen}
+      />
     </span>
   </span>
 </header>

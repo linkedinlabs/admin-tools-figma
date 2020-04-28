@@ -1,8 +1,12 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+
   export let isOpen = false;
 
+  const dispatch = createEventDispatcher();
   const handleClick = () => {
     isOpen = !isOpen;
+    dispatch('handleUpdate');
   };
 </script>
 

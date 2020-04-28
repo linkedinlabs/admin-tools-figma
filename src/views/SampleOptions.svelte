@@ -2,7 +2,7 @@
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
 
-  const masterItems = [
+  let masterItems = [
     {
       id: 1,
       labelGroupText: 'Display',
@@ -25,6 +25,23 @@
       isOpen: true,
     },
   ];
+
+  const handleItemUpdate = (item) => {
+    // locate original item based on passed item `id`
+    const grabIndex = 0;
+    const updatedItem = masterItems.filter(masterItem => masterItem.id === item.id)[grabIndex];
+
+    // toggle `isOpen`
+    updatedItem.isOpen = !item.isOpen;
+
+    // re-insert back into masterItems list
+    const itemIndex = masterItems.findIndex(masterItem => masterItem.id === item.id);
+    masterItems = [
+      ...masterItems.slice(0, itemIndex),
+      ...[updatedItem],
+      ...masterItems.slice(itemIndex + 1),
+    ];
+  };
 </script>
 
 <section class="options" id="action-options">
@@ -56,6 +73,7 @@
     {#each masterItems as item (item.id)}
       <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
         <ItemGroupHeader
+          on:handleUpdate={() => handleItemUpdate(item)}
           isLocked={item.isLocked}
           isOpen={item.isOpen}
           labelGroupText={item.labelGroupText}
