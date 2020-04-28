@@ -36,10 +36,6 @@
 
       .item-toggle {
         opacity: 0;
-
-        &.inactive {
-          display: none;
-        }
       }
 
       #{$all-buttons} {
