@@ -1,8 +1,14 @@
 <script>
+  import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
 
+  export let numberSelected = 0;
+
+  let isOpenEditor = false;
+  let isOpenTypography = true;
   let groups = [];
+
   let masterItems = [
     {
       id: 1,
@@ -85,6 +91,17 @@
     typographyItems = masterItems.filter(masterItem => masterItem.kind === 'typography');
   };
 
+  const handleIsOpenUpdate = (type) => {
+    switch (type) { // eslint-disable-line default-case
+      case 'editor':
+        isOpenEditor = !isOpenEditor;
+        break;
+      case 'style-type':
+        isOpenTypography = !isOpenTypography;
+        break;
+    }
+  };
+
   const sortGroupItems = (allItems) => {
     allItems.forEach((item) => {
       if (!itemExists(groups, 'name', item.labelGroupText)) {
@@ -109,49 +126,56 @@
   <ul id="sample-list">
     <li class="bulk-editor">
       <ItemGroupHeader
-        isOpen={true}
-        labelText="Modify all unlocked"
+        on:handleUpdate={() => handleIsOpenUpdate('editor')}
+        isOpen={isOpenEditor}
+        labelText={isOpenEditor ? `Modifying ${numberSelected} styles` : 'Modify all unlocked'}
         type="bulk-editor"
       />
+      {#if isOpenEditor}
+        <EditorExpandedContent/>
+      {/if}
     </li>
 
     {#if typographyItems}
       <li class="style-type">
         <ItemGroupHeader
-          isOpen={true}
+          on:handleUpdate={() => handleIsOpenUpdate('style-type')}
+          isOpen={isOpenTypography}
           labelText="Typography"
           type="style-type"
         />
       </li>
 
-      {#each sortGroupItems(typographyItems) as group (group.name)}
-        <li class="group-type">
-          <ItemGroupHeader
-            on:handleUpdate={() => handleGroupUpdate(group)}
-            isOpen={true}
-            labelText={`${group.name} Typography`}
-            type="group-type"
-          />
-        </li>
+      {#if isOpenTypography}
+        {#each sortGroupItems(typographyItems) as group (group.name)}
+          <li class="group-type">
+            <ItemGroupHeader
+              on:handleUpdate={() => handleGroupUpdate(group)}
+              isOpen={true}
+              labelText={`${group.name} Typography`}
+              type="group-type"
+            />
+          </li>
 
-        {#if group.isOpen}
-          {#each filterItemsByGroup(typographyItems, group.name) as item (item.id)}
-            <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
-              <ItemGroupHeader
-                on:handleUpdate={() => handleItemUpdate(item)}
-                isLocked={item.isLocked}
-                isOpen={item.isOpen}
-                labelGroupText={item.labelGroupText}
-                labelText={item.labelText}
-                type="master-item"
-              />
-              {#if item.isOpen}
-                <ItemExpandedContent item={item}/>
-              {/if}
-            </li>
-          {/each}
-        {/if}
-      {/each}
+          {#if group.isOpen}
+            {#each filterItemsByGroup(typographyItems, group.name) as item (item.id)}
+              <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
+                <ItemGroupHeader
+                  on:handleUpdate={() => handleItemUpdate(item)}
+                  isLocked={item.isLocked}
+                  isOpen={item.isOpen}
+                  labelGroupText={item.labelGroupText}
+                  labelText={item.labelText}
+                  type="master-item"
+                />
+                {#if item.isOpen}
+                  <ItemExpandedContent item={item}/>
+                {/if}
+              </li>
+            {/each}
+          {/if}
+        {/each}
+      {/if}
     {/if}
   </ul>
 </section>

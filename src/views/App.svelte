@@ -13,7 +13,7 @@
   <SceneNavigator/>
 
   {#if numberSelected > 0}
-    <SampleOptions/>
+    <SampleOptions numberSelected={numberSelected}/>
   {:else}
     <BlankState/>
   {/if}
