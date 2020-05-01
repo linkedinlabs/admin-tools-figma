@@ -129,37 +129,55 @@ svg {
   }
 }
 
-.master-item.expanded {
-  .expanded-content {
-    border-bottom: 1px solid $wl-accent-tertiary;
+.bulk-editor,
+.master-item {
+  &.expanded {
+    .expanded-content {
+      border-bottom: 1px solid $wl-accent-tertiary;
 
-    .divider-top {
-      @include divider-base(100%, #{em(15.5)});
-      margin-bottom: em(8);
+      .divider-top {
+        @include divider-base(100%, #{em(15.5)});
+        margin-bottom: em(8);
+      }
+
+      .form-element-holder {
+        .form-row {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          padding: em(2) em(10);
+          width: 100%;
+
+          .form-unit,
+          .form-element,
+          .form-label, {
+            &.split-40 {
+              width: calc(40% - #{em(3)});
+            }
+
+            &.split-50 {
+              width: calc(50% - #{em(3)});
+            }
+
+            &.split-60 {
+              width: calc(60% - #{em(3)});
+            }
+          }
+        }
+      }
     }
+  }
+}
 
-    .form-element-holder {
-      .form-row {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        padding: em(2) em(10);
-        width: 100%;
+.bulk-editor {
+  &.expanded {
+    .expanded-content {
+      background-color: rgba($wl-accent, 0.8);
+      border-bottom-color: rgba($wl-accent, 0.8);
 
-        .form-unit,
-        .form-element,
-        .form-label, {
-          &.split-40 {
-            width: calc(40% - #{em(3)});
-          }
-
-          &.split-50 {
-            width: calc(50% - #{em(3)});
-          }
-
-          &.split-60 {
-            width: calc(60% - #{em(3)});
-          }
+      .divider-top {
+        hr.inner {
+          background-color: $wl-accent-tertiary-invert;
         }
       }
     }

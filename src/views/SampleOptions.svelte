@@ -124,7 +124,7 @@
 
 <section class="options" id="action-options">
   <ul id="sample-list">
-    <li class="bulk-editor">
+    <li class={`bulk-editor${isOpenEditor ? ' expanded' : ''}`}>
       <ItemGroupHeader
         on:handleUpdate={() => handleIsOpenUpdate('editor')}
         isOpen={isOpenEditor}
