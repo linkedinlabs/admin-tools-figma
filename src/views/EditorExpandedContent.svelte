@@ -1,6 +1,7 @@
 <script>
   import FigmaInput from './forms-controls/FigmaInput';
   import FormLabel from './forms-controls/FormLabel';
+  import FigmaSelectmenu from './forms-controls/FigmaSelectmenu';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FigmaTextarea from './forms-controls/FigmaTextarea';
 </script>
@@ -82,13 +83,10 @@
         labelText="Library"
         nameId="test-library"
       />
-      <span class="form-element element-type-select split-50">
-        <select class="styled-select select-menu" id="test-library">
-          <option value="unassigned" selected>Not assigned</option>
-          <option value="avatar-company">Component</option>
-          <option value="avatar-person">Foundational Element</option>
-        </select>
-      </span>
+      <FigmaSelectmenu
+        className="form-element element-type-select split-50"
+        nameId="editor-test-library"
+      />
     </span>
     
     <span class="form-row">
