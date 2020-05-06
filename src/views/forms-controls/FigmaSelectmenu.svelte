@@ -1,4 +1,6 @@
 <script>
+  // this component is a svelte rebuild of the vendor/figma-select-menu.js script
+  // used in other LinkedIn Figma plugins
   import { onMount } from 'svelte';
   import '../../vendor/figma-select-menu';
 
@@ -24,14 +26,36 @@
     },
   ];
 
-  let child = null;
+  // state
   let isMenuOpen = false;
   let selected = {
-    value: null,
+    value,
     text: null,
   };
 
-  const isSelected = match => match === value;
+  // ui
+  let fauxSelectorElement = null;
+  let selectorContainerElement = null;
+  let scrollY = null;
+
+  const isSelected = (
+    toMatch,
+    currentSelected,
+    currentValue,
+  ) => {
+    if (currentSelected.value === null) {
+      if (toMatch === currentValue) {
+        return true;
+      }
+      return false;
+    }
+
+    if (toMatch === currentSelected.value) {
+      return true;
+    }
+    return false;
+  };
+
   const setSelected = (optionValue = value) => {
     const index = 0;
 
@@ -42,8 +66,6 @@
     }
     return selected;
   };
-  // temp
-  const logSelection = () => console.log(`${nameId} selected is: ${selected.value}`); // eslint-disable-line no-console
 
   // ui interactions
   const handleMenuClick = () => {
@@ -53,7 +75,6 @@
 
   const handleItemClick = (optionValue) => {
     setSelected(optionValue);
-    logSelection();
     isMenuOpen = false;
   };
 
@@ -65,15 +86,119 @@
     let clickOutside = true;
     let parent = event.target;
     while (parent) {
-      if (parent === child) {
+      if (parent === fauxSelectorElement) {
         clickOutside = false;
       }
       parent = parent.parentNode;
     }
 
     if (clickOutside) {
-      return handleItemClick();
+      return handleMenuClick();
     }
+    return null;
+  };
+
+  const watchKeys = (event) => {
+    if (!isMenuOpen) {
+      return null;
+    }
+
+    const selectNext = (direction) => {
+      let currentlySelectedItem = selectorContainerElement.querySelector('.styled-select__list--active .styled-select__list-item--indicate');
+      if (!currentlySelectedItem) {
+        currentlySelectedItem = selectorContainerElement.querySelector('.styled-select__list--active .styled-select__list-item--active');
+      }
+      if (currentlySelectedItem) {
+        const dropdown = currentlySelectedItem.parentNode;
+
+        // default is `down`, grab the next sibling
+        let nextSelectedItem = currentlySelectedItem.nextSibling;
+        if (direction === 'up') {
+          // grab the previous sibling
+          nextSelectedItem = currentlySelectedItem.previousSibling;
+
+          // skip over separators
+          if (nextSelectedItem && nextSelectedItem.tagName !== 'LI') {
+            nextSelectedItem = nextSelectedItem.previousSibling;
+          }
+
+          // if the previous sibling is missing, must be at the top
+          // grab the last element in the list
+          if (!nextSelectedItem) {
+            nextSelectedItem = currentlySelectedItem.parentNode.lastChild;
+          }
+        } else {
+          // skip over separators
+          if (nextSelectedItem && nextSelectedItem.tagName !== 'LI') {
+            nextSelectedItem = nextSelectedItem.nextSibling;
+          }
+
+          // if the next sibling is missing, must be at the bottom
+          // grab the first element in the list
+          if (!nextSelectedItem) {
+            nextSelectedItem = currentlySelectedItem.parentNode.firstChild;
+          }
+        }
+
+        currentlySelectedItem.classList.remove('styled-select__list-item--indicate');
+        nextSelectedItem.classList.add('styled-select__list-item--indicate');
+
+        const dropdownHeight = dropdown.offsetHeight;
+        const selectedItem = dropdown.querySelector('.styled-select__list-item--indicate');
+        const selectedItemHeight = selectedItem.offsetHeight;
+        const selectedItemTopOffset = selectedItem.getBoundingClientRect().top + scrollY;
+        const refreshedMenuTopInnerOffset = dropdown.getBoundingClientRect().top + scrollY;
+
+        if (
+          (selectedItemTopOffset < 0)
+          || ((selectedItemTopOffset + selectedItemHeight) > dropdownHeight)
+        ) {
+          const scrollPoint = selectedItemTopOffset - refreshedMenuTopInnerOffset;
+          dropdown.scrollTop = scrollPoint;
+        }
+      }
+    };
+
+    const commitSelectedValue = () => {
+      let currentlySelectedItem = selectorContainerElement.querySelector('.styled-select__list--active .styled-select__list-item--indicate');
+      const previouslySelectedItem = selectorContainerElement.querySelector('.styled-select__list--active .styled-select__list-item--active');
+      if (!currentlySelectedItem) {
+        currentlySelectedItem = selectorContainerElement.querySelector('.styled-select__list--active .styled-select__list-item--active');
+      }
+      const selectedValue = currentlySelectedItem.getAttribute('data-value');
+
+      // update the faux menu selected item
+      previouslySelectedItem.classList.remove('styled-select__list-item--active');
+      currentlySelectedItem.classList.add('styled-select__list-item--active');
+      currentlySelectedItem.classList.remove('styled-select__list-item--indicate');
+
+      // set selection
+      setSelected(selectedValue);
+      handleMenuClick();
+    };
+
+    const { key } = event;
+    switch (key) {
+      case 'ArrowUp':
+        event.preventDefault();
+        selectNext('up');
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        selectNext('down');
+        break;
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        commitSelectedValue();
+        break;
+      case 'Escape':
+        handleMenuClick();
+        break;
+      default:
+        return null;
+    }
+
     return null;
   };
 
@@ -87,11 +212,15 @@
   /* components/figma-select-menu */
 </style>
 
+<svelte:window on:keydown={watchKeys} bind:scrollY={scrollY}/>
 <svelte:body on:click={handleClickOutside}/>
 
-<span class={className}>
+<span
+  class={className}
+  bind:this={selectorContainerElement}
+>
   <div
-    bind:this={child}
+    bind:this={fauxSelectorElement}
     class="styled-select"
   >
     <button
@@ -109,7 +238,7 @@
     >
       {#each options as option (option.value)}
         <li
-          class={`styled-select__list-item${isSelected(option.value) ? ' styled-select__list-item--active' : ''}`}
+          class={`styled-select__list-item${isSelected(option.value, selected, value) ? ' styled-select__list-item--active' : ''}`}
           data-value={option.value}
           on:click={() => handleItemClick(option.value)}
           position="0"
@@ -133,7 +262,7 @@
     {#each options as option (option.value)}
       <option
         disabled={option.disabled}
-        selected={isSelected(option.value)}
+        selected={isSelected(option.value, selected, value)}
         value={option.value}
       >
         {option.text}
