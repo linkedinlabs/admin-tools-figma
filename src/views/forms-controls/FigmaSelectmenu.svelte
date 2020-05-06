@@ -24,11 +24,12 @@
     },
   ];
 
+  let child = null;
+  let isMenuOpen = false;
   let selected = {
     value: null,
     text: null,
   };
-  let isMenuOpen = false;
 
   const isSelected = match => match === value;
   const setSelected = (optionValue = value) => {
@@ -56,6 +57,26 @@
     isMenuOpen = false;
   };
 
+  const handleClickOutside = (event) => {
+    if (!isMenuOpen) {
+      return null;
+    }
+
+    let clickOutside = true;
+    let parent = event.target;
+    while (parent) {
+      if (parent === child) {
+        clickOutside = false;
+      }
+      parent = parent.parentNode;
+    }
+
+    if (clickOutside) {
+      return handleItemClick();
+    }
+    return null;
+  };
+
   onMount(async () => {
     setSelected();
   });
@@ -66,8 +87,13 @@
   /* components/figma-select-menu */
 </style>
 
+<svelte:body on:click={handleClickOutside}/>
+
 <span class={className}>
-  <div class="styled-select">
+  <div
+    bind:this={child}
+    class="styled-select"
+  >
     <button
       class={`styled-select__button${isMenuOpen ? ' styled-select__button--active' : ''}`}
       on:click={() => handleMenuClick()}
@@ -83,7 +109,7 @@
     >
       {#each options as option (option.value)}
         <li
-          class={`styled-select__list-item${isSelected(option.value) ? 'styled-select__list-item--active' : ''}`}
+          class={`styled-select__list-item${isSelected(option.value) ? ' styled-select__list-item--active' : ''}`}
           data-value={option.value}
           on:click={() => handleItemClick(option.value)}
           position="0"

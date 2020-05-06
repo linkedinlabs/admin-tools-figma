@@ -111,7 +111,7 @@
 
 .styled-select__list {
   position: absolute;
-  z-index: 2;
+  z-index: $z-flyout-controls;
   display: none;
   flex-direction: column;
   margin: 0;

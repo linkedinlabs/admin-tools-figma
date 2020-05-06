@@ -88,6 +88,7 @@
       <FigmaSelectmenu
         className="form-element element-type-select split-50"
         nameId="test-library"
+        value="unassigned"
       />
     </span>
     
