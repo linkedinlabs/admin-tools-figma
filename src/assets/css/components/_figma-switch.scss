@@ -78,6 +78,48 @@
   }
 }
 
+@mixin figma-switch-toggle-inverted {
+  @include figma-switch-toggle;
+
+  &:checked + label {
+    &:before {
+      background-color: rgba($wl-action-tertiary, 0.3);
+    }
+
+    &:after {
+      background-color: rgba($wl-ctrl-primary, 0.8);
+    }
+  }
+
+  &:enabled + label {
+    &:before,
+    &:after {
+      border-color: $wl-action-tertiary;
+    }
+  }
+
+  &:enabled + label:hover {
+    &:before,
+    &:after {
+      border-color: $wl-ctrl-primary-invert;
+    }
+  }
+
+  &:enabled:focus + label {
+    color: $wl-type-01-invert;
+
+    &:before,
+    &:after {
+      border-color: $wl-action-primary;
+      background-color: $wl-ctrl-primary;
+    }
+  }
+
+  &:enabled:active + label {
+    color: $wl-type-01-invert;
+  }
+}
+
 @mixin figma-switch-label {
   display: flex;
   padding-left: em(36);
@@ -107,6 +149,16 @@
     height: em(10);
     transition: transform 0.2s;
     border-radius: 50%;
+  }
+}
+
+@mixin figma-switch-label-inverted {
+  @include figma-switch-label;
+  color: $wl-type-01-invert;
+
+  &:before,
+  &:after {
+    background: none;
   }
 }
 

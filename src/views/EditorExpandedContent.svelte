@@ -97,6 +97,7 @@
       />
       <FigmaSelectmenu
         className="form-element element-type-select split-50"
+        invertView={true}
         nameId="editor-test-library"
       />
     </span>
@@ -104,6 +105,7 @@
     <span class="form-row">
       <FigmaSwitch
         className="form-element element-type-switch"
+        invertView={true}
         labelText="Interactive?"
         nameId="is-interactive"
       />

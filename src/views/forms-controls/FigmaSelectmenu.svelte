@@ -6,6 +6,7 @@
 
   export let className = null;
   export let disabled = false;
+  export let invertView = false;
   export let nameId = null;
   export let value = null;
   export let options = [
@@ -37,6 +38,9 @@
   let fauxSelectorElement = null;
   let selectorContainerElement = null;
   let scrollY = null;
+  if (className && invertView) {
+    className = `${className} inverted`;
+  }
 
   const isSelected = (
     toMatch,

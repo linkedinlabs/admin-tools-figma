@@ -160,6 +160,16 @@
           left: em(8);
         }
       }
+
+      &.inverted {
+        .switch__toggle {
+          @include figma-switch-toggle-inverted;
+        }
+
+        .switch__label {
+          @include figma-switch-label-inverted;
+        }
+      }
     }
   }
 }

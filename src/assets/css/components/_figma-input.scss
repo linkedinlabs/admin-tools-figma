@@ -78,7 +78,7 @@
 @mixin figma-input-inverted(
   $disableUnderline: true, // figma uses this in some places, but we rarely do
 ) {
-  @include figma-input;
+  @include figma-input($disableUnderline);
   color: rgba($wl-type-01-invert, 0.8);
   background: none;
 
