@@ -4,6 +4,7 @@
   import ButtonRestore from './ButtonRestore';
 
   export let labelText = null;
+  export let invertView = false;
   export let nameId = null;
   export let disableActions = false;
 </script>
@@ -12,7 +13,7 @@
   /* components/form-elements > @form-label */
 </style>
 
-<span class="form-label">
+<span class={`form-label${invertView ? ' inverted' : ''}`}>
   <span class="text">
     <label for={nameId}>{labelText}</label>
   </span>

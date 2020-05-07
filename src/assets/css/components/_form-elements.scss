@@ -95,9 +95,27 @@
   }
 }
 
+@mixin form-label-inverted {
+  @include form-label;
+
+  span {
+    &.actions {
+      #{$all-buttons} {
+        @include button-icon($wl-action-tertiary, 16, $wl-action-secondary);
+        width: em(16);
+        height: em(16);
+      }
+    }
+  }
+}
+
 .form-element-holder {
   .form-label {
     @include form-label;
+
+    &.inverted {
+      @include form-label-inverted;
+    }
   }
 
   // style form element types
@@ -108,6 +126,10 @@
     &.element-type-text-new,
     &.element-type-textarea {
       #{$all-text-inputs} { @include figma-input; }
+
+      &.inverted {
+        #{$all-text-inputs} { @include figma-input-inverted; }
+      }
     }
 
     &.element-type-text-new {

@@ -6,29 +6,33 @@
   import FigmaTextarea from './forms-controls/FigmaTextarea';
 </script>
 
-<section class="expanded-content">
+<section class="expanded-content editor">
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
     <span class="form-row">
       <span class="form-unit split-40">
         <FormLabel
+          invertView={true}
           labelText="Group&nbsp;&nbsp;&nbsp;/"
           nameId="test-group"
         />
         <FigmaInput
           className="form-element element-type-text"
+          invertView={true}
           nameId="test-group"
           value="Container"
         />
       </span>
       <span class="form-unit split-60">
         <FormLabel
+          invertView={true}
           labelText="Name"
           nameId="test-name"
         />
         <FigmaInput
           className="form-element element-type-text"
+          invertView={true}
           nameId="test-name"
           value="color-bg-container-dark"
         />
@@ -37,11 +41,13 @@
 
     <span class="form-row">
       <FormLabel
+        invertView={true}
         labelText="Label text here"
         nameId="test-label-link"
       />
       <FigmaInput
         className="form-element element-type-text"
+        invertView={true}
         nameId="test-label-link"
         value="I am some text to measure against"
       />
@@ -49,17 +55,20 @@
     
     <span class="form-row">
       <FormLabel
+        invertView={true}
         labelText="Add new…"
         nameId="add-new-label"
         disableActions={true}
       />
       <FigmaInput
         className="form-element element-type-text-new split-40"
+        invertView={true}
         nameId="add-new-label"
         placeholder="Add stuff to me…"
       />
       <FigmaInput
         className="form-element element-type-text-new split-60"
+        invertView={true}
         nameId="add-new-text"
         placeholder="Add other stuff to me…"
       />
@@ -67,11 +76,13 @@
 
     <span class="form-row">
       <FormLabel
+        invertView={true}
         labelText="Description"
         nameId="test-description"
       />
       <FigmaTextarea
         className="form-element element-type-textarea"
+        invertView={true}
         nameId="test-description"
         placeholder="Description"
         value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
@@ -80,6 +91,7 @@
     
     <span class="form-row">
       <FormLabel
+        invertView={true}
         labelText="Library"
         nameId="test-library"
       />

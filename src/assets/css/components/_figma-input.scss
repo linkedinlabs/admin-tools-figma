@@ -74,3 +74,32 @@
     }
   }
 }
+
+@mixin figma-input-inverted(
+  $disableUnderline: true, // figma uses this in some places, but we rarely do
+) {
+  @include figma-input;
+  color: rgba($wl-type-01-invert, 0.8);
+  background: none;
+
+  @include hover {
+    color: rgba($wl-type-01-invert, 0.9);
+    border: 1px solid $wl-action-tertiary;
+  }
+
+  &:active,
+  &:focus {
+    color: $wl-type-01-invert;
+    border: 2px solid $wl-action-primary;
+    background-color: $wl-ctrl-primary;
+  }
+
+  &::selection {
+    color: $wl-type-01-invert;
+    background-color: rgba($wl-action-primary, 0.5);
+  }
+
+  &::placeholder {
+    color: $wl-type-02;
+  }
+}
