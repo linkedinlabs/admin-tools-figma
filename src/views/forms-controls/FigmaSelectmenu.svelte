@@ -207,12 +207,27 @@
     const activeItemElement = menuListElement.querySelector('.styled-select__list-item--active');
 
     let menuPosition = 0;
+
     if (activeItemElement) {
+      // reset the menu for calculations
+      menuListElement.style.top = '0px';
+
       const menuOffset = menuListElement.getBoundingClientRect().top;
       const itemOffset = activeItemElement.getBoundingClientRect().top;
-      menuPosition = -(itemOffset - menuOffset);
+
+      // calculate distance between menu top and item top
+      const offsetDiff = itemOffset - menuOffset;
+
+      // if moving the menu up will take it off the screen, use a
+      // pre-baked position; otherwise move the menu up
+      if ((menuOffset - offsetDiff) < 0) {
+        menuPosition = -4;
+      } else {
+        menuPosition = -(offsetDiff);
+      }
     }
 
+    // set the menu position
     menuListElement.style.top = `${menuPosition}px`;
   };
 
