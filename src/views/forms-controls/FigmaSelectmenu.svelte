@@ -1,7 +1,7 @@
 <script>
   // this component is a svelte rebuild of the vendor/figma-select-menu.js script
   // used in other LinkedIn Figma plugins
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import '../../vendor/figma-select-menu';
 
   export let className = null;
@@ -202,8 +202,28 @@
     return null;
   };
 
+  const setMenuPosition = () => {
+    const menuListElement = selectorContainerElement.querySelector('.styled-select__list');
+    const activeItemElement = menuListElement.querySelector('.styled-select__list-item--active');
+
+    let menuPosition = 0;
+    if (activeItemElement) {
+      const menuOffset = menuListElement.getBoundingClientRect().top;
+      const itemOffset = activeItemElement.getBoundingClientRect().top;
+      menuPosition = -(itemOffset - menuOffset);
+    }
+
+    menuListElement.style.top = `${menuPosition}px`;
+  };
+
   onMount(async () => {
     setSelected();
+  });
+
+  afterUpdate(() => {
+    if (isMenuOpen) {
+      setMenuPosition();
+    }
   });
 
 </script>
@@ -234,14 +254,13 @@
     </button>
     <ul
       class={`styled-select__list${isMenuOpen ? ' styled-select__list--active' : ''}`}
-      style="top: 0px;"
+      style="top: 0px"
     >
       {#each options as option (option.value)}
         <li
           class={`styled-select__list-item${isSelected(option.value, selected, value) ? ' styled-select__list-item--active' : ''}`}
           data-value={option.value}
           on:click={() => handleItemClick(option.value)}
-          position="0"
         >
           <span class="styled-select__list-item-icon"></span>
           <span class="styled-select__list-item-text">
