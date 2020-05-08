@@ -1,11 +1,12 @@
 <script>
-  export let item = null;
-
   import FigmaInput from './forms-controls/FigmaInput';
   import FormLabel from './forms-controls/FormLabel';
   import FigmaSelectmenu from './forms-controls/FigmaSelectmenu';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FigmaTextarea from './forms-controls/FigmaTextarea';
+  import FormUnit from './forms-controls/FormUnit';
+
+  export let item = null;
 </script>
 
 <section class={`expanded-content${item.isLocked ? ' locked' : ''}`}>
@@ -13,17 +14,13 @@
 
   <span class="form-element-holder">
     <span class="form-row">
-      <span class="form-unit split-40">
-        <FormLabel
-          labelText="Group&nbsp;&nbsp;&nbsp;/"
-          nameId="test-group"
-        />
-        <FigmaInput
-          className="form-element element-type-text"
-          nameId="test-group"
-          value="Container"
-        />
-      </span>
+      <FormUnit
+        className="split-40"
+        labelText="Group&nbsp;&nbsp;&nbsp;/"
+        nameId="test-group"
+        kind="inputText"
+        value="Container"
+      />
       <span class="form-unit split-60">
         <FormLabel
           labelText="Name"
