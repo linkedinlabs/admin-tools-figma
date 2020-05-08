@@ -2,7 +2,6 @@
   // this component is a svelte rebuild of the vendor/figma-select-menu.js script
   // used in other LinkedIn Figma plugins
   import { afterUpdate, onMount } from 'svelte';
-  import '../../vendor/figma-select-menu';
 
   export let className = null;
   export let disabled = false;

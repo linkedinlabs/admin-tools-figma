@@ -17,10 +17,20 @@
   const originalValue = value;
   let isDirty = false;
   let isLocked = false;
+  let wasUnlocked = false;
 
   const restoreValue = () => {
     value = originalValue;
   };
+
+  // watching locking changes and restore value if item becomes locked
+  $: {
+    if (!wasUnlocked && isLocked) {
+      restoreValue();
+    }
+
+    wasUnlocked = isLocked;
+  }
 
   afterUpdate(() => {
     if (value !== originalValue) {
