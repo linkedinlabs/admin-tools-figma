@@ -56,6 +56,8 @@
 
         // re-size restore icon
         &.action-restore {
+          opacity: 1;
+
           span {
             &.icon {
               width: em(12);

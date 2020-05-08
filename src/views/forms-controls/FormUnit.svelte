@@ -18,6 +18,10 @@
   const originalValue = value;
   let isDirty = false;
 
+  const restoreValue = () => {
+    value = originalValue;
+  };
+
   afterUpdate(() => {
     if (value !== originalValue) {
       isDirty = true;
@@ -29,9 +33,11 @@
 
 <span class={className}>
   <FormLabel
+    on:handleRestore={() => restoreValue()}
     disableActions={disableActions}
-    labelText={`${labelText} ${isDirty ? '👎' : '👍'}`}
+    labelText={labelText}
     invertView={invertView}
+    isDirty={isDirty}
     nameId={nameId}
   />
 

@@ -5,6 +5,7 @@
 
   export let labelText = null;
   export let invertView = false;
+  export let isDirty = false;
   export let nameId = null;
   export let disableActions = false;
 </script>
@@ -13,13 +14,13 @@
   /* components/form-elements > @form-label */
 </style>
 
-<span class={`form-label${invertView ? ' inverted' : ''}`}>
+<span class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}>
   <span class="text">
     <label for={nameId}>{labelText}</label>
   </span>
   {#if !disableActions}
     <span class="actions">
-      <ButtonRestore isActive={true} />
+      {#if isDirty}<ButtonRestore on:handleRestore/>{/if}
       <ButtonLock/>
       <ButtonCopy/>
     </span>

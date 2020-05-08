@@ -71,14 +71,6 @@
       nameId={`test-library-${item.id}`}
       value="unassigned"
     />
-
-    <FormUnit
-      className="form-row"
-      kind="inputSwitch"
-      labelText="Interactive?"
-      nameId={`test-interactive-${item.id}`}
-      value="unassigned"
-    />
     
     <span class="form-row">
       <FigmaSwitch

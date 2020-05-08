@@ -1,8 +1,6 @@
 <script>
   import FigmaInput from './forms-controls/FigmaInput';
-  import FigmaSelectmenu from './forms-controls/FigmaSelectmenu';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
-  import FigmaTextarea from './forms-controls/FigmaTextarea';
   import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 </script>
@@ -30,19 +28,15 @@
       />
     </span>
 
-    <span class="form-row">
-      <FormLabel
-        invertView={true}
-        labelText="Label text here"
-        nameId="test-label-link"
-      />
-      <FigmaInput
-        className="form-element element-type-text"
-        invertView={true}
-        nameId="test-label-link"
-        value="I am some text to measure against"
-      />
-    </span>
+    <FormUnit
+      className="form-row"
+      invertView={true}
+      kind="inputText"
+      labelText="Label text here"
+      nameId="editor-test-label-link"
+      placeholder="Type something…"
+      value="I am some text to measure against"
+    />
     
     <span class="form-row">
       <FormLabel
@@ -65,34 +59,25 @@
       />
     </span>
 
-    <span class="form-row">
-      <FormLabel
-        invertView={true}
-        labelText="Description"
-        nameId="test-description"
-      />
-      <FigmaTextarea
-        className="form-element element-type-textarea"
-        invertView={true}
-        nameId="test-description"
-        placeholder="Description"
-        value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
-      />
-    </span>
-    
-    <span class="form-row">
-      <FormLabel
-        invertView={true}
-        labelText="Library"
-        nameId="test-library"
-      />
-      <FigmaSelectmenu
-        className="form-element element-type-select split-50"
-        invertView={true}
-        nameId="editor-test-library"
-      />
-    </span>
-    
+    <FormUnit
+      className="form-row"
+      invertView={true}
+      kind="inputTextarea"
+      labelText="Description"
+      nameId="editor-test-description"
+      placeholder="Description"
+      value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
+    />
+
+    <FormUnit
+      className="form-row"
+      invertView={true}
+      kind="inputSelect"
+      labelText="Library"
+      nameId="editor-test-library"
+      value="component"
+    />
+
     <span class="form-row">
       <FigmaSwitch
         className="form-element element-type-switch"
