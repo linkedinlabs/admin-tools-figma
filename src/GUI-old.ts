@@ -4,7 +4,6 @@
 import './assets/css/main.scss';
 import { pollWithPromise } from './Tools';
 import { ASSIGNMENTS } from './constants';
-import './vendor/figma-select-menu';
 
 /**
  * @description Sends a message and applicable payload to the main thread.
@@ -43,10 +42,10 @@ const sendMsgToMain = (
 const sendLoadedMsg = (): void => {
   // temp
   // set the Figma version of the menu
-  selectMenu.init({
-    position: 'positionToSelection',
-    selector: 'styled-select',
-  });
+  // selectMenu.init({
+  //   position: 'positionToSelection',
+  //   selector: 'styled-select',
+  // });
 
   // send message to main thread indicating UI has loaded
   parent.postMessage({ pluginMessage: { loaded: true } }, '*');
@@ -433,10 +432,10 @@ const updateSelectedLayers = (layers: Array<{
       actionsElement.removeAttribute('style');
 
       // set the Figma version of the menu
-      selectMenu.init({
-        position: 'positionToSelection',
-        selector: 'styled-select',
-      });
+      // selectMenu.init({
+      //   position: 'positionToSelection',
+      //   selector: 'styled-select',
+      // });
     } else {
       bodyElement.classList.add('blank-state-visible');
       blankStateElement.removeAttribute('style');

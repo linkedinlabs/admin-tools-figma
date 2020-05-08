@@ -9,7 +9,6 @@
     "document": "readonly",
     "figma": "readonly",
     "parent": "readonly",
-    "selectMenu": "readonly"
   },
   settings: {
     "import/extensions": [".js",".jsx",".ts",".tsx"],

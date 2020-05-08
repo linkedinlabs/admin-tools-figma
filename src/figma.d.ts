@@ -2,7 +2,6 @@
 
 declare global {
 // Vendor Declarations
-const selectMenu: window.selectMenu
 
 // for attaching Svelte to window global
 interface Window {
