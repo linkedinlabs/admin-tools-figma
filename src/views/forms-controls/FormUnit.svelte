@@ -7,7 +7,6 @@
 
   export let className = null;
   export let disableActions = false;
-  export let disabled = false;
   export let invertView = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
@@ -17,6 +16,7 @@
 
   const originalValue = value;
   let isDirty = false;
+  let isLocked = false;
 
   const restoreValue = () => {
     value = originalValue;
@@ -38,12 +38,14 @@
     labelText={labelText}
     invertView={invertView}
     isDirty={isDirty}
+    bind:isLocked={isLocked}
     nameId={nameId}
   />
 
   {#if kind === 'inputText'}
     <FigmaInput
       className="form-element element-type-text"
+      disabled={isLocked}
       invertView={invertView}
       nameId={nameId}
       placeholder={placeholder}
@@ -54,6 +56,7 @@
   {#if kind === 'inputTextarea'}
     <FigmaTextarea
       className="form-element element-type-textarea"
+      disabled={isLocked}
       invertView={invertView}
       nameId={nameId}
       placeholder={placeholder}
@@ -64,7 +67,7 @@
   {#if kind === 'inputSelect'}
     <FigmaSelectmenu
       className="form-element element-type-select split-50"
-      disabled={disabled}
+      disabled={isLocked}
       invertView={invertView}
       nameId={nameId}
       bind:value={value}

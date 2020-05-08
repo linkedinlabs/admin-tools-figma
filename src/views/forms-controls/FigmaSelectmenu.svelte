@@ -246,6 +246,8 @@
   afterUpdate(() => {
     if (isMenuOpen) {
       setMenuPosition();
+    } else {
+      setSelected();
     }
   });
 
@@ -268,6 +270,7 @@
   >
     <button
       class={`styled-select__button${isMenuOpen ? ' styled-select__button--active' : ''}`}
+      disabled={disabled}
       on:click={() => handleMenuClick()}
     >
       <span class="styled-select__button-label">

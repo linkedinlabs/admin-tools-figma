@@ -6,6 +6,7 @@
   export let labelText = null;
   export let invertView = false;
   export let isDirty = false;
+  export let isLocked = false;
   export let nameId = null;
   export let disableActions = false;
 </script>
@@ -21,7 +22,7 @@
   {#if !disableActions}
     <span class="actions">
       {#if isDirty}<ButtonRestore on:handleRestore/>{/if}
-      <ButtonLock/>
+      <ButtonLock bind:isLocked/>
       <ButtonCopy/>
     </span>
   {/if}
