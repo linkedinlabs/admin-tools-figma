@@ -1,10 +1,13 @@
 <script>
   import { afterUpdate } from 'svelte';
   import FigmaInput from './FigmaInput';
+  import FigmaSelectmenu from './FigmaSelectmenu';
+  import FigmaTextarea from './FigmaTextarea';
   import FormLabel from './FormLabel';
 
-  export let className = '';
-  // export let disabled = false;
+  export let className = null;
+  export let disableActions = false;
+  export let disabled = false;
   export let invertView = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
@@ -24,9 +27,10 @@
   });
 </script>
 
-<span class={`form-unit ${className}`}>
+<span class={className}>
   <FormLabel
-    labelText={`${labelText} dirty? ${isDirty ? '👍' : '👎'}`}
+    disableActions={disableActions}
+    labelText={`${labelText} ${isDirty ? '👎' : '👍'}`}
     invertView={invertView}
     nameId={nameId}
   />
@@ -37,6 +41,26 @@
       invertView={invertView}
       nameId={nameId}
       placeholder={placeholder}
+      bind:value={value}
+    />
+  {/if}
+
+  {#if kind === 'inputTextarea'}
+    <FigmaTextarea
+      className="form-element element-type-textarea"
+      invertView={invertView}
+      nameId={nameId}
+      placeholder={placeholder}
+      bind:value={value}
+    />
+  {/if}
+
+  {#if kind === 'inputSelect'}
+    <FigmaSelectmenu
+      className="form-element element-type-select split-50"
+      disabled={disabled}
+      invertView={invertView}
+      nameId={nameId}
       bind:value={value}
     />
   {/if}

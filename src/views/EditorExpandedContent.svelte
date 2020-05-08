@@ -1,9 +1,10 @@
 <script>
   import FigmaInput from './forms-controls/FigmaInput';
-  import FormLabel from './forms-controls/FormLabel';
   import FigmaSelectmenu from './forms-controls/FigmaSelectmenu';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FigmaTextarea from './forms-controls/FigmaTextarea';
+  import FormLabel from './forms-controls/FormLabel';
+  import FormUnit from './forms-controls/FormUnit';
 </script>
 
 <section class="expanded-content editor">
@@ -11,32 +12,22 @@
 
   <span class="form-element-holder">
     <span class="form-row">
-      <span class="form-unit split-40">
-        <FormLabel
-          invertView={true}
-          labelText="Group&nbsp;&nbsp;&nbsp;/"
-          nameId="test-group"
-        />
-        <FigmaInput
-          className="form-element element-type-text"
-          invertView={true}
-          nameId="test-group"
-          value="Container"
-        />
-      </span>
-      <span class="form-unit split-60">
-        <FormLabel
-          invertView={true}
-          labelText="Name"
-          nameId="test-name"
-        />
-        <FigmaInput
-          className="form-element element-type-text"
-          invertView={true}
-          nameId="test-name"
-          value="color-bg-container-dark"
-        />
-      </span>
+      <FormUnit
+        className="split-40"
+        invertView={true}
+        kind="inputText"
+        labelText="Group&nbsp;&nbsp;&nbsp;/"
+        nameId="editor-test-group"
+        value="Container"
+      />
+      <FormUnit
+        className="split-60"
+        invertView={true}
+        kind="inputText"
+        labelText="Name"
+        nameId="editor-test-name"
+        value="color-bg-container-dark"
+      />
     </span>
 
     <span class="form-row">

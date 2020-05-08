@@ -1,9 +1,7 @@
 <script>
   import FigmaInput from './forms-controls/FigmaInput';
-  import FormLabel from './forms-controls/FormLabel';
-  import FigmaSelectmenu from './forms-controls/FigmaSelectmenu';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
-  import FigmaTextarea from './forms-controls/FigmaTextarea';
+  import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 
   export let item = null;
@@ -15,37 +13,30 @@
   <span class="form-element-holder">
     <span class="form-row">
       <FormUnit
-        className="split-40"
-        labelText="Group&nbsp;&nbsp;&nbsp;/"
-        nameId="test-group"
+        className="form-unit split-40"
         kind="inputText"
+        labelText="Group&nbsp;&nbsp;&nbsp;/"
+        nameId={`test-group-${item.id}`}
         value="Container"
       />
-      <span class="form-unit split-60">
-        <FormLabel
-          labelText="Name"
-          nameId="test-name"
-        />
-        <FigmaInput
-          className="form-element element-type-text"
-          nameId="test-name"
-          value="color-bg-container-dark"
-        />
-      </span>
+      <FormUnit
+        className="form-unit split-60"
+        kind="inputText"
+        labelText="Name"
+        nameId={`test-name-${item.id}`}
+        value="color-bg-container-dark"
+      />
     </span>
 
-    <span class="form-row">
-      <FormLabel
-        labelText="Label text here"
-        nameId="test-label-link"
-      />
-      <FigmaInput
-        className="form-element element-type-text"
-        nameId="test-label-link"
-        value="I am some text to measure against"
-      />
-    </span>
-    
+    <FormUnit
+      className="form-row"
+      kind="inputText"
+      labelText="Label text here"
+      nameId={`test-label-link-${item.id}`}
+      placeholder="Type something…"
+      value="I am some text to measure against"
+    />
+
     <span class="form-row">
       <FormLabel
         labelText="Add new…"
@@ -64,30 +55,30 @@
       />
     </span>
 
-    <span class="form-row">
-      <FormLabel
-        labelText="Description"
-        nameId="test-description"
-      />
-      <FigmaTextarea
-        className="form-element element-type-textarea"
-        nameId="test-description"
-        placeholder="Description"
-        value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
-      />
-    </span>
-    
-    <span class="form-row">
-      <FormLabel
-        labelText="Library"
-        nameId="test-library"
-      />
-      <FigmaSelectmenu
-        className="form-element element-type-select split-50"
-        nameId="test-library"
-        value="unassigned"
-      />
-    </span>
+    <FormUnit
+      className="form-row"
+      kind="inputTextarea"
+      labelText="Description"
+      nameId={`test-description-${item.id}`}
+      placeholder="Description"
+      value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
+    />
+
+    <FormUnit
+      className="form-row"
+      kind="inputSelect"
+      labelText="Library"
+      nameId={`test-library-${item.id}`}
+      value="unassigned"
+    />
+
+    <FormUnit
+      className="form-row"
+      kind="inputSwitch"
+      labelText="Interactive?"
+      nameId={`test-interactive-${item.id}`}
+      value="unassigned"
+    />
     
     <span class="form-row">
       <FigmaSwitch

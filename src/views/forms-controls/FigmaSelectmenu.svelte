@@ -63,11 +63,15 @@
   const setSelected = (optionValue = value) => {
     const index = 0;
 
+    // update for faux select
     if (optionValue) {
       selected = options.filter(option => option.value === optionValue)[index];
     } else {
       selected = options[index];
     }
+
+    // update for real select + return binding
+    value = selected.value;
     return selected;
   };
 
@@ -291,7 +295,7 @@
     </ul>
   </div>
   <select
-    bind:value={selected.value}
+    bind:value={value}
     class="styled-select select-menu"
     disabled={disabled}
     id={nameId}
