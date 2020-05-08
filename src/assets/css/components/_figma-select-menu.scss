@@ -116,15 +116,22 @@
     background: none;
 
     @include hover {
-      color: rgba($wl-type-01-invert, 0.9);
-      border: 1px solid $wl-action-tertiary;
+      &:enabled {
+        color: rgba($wl-type-01-invert, 0.9);
+        border: 1px solid $wl-action-tertiary;
+      }
     }
 
-    &:active,
-    &:focus {
+    &:enabled:active,
+    &:enabled:focus {
       color: $wl-type-01-invert;
       border: 2px solid $wl-action-primary;
       background-color: $wl-ctrl-primary;
+    }
+
+    &:disabled {
+      color: rgba($wl-type-01-invert, 0.8);
+      opacity: 0.3;
     }
   }
 

@@ -83,8 +83,10 @@
   background: none;
 
   @include hover {
-    color: rgba($wl-type-01-invert, 0.9);
-    border: 1px solid $wl-action-tertiary;
+    &:enabled {
+      color: rgba($wl-type-01-invert, 0.9);
+      border: 1px solid $wl-action-tertiary;
+    }
   }
 
   &:active,
@@ -101,5 +103,11 @@
 
   &::placeholder {
     color: $wl-type-02;
+  }
+
+  &:disabled {
+    color: rgba($wl-type-01-invert, 0.8);
+    background: none;
+    opacity: 0.4;
   }
 }
