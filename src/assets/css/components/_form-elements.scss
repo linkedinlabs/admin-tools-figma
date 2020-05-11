@@ -143,6 +143,11 @@
     &.element-type-textarea {
       #{$all-text-inputs} {
         min-height: em(68);
+
+        &:active,
+        &:focus {
+          // min-height: em(70);
+        }
       }
     }
 

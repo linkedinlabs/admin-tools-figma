@@ -40,17 +40,17 @@
     <span class="form-row">
       <FormLabel
         labelText="Add new…"
-        nameId="add-new-label"
+        nameId={`add-new-label-${item.id}`}
         disableActions={true}
       />
       <FigmaInput
         className="form-element element-type-text-new split-40"
-        nameId="add-new-label"
+        nameId={`add-new-label-${item.id}`}
         placeholder="Add stuff to me…"
       />
       <FigmaInput
         className="form-element element-type-text-new split-60"
-        nameId="add-new-text"
+        nameId={`add-new-text-${item.id}`}
         placeholder="Add other stuff to me…"
       />
     </span>

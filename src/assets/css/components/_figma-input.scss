@@ -21,8 +21,10 @@
   outline: none;
 
   @include hover {
-    color: rgba($wl-ctrl-primary, 0.8);
-    border: 1px solid rgba($wl-ctrl-primary, 0.1);
+    &:enabled {
+      color: rgba($wl-ctrl-primary, 0.8);
+      border: 1px solid rgba($wl-ctrl-primary, 0.1);
+    }
   }
 
   &::selection {
@@ -47,15 +49,12 @@
 
   &:not(:disabled):focus:placeholder-shown {
     border: 2px solid $wl-action-primary;
+    color: blue;
   }
 
-  &:not(:disabled):focus:not(:placeholder-shown) {
-    padding-left: em(6);
-  }
-
-  &:active,
-  &:focus {
-    padding: em(8) em(4) em(8) em(6);
+  &:focus,
+  &:focus:hover {
+    padding: em(7) em(4) em(8) em(6);
     color: $wl-ctrl-primary;
     border: 2px solid $wl-action-primary;
     border-radius: 2px;
@@ -67,10 +66,6 @@
 
     @include hover {
       border: 1px solid transparent;
-    }
-
-    &:active {
-      padding: em(8) em(4) em(8) em(7);
     }
   }
 }
@@ -85,14 +80,15 @@
   @include hover {
     &:enabled {
       color: rgba($wl-type-01-invert, 0.9);
-      border: 1px solid $wl-action-tertiary;
+      border-color: $wl-action-tertiary;
     }
   }
 
   &:active,
-  &:focus {
+  &:focus,
+  &:focus:hover {
     color: $wl-type-01-invert;
-    border: 2px solid $wl-action-primary;
+    border-color: $wl-action-primary;
     background-color: $wl-ctrl-primary;
   }
 

@@ -11,7 +11,7 @@
   <span class="form-element-holder">
     <span class="form-row">
       <FormUnit
-        className="split-40"
+        className="form-unit split-40"
         invertView={true}
         kind="inputText"
         labelText="Group&nbsp;&nbsp;&nbsp;/"
@@ -19,7 +19,7 @@
         value="Container"
       />
       <FormUnit
-        className="split-60"
+        className="form-unit split-60"
         invertView={true}
         kind="inputText"
         labelText="Name"
