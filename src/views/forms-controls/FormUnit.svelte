@@ -8,6 +8,7 @@
   export let className = null;
   export let disableActions = false;
   export let invertView = false;
+  export let isLocked = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
   export let placeholder = null;
@@ -16,7 +17,6 @@
 
   const originalValue = value;
   let isDirty = false;
-  let isLocked = false;
   let wasUnlocked = false;
 
   const restoreValue = () => {

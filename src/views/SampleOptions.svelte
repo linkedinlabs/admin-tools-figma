@@ -162,7 +162,7 @@
               <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUpdate={() => handleItemUpdate(item)}
-                  isLocked={item.isLocked}
+                  bind:isLocked={item.isLocked}
                   isOpen={item.isOpen}
                   labelGroupText={item.labelGroupText}
                   labelText={item.labelText}

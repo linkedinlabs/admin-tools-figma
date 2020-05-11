@@ -45,6 +45,14 @@
 
   &:disabled + label {
     opacity: 0.3;
+
+    &:before {
+      opacity: 0.3;
+    }
+
+    &:after {
+      opacity: 0.2;
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 <script>
   export let checked = false;
   export let className = 'switch';
+  export let disabled = false;
   export let invertView = false;
   export let labelText = null;
   export let nameId = null;
@@ -17,6 +18,7 @@
 <span class={className}>
   <input
     class="switch__toggle"
+    disabled={disabled}
     id={nameId}
     name={nameId}
     type="checkbox"

@@ -14,6 +14,7 @@
     <span class="form-row">
       <FormUnit
         className="form-unit split-40"
+        isLocked={item.isLocked}
         kind="inputText"
         labelText="Group&nbsp;&nbsp;&nbsp;/"
         nameId={`test-group-${item.id}`}
@@ -21,6 +22,7 @@
       />
       <FormUnit
         className="form-unit split-60"
+        isLocked={item.isLocked}
         kind="inputText"
         labelText="Name"
         nameId={`test-name-${item.id}`}
@@ -30,6 +32,7 @@
 
     <FormUnit
       className="form-row"
+      isLocked={item.isLocked}
       kind="inputText"
       labelText="Label text here"
       nameId={`test-label-link-${item.id}`}
@@ -45,11 +48,13 @@
       />
       <FigmaInput
         className="form-element element-type-text-new split-40"
+        disabled={item.isLocked}
         nameId={`add-new-label-${item.id}`}
         placeholder="Add stuff to me…"
       />
       <FigmaInput
         className="form-element element-type-text-new split-60"
+        disabled={item.isLocked}
         nameId={`add-new-text-${item.id}`}
         placeholder="Add other stuff to me…"
       />
@@ -57,6 +62,7 @@
 
     <FormUnit
       className="form-row"
+      isLocked={item.isLocked}
       kind="inputTextarea"
       labelText="Description"
       nameId={`test-description-${item.id}`}
@@ -66,6 +72,7 @@
 
     <FormUnit
       className="form-row"
+      isLocked={item.isLocked}
       kind="inputSelect"
       labelText="Library"
       nameId={`test-library-${item.id}`}
@@ -75,6 +82,7 @@
     <span class="form-row">
       <FigmaSwitch
         className="form-element element-type-switch"
+        disabled={item.isLocked}
         labelText="Interactive?"
         nameId="is-interactive"
       />

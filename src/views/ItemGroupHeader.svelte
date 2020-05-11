@@ -31,7 +31,7 @@
   <span class="right">
     <span class="actions">
       {#if type !== 'bulk-editor'}
-        <ButtonLock isLocked={isLocked}/>
+        <ButtonLock bind:isLocked={isLocked}/>
       {/if}
       <ButtonOpenClose
         on:handleUpdate={() => dispatch('handleUpdate')}
