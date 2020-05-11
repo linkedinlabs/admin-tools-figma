@@ -14,7 +14,7 @@
       id: 1,
       labelGroupText: 'Display',
       labelText: 'Display Large',
-      isLocked: true,
+      locked: true,
       isOpen: false,
       kind: 'typography',
     },
@@ -22,7 +22,7 @@
       id: 2,
       labelGroupText: 'Display',
       labelText: 'Display Large Bold',
-      isLocked: true,
+      locked: true,
       isOpen: false,
       kind: 'typography',
     },
@@ -30,7 +30,7 @@
       id: 3,
       labelGroupText: 'Display',
       labelText: 'Display XLarge',
-      isLocked: false,
+      locked: false,
       isOpen: true,
       kind: 'typography',
     },
@@ -162,7 +162,7 @@
               <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUpdate={() => handleItemUpdate(item)}
-                  bind:isLocked={item.isLocked}
+                  bind:isLocked={item.locked}
                   isOpen={item.isOpen}
                   labelGroupText={item.labelGroupText}
                   labelText={item.labelText}

@@ -7,14 +7,14 @@
   export let item = null;
 </script>
 
-<section class={`expanded-content${item.isLocked ? ' locked' : ''}`}>
+<section class={`expanded-content${item.locked ? ' locked' : ''}`}>
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
     <span class="form-row">
       <FormUnit
         className="form-unit split-40"
-        isLocked={item.isLocked}
+        itemIsLocked={item.locked}
         kind="inputText"
         labelText="Group&nbsp;&nbsp;&nbsp;/"
         nameId={`test-group-${item.id}`}
@@ -22,7 +22,7 @@
       />
       <FormUnit
         className="form-unit split-60"
-        isLocked={item.isLocked}
+        itemIsLocked={item.locked}
         kind="inputText"
         labelText="Name"
         nameId={`test-name-${item.id}`}
@@ -32,7 +32,7 @@
 
     <FormUnit
       className="form-row"
-      isLocked={item.isLocked}
+      itemIsLocked={item.locked}
       kind="inputText"
       labelText="Label text here"
       nameId={`test-label-link-${item.id}`}
@@ -48,13 +48,13 @@
       />
       <FigmaInput
         className="form-element element-type-text-new split-40"
-        disabled={item.isLocked}
+        disabled={item.locked}
         nameId={`add-new-label-${item.id}`}
         placeholder="Add stuff to me…"
       />
       <FigmaInput
         className="form-element element-type-text-new split-60"
-        disabled={item.isLocked}
+        disabled={item.locked}
         nameId={`add-new-text-${item.id}`}
         placeholder="Add other stuff to me…"
       />
@@ -62,7 +62,7 @@
 
     <FormUnit
       className="form-row"
-      isLocked={item.isLocked}
+      itemIsLocked={item.locked}
       kind="inputTextarea"
       labelText="Description"
       nameId={`test-description-${item.id}`}
@@ -72,7 +72,7 @@
 
     <FormUnit
       className="form-row"
-      isLocked={item.isLocked}
+      itemIsLocked={item.locked}
       kind="inputSelect"
       labelText="Library"
       nameId={`test-library-${item.id}`}
@@ -82,7 +82,7 @@
     <span class="form-row">
       <FigmaSwitch
         className="form-element element-type-switch"
-        disabled={item.isLocked}
+        disabled={item.locked}
         labelText="Interactive?"
         nameId="is-interactive"
       />

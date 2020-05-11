@@ -1,4 +1,5 @@
 <script>
+  export let disabled = false;
   export let isLocked = false;
 
   const handleClick = () => {
@@ -11,8 +12,9 @@
 </style>
 
 <button
-  class={`item-toggle action-lock-toggle${isLocked ? ' locked' : ''}`}
   on:click={() => handleClick()}
+  class={`item-toggle action-lock-toggle${isLocked ? ' locked' : ''}`}
+  disabled={disabled}
 >
   <span class="label">
     {`${isLocked ? 'Unlock' : 'Lock'} item`}

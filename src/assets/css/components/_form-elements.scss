@@ -74,6 +74,10 @@
           &.locked {
             opacity: 1;
 
+            &:disabled {
+              opacity: 0.4;
+            }
+
             .icon.unlocked { display: none; }
             .icon.locked { display: block; }
           }

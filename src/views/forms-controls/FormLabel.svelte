@@ -7,8 +7,14 @@
   export let invertView = false;
   export let isDirty = false;
   export let isLocked = false;
+  export let itemIsLocked = false;
   export let nameId = null;
   export let disableActions = false;
+
+  // watch parent locking changes to match an item unlock
+  $: {
+    isLocked = itemIsLocked;
+  }
 </script>
 
 <style>
@@ -22,7 +28,10 @@
   {#if !disableActions}
     <span class="actions">
       {#if isDirty}<ButtonRestore on:handleRestore/>{/if}
-      <ButtonLock bind:isLocked/>
+      <ButtonLock
+        bind:isLocked
+        disabled={itemIsLocked}
+      />
       <ButtonCopy/>
     </span>
   {/if}
