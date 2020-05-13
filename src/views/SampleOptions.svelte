@@ -51,13 +51,21 @@
     return doesExist;
   };
 
-  const handleGroupUpdate = (group) => {
+  const handleGroupUpdate = (group, operationType = 'toggleOpen') => {
     // locate original group based on passed group `name`
     const grabIndex = 0;
     const updatedGroup = groups.filter(groupItem => groupItem.name === group.name)[grabIndex];
 
-    // toggle `isOpen`
-    updatedGroup.isOpen = !group.isOpen;
+    switch (operationType) {
+      case 'toggleOpen':
+        // toggle `isOpen`
+        updatedGroup.isOpen = !group.isOpen;
+        break;
+      case 'partialUnlock':
+        updatedGroup.lockingStatus = 'partial';
+        break;
+      default:
+    }
 
     // re-insert back into groups list
     const itemIndex = groups.findIndex(groupItem => groupItem.name === group.name);
@@ -107,6 +115,7 @@
       if (!itemExists(groups, 'name', item.labelGroupText)) {
         const groupItem = {
           name: item.labelGroupText,
+          lockingStatus: 'unlocked', // locked, partial, unlocked
           isOpen: true,
         };
         groups = [...groups, groupItem];
@@ -151,7 +160,9 @@
           <li class="group-type">
             <ItemGroupHeader
               on:handleUpdate={() => handleGroupUpdate(group)}
-              isOpen={true}
+              bind:groupIsLocked={group.lockingStatus}
+              isGroupContainer={true}
+              isOpen={group.isOpen}
               labelText={`${group.name} Typography`}
               type="group-type"
             />
@@ -161,7 +172,9 @@
             {#each filterItemsByGroup(typographyItems, group.name) as item (item.id)}
               <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
                 <ItemGroupHeader
+                  on:handleUnlock={() => handleGroupUpdate(group, 'partialUnlock')}
                   on:handleUpdate={() => handleItemUpdate(item)}
+                  groupIsLocked={group.lockingStatus}
                   bind:isLocked={item.locked}
                   isOpen={item.isOpen}
                   labelGroupText={item.labelGroupText}
@@ -169,7 +182,10 @@
                   type="master-item"
                 />
                 {#if item.isOpen}
-                  <ItemExpandedContent item={item}/>
+                  <ItemExpandedContent
+                    groupIsLocked={group.lockingStatus}
+                    item={item}
+                  />
                 {/if}
               </li>
             {/each}

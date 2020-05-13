@@ -50,8 +50,8 @@
     invertView={invertView}
     isDirty={isDirty}
     bind:isLocked={isLocked}
-    itemIsLocked={itemIsLocked}
     nameId={nameId}
+    parentIsLocked={itemIsLocked}
   />
 
   {#if kind === 'inputText'}

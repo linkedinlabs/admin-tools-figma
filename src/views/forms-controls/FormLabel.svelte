@@ -3,17 +3,17 @@
   import ButtonLock from './ButtonLock';
   import ButtonRestore from './ButtonRestore';
 
+  export let disableActions = false;
   export let labelText = null;
   export let invertView = false;
   export let isDirty = false;
   export let isLocked = false;
-  export let itemIsLocked = false;
   export let nameId = null;
-  export let disableActions = false;
+  export let parentIsLocked = false;
 
   // watch parent locking changes to match an item unlock
   $: {
-    isLocked = itemIsLocked;
+    isLocked = parentIsLocked;
   }
 </script>
 
@@ -30,7 +30,7 @@
       {#if isDirty}<ButtonRestore on:handleRestore/>{/if}
       <ButtonLock
         bind:isLocked
-        disabled={itemIsLocked}
+        disabled={parentIsLocked}
       />
       <ButtonCopy/>
     </span>
