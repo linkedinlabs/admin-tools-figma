@@ -24,12 +24,13 @@
     value = originalValue;
   };
 
-  // watching locking changes and restore value if item becomes locked
+  // watch locking changes and restore value if item becomes locked
   $: {
     if (!wasUnlocked && isLocked) {
       restoreValue();
     }
 
+    // update the comparion variable
     wasUnlocked = isLocked;
   }
 
