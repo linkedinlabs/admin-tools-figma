@@ -28,96 +28,91 @@ svg {
   width: 100%;
 }
 
+.hide-visually {
+  @include hide-visually;
+}
+
 .container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-direction: column;
-  padding-top: em(41); // scene-navigator height
-  padding-bottom: em(41); // status bar height
+  // display: flex;
+  // align-items: flex-start;
+  // justify-content: flex-start;
+  // flex-direction: column;
+  // padding-top: em(41); // scene-navigator height
+  // padding-bottom: em(41); // status bar height
 
-  ul#layer-list,
-  ul#layer-list li.shape-layer-holder,
-  ul#layer-list li.text-layer-holder {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
+  // ul#layer-list,
+  // ul#layer-list li.shape-layer-holder,
+  // ul#layer-list li.text-layer-holder {
+  //   margin: 0;
+  //   padding: 0;
+  //   list-style-type: none;
+  // }
 
-  ul#layer-list {
-    li {
-      &.shape-layer-holder,
-      &.text-layer-holder {
-        margin-bottom: em(12);
+  // ul#layer-list {
+  //   li {
+  //     &.shape-layer-holder,
+  //     &.text-layer-holder {
+  //       margin-bottom: em(12);
 
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
+  //       &:last-child {
+  //         margin-bottom: 0;
+  //       }
+  //     }
+  //   }
+  // }
 
-  .options {
-    display: block;
-    width: 100%;
-  }
+  // .options {
+  //   display: block;
+  //   width: 100%;
+  // }
 
-  .select {
-    display: block;
-    width: 100%;
+  // .select {
+  //   display: block;
+  //   width: 100%;
 
-    label {
-      display: none;
-    }
-  }
+  //   label {
+  //     display: none;
+  //   }
+  // }
 
-  .button {
-    &.working {
-      opacity: 0.5;
-    }
-  }
+  // .button {
+  //   &.working {
+  //     opacity: 0.5;
+  //   }
+  // }
 
-  .edit-actions {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    width: 100%;
-    height: em($footer-height-px);
-    background: $wl-canvas;
+  // .edit-actions {
+  //   position: fixed;
+  //   left: 0;
+  //   bottom: 0;
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   padding: 16px;
+  //   width: 100%;
+  //   height: em($footer-height-px);
+  //   background: $wl-canvas;
 
-    .mark {
-      width: 26px;
-      height: 30px;
-    }
-  }
+  //   .mark {
+  //     width: 26px;
+  //     height: 30px;
+  //   }
+  // }
 
-  &.padding {
-    padding: 16px 8px 16px 8px;
+  // &.padding {
+  //   padding: 16px 8px 16px 8px;
 
-    h2, h3, p, ul#layer-list {
-      padding-left: 8px;
-      padding-right: 8px;
-    }
+  //   h2, h3, p, ul#layer-list {
+  //     padding-left: 8px;
+  //     padding-right: 8px;
+  //   }
 
-    p {
-      &.select {
-        padding: 0;
-      }
-    }
-
-    // .styled-select {
-    //   margin-top: -4px;
-    //   margin-bottom: -4px;
-
-    //   ul {
-    //     padding: 8px 0 8px 0;
-    //   }
-    // }
-  }
+  //   p {
+  //     &.select {
+  //       padding: 0;
+  //     }
+  //   }
+  // }
 
   // new layout stuff - temp
   nav {

@@ -4,12 +4,14 @@
   import ButtonRestore from './ButtonRestore';
 
   export let disableActions = false;
+  export let disableCopy = false;
   export let labelText = null;
   export let invertView = false;
   export let isDirty = false;
   export let isLocked = false;
   export let nameId = null;
   export let parentIsLocked = false;
+  export let value = null;
 
   // watch parent locking changes to match an item unlock
   $: {
@@ -32,7 +34,9 @@
         bind:isLocked
         disabled={parentIsLocked}
       />
-      <ButtonCopy/>
+      {#if value && !disableCopy}
+        <ButtonCopy valueToCopy={value}/>
+      {/if}
     </span>
   {/if}
 </span>

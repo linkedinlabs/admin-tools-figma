@@ -71,6 +71,7 @@
 
     <FormUnit
       className="form-row"
+      disableCopy={true}
       invertView={true}
       kind="inputSelect"
       labelText="Library"

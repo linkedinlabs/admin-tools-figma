@@ -1,7 +1,28 @@
 <script>
-  const handleClick = () => {
-    // temp
-    console.log('copied!'); // eslint-disable-line no-console
+  export let valueToCopy = null;
+
+  const handleCopy = (value) => {
+    if (value) {
+      // navigator.clipboard is not currently available to Figma plugins
+      // https://figmaplugins.slack.com/archives/CHPTY6TFD/p1584724622281200
+      // ---
+      // create a temporary <textarea> to hold the text for copying
+      const tempTextareaElement = document.createElement('textarea');
+      tempTextareaElement.classList.add('hide-visually'); // hide the text area
+
+      // set the textarea contents to the value we want copied
+      tempTextareaElement.innerText = value;
+
+      // add the text area to the DOM and select the contents
+      document.body.appendChild(tempTextareaElement);
+      tempTextareaElement.select();
+
+      // copy to the clipboard
+      document.execCommand('copy');
+
+      // remove the temp element
+      tempTextareaElement.remove();
+    }
   };
 </script>
 
@@ -11,7 +32,7 @@
 
 <button
   class="item-toggle action-copy"
-  on:click={() => handleClick()}
+  on:click={() => handleCopy(valueToCopy)}
 >
   <span class="label">
     Copy to clipboard

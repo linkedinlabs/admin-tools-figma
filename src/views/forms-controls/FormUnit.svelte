@@ -7,6 +7,7 @@
 
   export let className = null;
   export let disableActions = false;
+  export let disableCopy = false;
   export let invertView = false;
   export let itemIsLocked = false;
   export let kind = 'inputText';
@@ -47,12 +48,14 @@
   <FormLabel
     on:handleRestore={() => restoreValue()}
     disableActions={disableActions}
+    disableCopy={disableCopy}
     labelText={labelText}
     invertView={invertView}
     isDirty={isDirty}
     bind:isLocked={isLocked}
     nameId={nameId}
     parentIsLocked={itemIsLocked}
+    value={value}
   />
 
   {#if kind === 'inputText'}

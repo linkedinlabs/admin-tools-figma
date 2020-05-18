@@ -72,6 +72,7 @@
 
     <FormUnit
       className="form-row"
+      disableCopy={true}
       itemIsLocked={item.locked}
       kind="inputSelect"
       labelText="Library"
