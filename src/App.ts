@@ -424,10 +424,11 @@ export default class App {
       selected.push({
         id: node.id,
         assignment,
+        name: node.name,
+        nodeType,
         originalImage,
         originalText,
         proposedText,
-        nodeType,
         rounded,
         locked,
       });

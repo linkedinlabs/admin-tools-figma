@@ -3,7 +3,7 @@
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
 
-  export let numberSelected = 0;
+  export let items = null;
 
   let isOpenEditor = false;
   let isOpenTypography = true;
@@ -137,7 +137,7 @@
       <ItemGroupHeader
         on:handleUpdate={() => handleIsOpenUpdate('editor')}
         isOpen={isOpenEditor}
-        labelText={isOpenEditor ? `Modifying ${numberSelected} styles` : 'Modify all unlocked'}
+        labelText={isOpenEditor ? `Modifying ${items ? items.length : 0} styles` : 'Modify all unlocked'}
         type="bulk-editor"
       />
       {#if isOpenEditor}

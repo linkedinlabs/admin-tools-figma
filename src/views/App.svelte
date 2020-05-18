@@ -2,12 +2,12 @@
   import { isStyles } from './stores';
   import BlankState from './BlankState';
   import FontPreload from './FontPreload';
-  import SampleOptions from './SampleOptions';
+  import ItemsList from './ItemsList';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
 
   export let inspect = 'components';
-  export let numberSelected;
+  export let items = null;
 
   const setIsStyles = (currentlyInspecting) => {
     const isStylesLocal = currentlyInspecting === 'styles';
@@ -25,11 +25,11 @@
   <FontPreload/>
   <SceneNavigator />
 
-  {#if numberSelected > 0}
-    <SampleOptions numberSelected={numberSelected}/>
+  {#if items && items.length > 0}
+    <ItemsList items={items}/>
   {:else}
     <BlankState/>
   {/if}
 
-  <StatusBar numberSelected={numberSelected}/>
+  <StatusBar numberSelected={items ? items.length : 0}/>
 </div>

@@ -10,9 +10,9 @@
     watchSelection = true;
   }
 
-  const statusText = (isStyle) => {
+  const statusText = (isStyle, count) => {
     const labelType = isStyle ? 'style' : 'component';
-    const newStatusText = numberSelected === 1 ? labelType : `${labelType}s`;
+    const newStatusText = count === 1 ? labelType : `${labelType}s`;
     return newStatusText;
   };
 </script>
@@ -29,7 +29,7 @@
 
 <footer class="status-bar">
   <p>
-    {numberSelected} {statusText($isStyles)} {watchSelection ? 'selected' : ''}
+    {numberSelected} {statusText($isStyles, numberSelected)} {watchSelection ? 'selected' : ''}
   </p>
   {#if $isStyles}
   <FigmaSwitch

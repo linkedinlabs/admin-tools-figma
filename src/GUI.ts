@@ -5,7 +5,7 @@ const app = new App({
   target: document.body,
   props: {
     inspect: 'styles', // 'styles' or 'components'
-    numberSelected: 0,
+    items: null,
   },
 });
 
@@ -34,23 +34,25 @@ const sendLoadedMsg = (): void => {
  * @kind function
  * @name updateSelected
  *
- * @param {Array} layers An array of layers to clone. Each entry should include an `id`,
+ * @param {Array} items An array of items to clone. Each entry should include an `id`,
  * an `assignment`, `originalText`, `proposedText`, and a `locked` boolean.
  *
  * @returns {null}
  */
-const updateSelected = (layers: Array<{
+const updateSelected = (items: Array<{
   id: string,
   assignment: string,
+  name: string,
+  nodeType: 'text' | 'shape',
   originalImage: Uint8Array,
   originalText: string,
   proposedText: string,
-  nodeType: 'text' | 'shape',
   rounded: 'all' | 'none' | 'some',
   locked: boolean,
 }>): void => {
-  const layerCount = layers.length;
-  app.numberSelected = layerCount || 0;
+  if (items) {
+    app.items = items;
+  }
 };
 
 /** WIP
