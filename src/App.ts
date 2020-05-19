@@ -341,7 +341,16 @@ export default class App {
     const styleIds = [];
 
     // set array of data with information from each node
-    const selected = [];
+    const selected: Array<{
+      id: string,
+      description: string,
+      group: string,
+      kind: string,
+      label: string,
+      name: string,
+      type: StyleType,
+    }> = [];
+
     await asyncForEach(nodes, async (node) => {
       type Assignment =
         'unassigned'
@@ -435,13 +444,6 @@ export default class App {
       //   locked,
       // });
 
-      console.log(node)
-      // console.log(`effect: ${node.effectStyleId || null}`);
-      // console.log(`fill: ${node.fillStyleId || null}`);
-      console.log(`grid: ${node.gridStyleId || null}`);
-      // console.log(`stroke: ${node.strokeStyleId || null}`);
-      // console.log(`type: ${node.textStyleId || null}`);
-
       const {
         effectStyleId,
         fillStyleId,
@@ -455,28 +457,53 @@ export default class App {
       if (gridStyleId) { styleIds.push(gridStyleId); }
       if (strokeStyleId) { styleIds.push(strokeStyleId); }
       if (textStyleId) { styleIds.push(textStyleId); }
-
-      // console.log(effectStyle)
-      // console.log(fillStyle)
-      // console.log(strokeStyle)
-      // console.log(textStyle)
-      // console.log(styleIds)
     });
 
-    const uniqueStyleIds: Array<string> = [...new Set(styleIds)];
     const selectedStyles: Array<BaseStyle> = [];
+    const uniqueStyleIds: Array<string> = [...new Set(styleIds)];
+
+    // iterate style IDs and load the styles into the `selectedStyles` array
     uniqueStyleIds.forEach((styleId) => {
       const style: BaseStyle = figma.getStyleById(styleId);
       if (style) {
+
         const { id, description, name } = style;
         const kind: 'style' | 'component' = 'style';
-        const type: 'effect' | 'grid' | 'paint' | 'text' = style.type.toLowerCase() as 'effect' | 'grid' | 'paint' | 'text';
+        const type: StyleType = style.type;
 
-        const nameGroup = name.split('/')[0].trim();
-        const nameClean = name.split('/')[1].trim();
-        console.log(`name ${name}`)
-        console.log(`nameGroup ${nameGroup}`)
-        console.log(`nameClean ${nameClean}`)
+        const nameArray = name.split(' / ');
+        let nameGroup: string = null;
+        let nameClean: string = name;
+
+        if (nameArray.length > 1) {
+          const gIndex: number = 0;
+          nameGroup = nameArray[gIndex].trim();
+
+          nameArray.shift();
+          nameClean = nameArray.join(' / ');
+        }
+
+        type TypeName =
+          'Effect'
+          | 'Grid'
+          | 'Typography'
+          | 'Color & Fill';
+        let typeName: TypeName = null;
+
+        switch (type) {
+          case 'EFFECT':
+            typeName = 'Effect';
+            break;
+          case 'GRID':
+            typeName = 'Grid';
+            break;
+          case 'TEXT':
+            typeName = 'Typography';
+            break;
+          default: // PAINT
+            typeName = 'Color & Fill';
+        }
+
         selectedStyles.push(style);
 
         // update the bundle of info for the current `node` in the selection
@@ -485,15 +512,14 @@ export default class App {
           description,
           group: nameGroup,
           kind,
+          label: typeName,
           name: nameClean,
           type,
         });
       }
     })
-    console.log(styleIds);
-    console.log('unique')
-    console.log(uniqueStyleIds);
-    console.log(selectedStyles);
+
+    console.log(selectedStyles); // temp
 
     // send the updates to the UI
     figma.ui.postMessage({
