@@ -330,13 +330,15 @@ export default class App {
    */
   static async refreshGUI(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
-    const nodes: Array<
-      TextNode
-      | EllipseNode
-      | PolygonNode
-      | RectangleNode
-      | StarNode> = getFilteredNodes(selection);
+    // const nodes: Array<
+    //   TextNode
+    //   | EllipseNode
+    //   | PolygonNode
+    //   | RectangleNode
+    //   | StarNode> = getFilteredNodes(selection);
+    const nodes: Array<SceneNode> = selection;
     const nodesCount = nodes.length;
+    const styleIds = [];
 
     // set array of data with information from each node
     const selected = [];
@@ -421,18 +423,77 @@ export default class App {
       }
 
       // update the bundle of info for the current `node` in the selection
-      selected.push({
-        id: node.id,
-        assignment,
-        name: node.name,
-        nodeType,
-        originalImage,
-        originalText,
-        proposedText,
-        rounded,
-        locked,
-      });
+      // selected.push({
+      //   id: node.id,
+      //   assignment,
+      //   name: node.name,
+      //   nodeType,
+      //   originalImage,
+      //   originalText,
+      //   proposedText,
+      //   rounded,
+      //   locked,
+      // });
+
+      console.log(node)
+      // console.log(`effect: ${node.effectStyleId || null}`);
+      // console.log(`fill: ${node.fillStyleId || null}`);
+      console.log(`grid: ${node.gridStyleId || null}`);
+      // console.log(`stroke: ${node.strokeStyleId || null}`);
+      // console.log(`type: ${node.textStyleId || null}`);
+
+      const {
+        effectStyleId,
+        fillStyleId,
+        gridStyleId,
+        strokeStyleId,
+        textStyleId,
+      } = node;
+
+      if (effectStyleId) { styleIds.push(effectStyleId); }
+      if (fillStyleId) { styleIds.push(fillStyleId); }
+      if (gridStyleId) { styleIds.push(gridStyleId); }
+      if (strokeStyleId) { styleIds.push(strokeStyleId); }
+      if (textStyleId) { styleIds.push(textStyleId); }
+
+      // console.log(effectStyle)
+      // console.log(fillStyle)
+      // console.log(strokeStyle)
+      // console.log(textStyle)
+      // console.log(styleIds)
     });
+
+    const uniqueStyleIds: Array<string> = [...new Set(styleIds)];
+    const selectedStyles: Array<BaseStyle> = [];
+    uniqueStyleIds.forEach((styleId) => {
+      const style: BaseStyle = figma.getStyleById(styleId);
+      if (style) {
+        const { id, description, name } = style;
+        const kind: 'style' | 'component' = 'style';
+        const type: 'effect' | 'grid' | 'paint' | 'text' = style.type.toLowerCase() as 'effect' | 'grid' | 'paint' | 'text';
+
+        const nameGroup = name.split('/')[0].trim();
+        const nameClean = name.split('/')[1].trim();
+        console.log(`name ${name}`)
+        console.log(`nameGroup ${nameGroup}`)
+        console.log(`nameClean ${nameClean}`)
+        selectedStyles.push(style);
+
+        // update the bundle of info for the current `node` in the selection
+        selected.push({
+          id,
+          description,
+          group: nameGroup,
+          kind,
+          name: nameClean,
+          type,
+        });
+      }
+    })
+    console.log(styleIds);
+    console.log('unique')
+    console.log(uniqueStyleIds);
+    console.log(selectedStyles);
 
     // send the updates to the UI
     figma.ui.postMessage({
