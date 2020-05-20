@@ -9,34 +9,63 @@
   let isOpenTypography = true;
   let groups = [];
 
-  let masterItems = [
-    {
-      id: 1,
-      labelGroupText: 'Display',
-      labelText: 'Display Large',
-      locked: true,
-      isOpen: false,
-      kind: 'typography',
-    },
-    {
-      id: 2,
-      labelGroupText: 'Display',
-      labelText: 'Display Large Bold',
-      locked: true,
-      isOpen: false,
-      kind: 'typography',
-    },
-    {
-      id: 3,
-      labelGroupText: 'Display',
-      labelText: 'Display XLarge',
-      locked: false,
-      isOpen: true,
-      kind: 'typography',
-    },
-  ];
+  // let masterItems = [
+  //   {
+  //     id: 1,
+  //     group: 'Display',
+  //     name: 'Display Large',
+  //     locked: true,
+  //     isOpen: false,
+  //     type: 'TEXT',
+  //     typeName: 'Typography',
+  //   },
+  //   {
+  //     id: 2,
+  //     group: 'Display',
+  //     name: 'Display Large Bold',
+  //     locked: true,
+  //     isOpen: false,
+  //     type: 'TEXT',
+  //     typeName: 'Typography',
+  //   },
+  //   {
+  //     id: 3,
+  //     group: 'Display',
+  //     name: 'Display XLarge',
+  //     locked: false,
+  //     isOpen: true,
+  //     type: 'TEXT',
+  //     typeName: 'Typography',
+  //   },
+  // ];
 
-  let typographyItems = masterItems.filter(masterItem => masterItem.kind === 'typography');
+
+  let masterItems = items;
+  let styleTypes = [];
+
+  const setStyleTypes = (array) => {
+    const typesFound = [];
+    array.forEach(item => {
+      if (!typesFound.includes(item.type)) {
+        styleTypes.push({
+          name: item.typeName,
+          isOpen: true,
+          locked: false,
+          type: item.type,
+        });
+        typesFound.push(item.type)        
+      }
+    });
+    return styleTypes;
+  }
+
+  let typographyItems = masterItems.filter(masterItem => masterItem.type === 'TEXT');
+  let fillItems = masterItems.filter(masterItem => masterItem.type === 'PAINT');
+
+  const itemsByType = (array, filterType) => {
+    const filteredItems = masterItems.filter(masterItem => masterItem.type === filterType);
+    return filteredItems;
+  }
 
   const itemExists = (array, key, value) => {
     let doesExist = false;
@@ -76,7 +105,7 @@
     ];
 
     // update by type
-    typographyItems = masterItems.filter(masterItem => masterItem.kind === 'typography');
+    typographyItems = masterItems.filter(masterItem => masterItem.type === 'TEXT');
   };
 
   const handleItemUpdate = (item) => {
@@ -96,7 +125,7 @@
     ];
 
     // update by type
-    typographyItems = masterItems.filter(masterItem => masterItem.kind === 'typography');
+    typographyItems = masterItems.filter(masterItem => masterItem.type === 'TEXT');
   };
 
   const handleIsOpenUpdate = (type) => {
@@ -110,23 +139,24 @@
     }
   };
 
-  const sortGroupItems = (allItems) => {
+  const sortGroupItems = (allItems, filterType) => {
+    let groupItems = [];
     allItems.forEach((item) => {
-      if (!itemExists(groups, 'name', item.labelGroupText)) {
+      if (item.type === filterType && !itemExists(groupItems, 'name', item.group)) {
         const groupItem = {
-          name: item.labelGroupText,
+          name: item.group,
           lockingStatus: 'unlocked', // locked, partial, unlocked
           isOpen: true,
         };
-        groups = [...groups, groupItem];
+        groupItems = [...groupItems, groupItem];
       }
     });
 
-    return groups;
+    return groupItems;
   };
 
   const filterItemsByGroup = (allItems, groupType) => {
-    const filteredItems = allItems.filter(item => item.labelGroupText === groupType);
+    const filteredItems = allItems.filter(item => item.group === groupType);
     return filteredItems;
   };
 </script>
@@ -145,6 +175,56 @@
       {/if}
     </li>
 
+    {#each setStyleTypes(masterItems) as styleType (styleType.name)}
+      <li class="style-type">
+        <ItemGroupHeader
+          on:handleUpdate={() => handleIsOpenUpdate('style-type')}
+          isOpen={styleType.isOpen}
+          labelText={styleType.name}
+          type="style-type"
+        />
+      </li>
+
+      {#if styleType.isOpen}
+        {#each sortGroupItems(masterItems, styleType.type) as group (group.name)}
+          <li class="group-type">
+            <ItemGroupHeader
+              on:handleUpdate={() => handleGroupUpdate(group)}
+              bind:groupIsLocked={group.lockingStatus}
+              isGroupContainer={true}
+              isOpen={group.isOpen}
+              labelText={`${group.name} ${styleType.name}`}
+              type="group-type"
+            />
+          </li>
+
+          {#if group.isOpen}
+            {#each filterItemsByGroup(masterItems, group.name) as item (item.id)}
+              <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
+                <ItemGroupHeader
+                  on:handleUnlock={() => handleGroupUpdate(group, 'partialUnlock')}
+                  on:handleUpdate={() => handleItemUpdate(item)}
+                  groupIsLocked={group.lockingStatus}
+                  bind:isLocked={item.locked}
+                  isOpen={item.isOpen}
+                  labelGroupText={item.group}
+                  labelText={item.name}
+                  type="master-item"
+                />
+                {#if item.isOpen}
+                  <ItemExpandedContent
+                    groupIsLocked={group.lockingStatus}
+                    item={item}
+                  />
+                {/if}
+              </li>
+            {/each}
+          {/if}
+        {/each}
+      {/if}
+    {/each}
+
+    <!--
     {#if typographyItems}
       <li class="style-type">
         <ItemGroupHeader
@@ -177,8 +257,8 @@
                   groupIsLocked={group.lockingStatus}
                   bind:isLocked={item.locked}
                   isOpen={item.isOpen}
-                  labelGroupText={item.labelGroupText}
-                  labelText={item.labelText}
+                  labelGroupText={item.group}
+                  labelText={item.name}
                   type="master-item"
                 />
                 {#if item.isOpen}
@@ -193,5 +273,6 @@
         {/each}
       {/if}
     {/if}
+    -->
   </ul>
 </section>

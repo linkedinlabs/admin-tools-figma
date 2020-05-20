@@ -336,6 +336,12 @@ export default class App {
     //   | PolygonNode
     //   | RectangleNode
     //   | StarNode> = getFilteredNodes(selection);
+    type TypeName =
+      'Effect'
+      | 'Grid'
+      | 'Typography'
+      | 'Color & Fill';
+
     const nodes: Array<SceneNode> = selection;
     const nodesCount = nodes.length;
     const styleIds = [];
@@ -344,11 +350,13 @@ export default class App {
     const selected: Array<{
       id: string,
       description: string,
+      isOpen: boolean,
       group: string,
       kind: string,
-      label: string,
+      locked: boolean,
       name: string,
       type: StyleType,
+      typeName: TypeName,
     }> = [];
 
     await asyncForEach(nodes, async (node) => {
@@ -483,11 +491,6 @@ export default class App {
           nameClean = nameArray.join(' / ');
         }
 
-        type TypeName =
-          'Effect'
-          | 'Grid'
-          | 'Typography'
-          | 'Color & Fill';
         let typeName: TypeName = null;
 
         switch (type) {
@@ -510,11 +513,13 @@ export default class App {
         selected.push({
           id,
           description,
+          isOpen: false,
           group: nameGroup,
           kind,
-          label: typeName,
+          locked: false,
           name: nameClean,
           type,
+          typeName,
         });
       }
     })

@@ -11,31 +11,52 @@
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
-    <span class="form-row">
+    {#if item.group}
+      <span class="form-row">
+        <FormUnit
+          className="form-unit split-40"
+          itemIsLocked={item.locked}
+          kind="inputText"
+          labelText={`${item.group}   /`}
+          nameId={`item-group-${item.id}`}
+          value={item.group}
+        />
+        <FormUnit
+          className="form-unit split-60"
+          itemIsLocked={item.locked}
+          kind="inputText"
+          labelText="Name"
+          nameId={`item-name-${item.id}`}
+          value={item.name}
+        />
+      </span>
+    {:else}
       <FormUnit
-        className="form-unit split-40"
-        itemIsLocked={item.locked}
-        kind="inputText"
-        labelText="Group&nbsp;&nbsp;&nbsp;/"
-        nameId={`test-group-${item.id}`}
-        value="Container"
-      />
-      <FormUnit
-        className="form-unit split-60"
+        className="form-row"
         itemIsLocked={item.locked}
         kind="inputText"
         labelText="Name"
-        nameId={`test-name-${item.id}`}
-        value="color-bg-container-dark"
+        nameId={`item-name-${item.id}`}
+        value={item.name}
       />
-    </span>
+    {/if}
+
+    <FormUnit
+      className="form-row"
+      itemIsLocked={item.locked}
+      kind="inputTextarea"
+      labelText="Description"
+      nameId={`item-description-${item.id}`}
+      placeholder="Description"
+      value={item.description}
+    />
 
     <FormUnit
       className="form-row"
       itemIsLocked={item.locked}
       kind="inputText"
       labelText="Label text here"
-      nameId={`test-label-link-${item.id}`}
+      nameId={`item-label-link-${item.id}`}
       placeholder="Type something…"
       value="I am some text to measure against"
     />
@@ -62,21 +83,11 @@
 
     <FormUnit
       className="form-row"
-      itemIsLocked={item.locked}
-      kind="inputTextarea"
-      labelText="Description"
-      nameId={`test-description-${item.id}`}
-      placeholder="Description"
-      value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
-    />
-
-    <FormUnit
-      className="form-row"
       disableCopy={true}
       itemIsLocked={item.locked}
       kind="inputSelect"
       labelText="Library"
-      nameId={`test-library-${item.id}`}
+      nameId={`item-library-${item.id}`}
       value="unassigned"
     />
     
