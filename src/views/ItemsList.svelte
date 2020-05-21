@@ -1,89 +1,64 @@
 <script>
+  import { onMount } from 'svelte';
+  import {
+    existsInArray,
+    filterByKey,
+    updateArray,
+  } from '../Tools';
   import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
 
+  // props
   export let items = null;
 
+  // locals
   let isOpenEditor = false;
   let isOpenTypography = true;
   let groups = [];
-
-  // let masterItems = [
-  //   {
-  //     id: 1,
-  //     group: 'Display',
-  //     name: 'Display Large',
-  //     locked: true,
-  //     isOpen: false,
-  //     type: 'TEXT',
-  //     typeName: 'Typography',
-  //   },
-  //   {
-  //     id: 2,
-  //     group: 'Display',
-  //     name: 'Display Large Bold',
-  //     locked: true,
-  //     isOpen: false,
-  //     type: 'TEXT',
-  //     typeName: 'Typography',
-  //   },
-  //   {
-  //     id: 3,
-  //     group: 'Display',
-  //     name: 'Display XLarge',
-  //     locked: false,
-  //     isOpen: true,
-  //     type: 'TEXT',
-  //     typeName: 'Typography',
-  //   },
-  // ];
-
-
   let masterItems = items;
-  let styleTypes = [];
+  let types = [];
 
-  const setStyleTypes = (array) => {
-    const typesFound = [];
-    array.forEach(item => {
-      if (!typesFound.includes(item.type)) {
-        styleTypes.push({
+  // imported helpers used in the UI need a local reference
+  const runFilterByKey = filterByKey;
+
+  const setTypes = (allItems) => {
+    const typeItems = [];
+    allItems.forEach((item) => {
+      if (!typeItems.includes(item.type)) {
+        types.push({
           name: item.typeName,
           isOpen: true,
           locked: false,
           type: item.type,
         });
-        typesFound.push(item.type)        
+        typeItems.push(item.type);
       }
     });
-    return styleTypes;
-  }
+    return types;
+  };
 
-  let typographyItems = masterItems.filter(masterItem => masterItem.type === 'TEXT');
-  let fillItems = masterItems.filter(masterItem => masterItem.type === 'PAINT');
+  const setGroups = (allItems, typesToMatch) => {
+    let groupItems = [];
+    allItems.forEach((item) => {
+      const grabIndex = 0;
+      const typeItem = typesToMatch.filter(type => type.name === item.typeName)[grabIndex];
+      if (typeItem && !existsInArray(groupItems, 'name', item.group)) {
+        const groupItem = {
+          name: item.group,
+          lockingStatus: 'unlocked', // locked, partial, unlocked
+          isOpen: true,
+          type: typeItem.type,
+        };
+        groupItems = [...groupItems, groupItem];
+      }
+    });
 
-  const itemsByType = (array, filterType) => {
-    const filteredItems = masterItems.filter(masterItem => masterItem.type === filterType);
-    return filteredItems;
-  }
-
-  const itemExists = (array, key, value) => {
-    let doesExist = false;
-    const itemIndex = array.findIndex(
-      foundItem => (foundItem[key] === value),
-    );
-
-    if (itemIndex > -1) {
-      doesExist = true;
-    }
-
-    return doesExist;
+    return groupItems;
   };
 
   const handleGroupUpdate = (group, operationType = 'toggleOpen') => {
-    // locate original group based on passed group `name`
-    const grabIndex = 0;
-    const updatedGroup = groups.filter(groupItem => groupItem.name === group.name)[grabIndex];
+    const updatedGroup = group;
 
     switch (operationType) {
       case 'toggleOpen':
@@ -96,36 +71,18 @@
       default:
     }
 
-    // re-insert back into groups list
-    const itemIndex = groups.findIndex(groupItem => groupItem.name === group.name);
-    groups = [
-      ...groups.slice(0, itemIndex),
-      ...[updatedGroup],
-      ...groups.slice(itemIndex + 1),
-    ];
-
-    // update by type
-    typographyItems = masterItems.filter(masterItem => masterItem.type === 'TEXT');
+    // re-insert back into groups list based on group `name`
+    groups = updateArray(groups, updatedGroup, 'name', 'update');
   };
 
   const handleItemUpdate = (item) => {
-    // locate original item based on passed item `id`
-    const grabIndex = 0;
-    const updatedItem = masterItems.filter(masterItem => masterItem.id === item.id)[grabIndex];
+    const updatedItem = item;
 
     // toggle `isOpen`
     updatedItem.isOpen = !item.isOpen;
 
-    // re-insert back into masterItems list
-    const itemIndex = masterItems.findIndex(masterItem => masterItem.id === item.id);
-    masterItems = [
-      ...masterItems.slice(0, itemIndex),
-      ...[updatedItem],
-      ...masterItems.slice(itemIndex + 1),
-    ];
-
-    // update by type
-    typographyItems = masterItems.filter(masterItem => masterItem.type === 'TEXT');
+    // re-insert back into masterItems list based on item `id`
+    masterItems = updateArray(masterItems, updatedItem, 'id', 'update');
   };
 
   const handleIsOpenUpdate = (type) => {
@@ -139,26 +96,10 @@
     }
   };
 
-  const sortGroupItems = (allItems, filterType) => {
-    let groupItems = [];
-    allItems.forEach((item) => {
-      if (item.type === filterType && !itemExists(groupItems, 'name', item.group)) {
-        const groupItem = {
-          name: item.group,
-          lockingStatus: 'unlocked', // locked, partial, unlocked
-          isOpen: true,
-        };
-        groupItems = [...groupItems, groupItem];
-      }
-    });
-
-    return groupItems;
-  };
-
-  const filterItemsByGroup = (allItems, groupType) => {
-    const filteredItems = allItems.filter(item => item.group === groupType);
-    return filteredItems;
-  };
+  onMount(async () => {
+    types = setTypes(masterItems);
+    groups = setGroups(masterItems, types);
+  });
 </script>
 
 <section class="options" id="action-options">
@@ -175,31 +116,31 @@
       {/if}
     </li>
 
-    {#each setStyleTypes(masterItems) as styleType (styleType.name)}
+    {#each types as type (type.name)}
       <li class="style-type">
         <ItemGroupHeader
           on:handleUpdate={() => handleIsOpenUpdate('style-type')}
-          isOpen={styleType.isOpen}
-          labelText={styleType.name}
+          isOpen={type.isOpen}
+          labelText={type.name}
           type="style-type"
         />
       </li>
 
-      {#if styleType.isOpen}
-        {#each sortGroupItems(masterItems, styleType.type) as group (group.name)}
+      {#if type.isOpen}
+        {#each runFilterByKey(groups, 'type', type.type) as group (group.name)}
           <li class="group-type">
             <ItemGroupHeader
               on:handleUpdate={() => handleGroupUpdate(group)}
               bind:groupIsLocked={group.lockingStatus}
               isGroupContainer={true}
               isOpen={group.isOpen}
-              labelText={`${group.name} ${styleType.name}`}
+              labelText={`${group.name} ${type.name}`}
               type="group-type"
             />
           </li>
 
           {#if group.isOpen}
-            {#each filterItemsByGroup(masterItems, group.name) as item (item.id)}
+            {#each runFilterByKey(masterItems, 'group', group.name) as item (item.id)}
               <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, 'partialUnlock')}
@@ -223,56 +164,5 @@
         {/each}
       {/if}
     {/each}
-
-    <!--
-    {#if typographyItems}
-      <li class="style-type">
-        <ItemGroupHeader
-          on:handleUpdate={() => handleIsOpenUpdate('style-type')}
-          isOpen={isOpenTypography}
-          labelText="Typography"
-          type="style-type"
-        />
-      </li>
-
-      {#if isOpenTypography}
-        {#each sortGroupItems(typographyItems) as group (group.name)}
-          <li class="group-type">
-            <ItemGroupHeader
-              on:handleUpdate={() => handleGroupUpdate(group)}
-              bind:groupIsLocked={group.lockingStatus}
-              isGroupContainer={true}
-              isOpen={group.isOpen}
-              labelText={`${group.name} Typography`}
-              type="group-type"
-            />
-          </li>
-
-          {#if group.isOpen}
-            {#each filterItemsByGroup(typographyItems, group.name) as item (item.id)}
-              <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
-                <ItemGroupHeader
-                  on:handleUnlock={() => handleGroupUpdate(group, 'partialUnlock')}
-                  on:handleUpdate={() => handleItemUpdate(item)}
-                  groupIsLocked={group.lockingStatus}
-                  bind:isLocked={item.locked}
-                  isOpen={item.isOpen}
-                  labelGroupText={item.group}
-                  labelText={item.name}
-                  type="master-item"
-                />
-                {#if item.isOpen}
-                  <ItemExpandedContent
-                    groupIsLocked={group.lockingStatus}
-                    item={item}
-                  />
-                {/if}
-              </li>
-            {/each}
-          {/if}
-        {/each}
-      {/if}
-    {/if}
-    -->
   </ul>
 </section>

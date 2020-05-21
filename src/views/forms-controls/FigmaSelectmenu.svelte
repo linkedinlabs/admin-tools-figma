@@ -249,7 +249,6 @@
       setSelected();
     }
   });
-
 </script>
 
 <style>

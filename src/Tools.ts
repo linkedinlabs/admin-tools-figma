@@ -244,6 +244,54 @@ const makeNetworkRequest = (options: {
     .catch(err => console.error(err)); // eslint-disable-line no-console
 };
 
+/** WIP
+ * @description A reusable helper function to take an array and add or remove data from it
+ * based on a top-level key and a defined action.
+ *
+ * @kind function
+ * @name existsInArray
+ *
+ * @param {Array} array The array to be modified.
+ * @param {Object} item Object containing the new bit of data to add, remove, or update.
+ * @param {string} itemKey String representing the key to match (default is `id`).
+ * @param {string} action Constant string representing the action to take
+ * (`add`, `update`, or `remove`).
+ *
+ * @returns {Object} The modified array.
+ */
+const existsInArray = (array, key, value) => {
+  let doesExist = false;
+  const itemIndex = array.findIndex(
+    foundItem => (foundItem[key] === value),
+  );
+
+  if (itemIndex > -1) {
+    doesExist = true;
+  }
+
+  return doesExist;
+};
+
+/** WIP
+ * @description A reusable helper function to take an array and add or remove data from it
+ * based on a top-level key and a defined action.
+ *
+ * @kind function
+ * @name filterByKey
+ *
+ * @param {Array} array The array to be modified.
+ * @param {Object} item Object containing the new bit of data to add, remove, or update.
+ * @param {string} itemKey String representing the key to match (default is `id`).
+ * @param {string} action Constant string representing the action to take
+ * (`add`, `update`, or `remove`).
+ *
+ * @returns {Object} The modified array.
+ */
+const filterByKey = (array, key, value) => {
+  const filteredArray = array.filter(item => item[key] === value);
+  return filteredArray;
+};
+
 /**
  * @description A reusable helper function to take an array and add or remove data from it
  * based on a top-level key and a defined action.
@@ -272,17 +320,26 @@ const updateArray = (
     foundItem => (foundItem[itemKey] === item[itemKey]),
   );
 
-  // if a match exists, remove it
-  // even if the action is `add`, always remove the existing entry to prevent duplicates
+  // if a match exists
   if (itemIndex > -1) {
-    updatedArray = [
-      ...updatedArray.slice(0, itemIndex),
-      ...updatedArray.slice(itemIndex + 1),
-    ];
+    if (action === 'update') {
+      // remove it and re-add it
+      updatedArray = [
+        ...updatedArray.slice(0, itemIndex),
+        ...[item],
+        ...updatedArray.slice(itemIndex + 1),
+      ];
+    } else {
+      // remove it
+      updatedArray = [
+        ...updatedArray.slice(0, itemIndex),
+        ...updatedArray.slice(itemIndex + 1),
+      ];
+    }
   }
 
-  // if the `action` is `add` (or update), append the new `item` to the array
-  if (action !== 'remove') {
+  // if the `action` is `add`, append the new `item` to the array
+  if (action === 'add') {
     updatedArray.push(item);
   }
 
@@ -600,6 +657,8 @@ export {
   asyncNetworkRequest,
   awaitUIReadiness,
   dataNamespace,
+  existsInArray,
+  filterByKey,
   findTopComponent,
   findTopFrame,
   findTopInstance,
