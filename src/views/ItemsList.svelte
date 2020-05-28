@@ -21,6 +21,7 @@
 
   // imported helpers used in the UI need a local reference
   const runFilterByKey = filterByKey;
+  const runUpdateArray = updateArray;
 
   const setTypes = (allItems) => {
     const typeItems = [];
@@ -28,8 +29,8 @@
       if (!typeItems.includes(item.type)) {
         types.push({
           name: item.typeName,
+          lockingStatus: 'unlocked', // locked, partial, unlocked
           isOpen: true,
-          locked: false,
           type: item.type,
         });
         typeItems.push(item.type);
@@ -57,8 +58,24 @@
     return groupItems;
   };
 
-  const handleGroupUpdate = (group, operationType = 'toggleOpen') => {
+  const handleTypeUpdate = (type, operationType = 'toggleOpen') => {
+    const updatedType = type;
+
+    switch (operationType) {
+      case 'toggleOpen':
+        // toggle `isOpen`
+        updatedType.isOpen = !type.isOpen;
+        break;
+      default:
+    }
+
+    // re-insert back into types list based on type `name`
+    types = runUpdateArray(types, updatedType, 'name', 'update');
+  };
+
+  const handleGroupUpdate = (group, type = null, operationType = 'toggleOpen') => {
     const updatedGroup = group;
+    let updatedType = null;
 
     switch (operationType) {
       case 'toggleOpen':
@@ -66,13 +83,18 @@
         updatedGroup.isOpen = !group.isOpen;
         break;
       case 'partialUnlock':
+        updatedType = type;
         updatedGroup.lockingStatus = 'partial';
+        updatedType.lockingStatus = 'partial';
         break;
       default:
     }
 
     // re-insert back into groups list based on group `name`
-    groups = updateArray(groups, updatedGroup, 'name', 'update');
+    groups = runUpdateArray(groups, updatedGroup, 'name', 'update');
+    if (updatedType) {
+      types = runUpdateArray(types, updatedType, 'name', 'update');
+    }
   };
 
   const handleItemUpdate = (item) => {
@@ -82,7 +104,7 @@
     updatedItem.isOpen = !item.isOpen;
 
     // re-insert back into masterItems list based on item `id`
-    masterItems = updateArray(masterItems, updatedItem, 'id', 'update');
+    masterItems = runUpdateArray(masterItems, updatedItem, 'id', 'update');
   };
 
   const handleIsOpenUpdate = (type) => {
@@ -119,10 +141,13 @@
     {#each types as type (type.name)}
       <li class="style-type">
         <ItemGroupHeader
-          on:handleUpdate={() => handleIsOpenUpdate('style-type')}
+          on:handleUpdate={() => handleTypeUpdate(type)}
+          isLocked={type.lockingStatus === 'locked'}
           isOpen={type.isOpen}
+          isTypeContainer={true}
           labelText={type.name}
           type="style-type"
+          bind:typeIsLocked={type.lockingStatus}
         />
       </li>
 
@@ -130,12 +155,14 @@
         {#each runFilterByKey(groups, 'type', type.type) as group (group.name)}
           <li class="group-type">
             <ItemGroupHeader
-              on:handleUpdate={() => handleGroupUpdate(group)}
+              on:handleUpdate={() => handleGroupUpdate(group, type)}
               bind:groupIsLocked={group.lockingStatus}
               isGroupContainer={true}
+              isLocked={group.lockingStatus === 'locked'}
               isOpen={group.isOpen}
               labelText={`${group.name} ${type.name}`}
               type="group-type"
+              typeIsLocked={type.lockingStatus}
             />
           </li>
 
@@ -143,7 +170,7 @@
             {#each runFilterByKey(masterItems, 'group', group.name) as item (item.id)}
               <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
                 <ItemGroupHeader
-                  on:handleUnlock={() => handleGroupUpdate(group, 'partialUnlock')}
+                  on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}
                   on:handleUpdate={() => handleItemUpdate(item)}
                   groupIsLocked={group.lockingStatus}
                   bind:isLocked={item.locked}

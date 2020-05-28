@@ -8,30 +8,58 @@
   export let isGroupContainer = false;
   export let isLocked = false;
   export let isOpen = false;
+  export let isTypeContainer = false;
   export let labelGroupText = null;
   export let labelText = 'Item name here';
   export let type = 'master-item';
+  export let typeIsLocked = 'unlocked';
 
   const dispatch = createEventDispatcher();
 
-  let groupWasUnlocked = false;
-  let wasUnlocked = false;
+  let groupWasUnlocked = 'unlocked';
+  let typeWasUnlocked = 'unlocked';
+  let wasUnlocked = 'unlocked';
 
   // set initial locking status
-  if (!isGroupContainer && groupIsLocked) {
+  if (!isGroupContainer && groupIsLocked === 'locked') {
+    isLocked = true;
+  }
+
+  if (!isTypeContainer && typeIsLocked === 'locked') {
     isLocked = true;
   }
 
   // watch parent locking changes to match an item unlock
   $: {
+    // lock item if type is locked
+    if ((typeWasUnlocked !== 'locked') && (typeIsLocked === 'locked')) {
+      isLocked = true;
+    }
+
     // lock item if group is locked
-    if ((groupWasUnlocked) && (groupIsLocked === 'locked')) {
+    if ((groupWasUnlocked !== 'locked') && (groupIsLocked === 'locked')) {
       isLocked = true;
     }
 
     // unlock item if group is unlocked
-    if ((!groupWasUnlocked) && (groupIsLocked === 'unlocked')) {
+    if (!isTypeContainer && !isGroupContainer && (groupWasUnlocked === 'locked') && (groupIsLocked === 'unlocked')) {
       isLocked = false;
+    }
+
+    // unlock group if type is unlocked
+    if (isGroupContainer && (typeWasUnlocked === 'locked') && (typeIsLocked === 'unlocked') && (groupWasUnlocked === 'locked') && (groupIsLocked === 'locked')) {
+      isLocked = false;
+    }
+
+    // the header is a type header
+    if (isTypeContainer) {
+      if (!wasUnlocked && isLocked) {
+        typeIsLocked = 'locked';
+      }
+
+      if ((typeIsLocked !== 'partial') && wasUnlocked && !isLocked) {
+        typeIsLocked = 'unlocked';
+      }
     }
 
     // the header is a group header
@@ -40,17 +68,13 @@
         groupIsLocked = 'locked';
       }
 
-      if (wasUnlocked && !isLocked) {
+      if ((groupIsLocked !== 'partial') && wasUnlocked && !isLocked) {
         groupIsLocked = 'unlocked';
-      }
-
-      if (!groupWasUnlocked && groupIsLocked === 'partial') {
-        isLocked = false;
       }
     }
 
     // the header is an item header
-    if (!isGroupContainer) {
+    if (!isGroupContainer && !isTypeContainer) {
       // bubble up unlock events to make sure the group
       // lock status is representative
       if (wasUnlocked && !isLocked) {
@@ -59,7 +83,8 @@
     }
 
     // set tracking flags
-    groupWasUnlocked = groupIsLocked !== 'locked';
+    groupWasUnlocked = groupIsLocked;
+    typeWasUnlocked = typeIsLocked;
     wasUnlocked = isLocked;
   }
 </script>
