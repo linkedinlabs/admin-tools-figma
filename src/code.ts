@@ -2,7 +2,6 @@
 import App from './App';
 import Messenger from './Messenger';
 import { awaitUIReadiness } from './Tools';
-import { ASSIGNMENTS } from './constants';
 
 // GUI management -------------------------------------------------
 
@@ -51,10 +50,10 @@ const dispatcher = async (action: {
   const shouldTerminate: boolean = !visual;
 
   // pass along some GUI management and navigation functions to the App class
-  const app = new App({
-    shouldTerminate,
-    terminatePlugin,
-  });
+  // const app = new App({
+  //   shouldTerminate,
+  //   terminatePlugin,
+  // });
 
   // run the action in the App class based on type
   const runAction = async () => {
@@ -65,50 +64,54 @@ const dispatcher = async (action: {
     //   languages: Array<string>,
     // } = await figma.clientStorage.getAsync(DATA_KEYS.options);
 
-    // make sure the type passed from the menu command exists
-    const verifyQuickType = (kind: string, quickType: string): boolean => {
-      const typeSimplified = quickType.replace(`quick-${kind}-`, '');
-      let isVerified = false;
+    // // make sure the type passed from the menu command exists
+    // const verifyQuickType = (kind: string, quickType: string): boolean => {
+    //   const typeSimplified = quickType.replace(`quick-${kind}-`, '');
+    //   let isVerified = false;
 
-      if (typeSimplified === 'assigned') {
-        isVerified = true;
-        return isVerified;
-      }
+    //   if (typeSimplified === 'assigned') {
+    //     isVerified = true;
+    //     return isVerified;
+    //   }
 
-      Object.keys(ASSIGNMENTS).forEach((key) => {
-        if (ASSIGNMENTS[key].id === typeSimplified) {
-          isVerified = true;
-        }
-      });
-      return isVerified;
-    };
+    //   Object.keys(ASSIGNMENTS).forEach((key) => {
+    //     if (ASSIGNMENTS[key].id === typeSimplified) {
+    //       isVerified = true;
+    //     }
+    //   });
+    //   return isVerified;
+    // };
+
+    console.log(payload); // eslint-disable-line no-console
+    console.log(terminatePlugin); // eslint-disable-line no-console
+    console.log(shouldTerminate); // eslint-disable-line no-console
 
     switch (type) {
-      case 'lock-toggle':
-      case 'reassign':
-      case 'remix':
-      case 'restore':
-        App.actOnNode(type, payload, sessionKey);
-        break;
-      case 'remix-all':
-        App.remixAll(sessionKey);
-        break;
-      case 'submit':
-        app.commitContent(sessionKey);
-        break;
+      // case 'lock-toggle':
+      // case 'reassign':
+      // case 'remix':
+      // case 'restore':
+      //   App.actOnNode(type, payload, sessionKey);
+      //   break;
+      // case 'remix-all':
+      //   App.remixAll(sessionKey);
+      //   break;
+      // case 'submit':
+      //   app.commitContent(sessionKey);
+      //   break;
       case 'tools':
         App.showToolbar(sessionKey);
         break;
-      case String(type.match(/^quick-randomize-.*/)):
-        if (verifyQuickType('randomize', type)) {
-          app.quickRandomize(type.replace('quick-randomize-', ''), sessionKey);
-        }
-        break;
-      case String(type.match(/^quick-assign-.*/)):
-        if (verifyQuickType('assign', type)) {
-          app.quickAssign(type.replace('quick-assign-', ''));
-        }
-        break;
+      // case String(type.match(/^quick-randomize-.*/)):
+      //   if (verifyQuickType('randomize', type)) {
+      //     app.quickRandomize(type.replace('quick-randomize-', ''), sessionKey);
+      //   }
+      //   break;
+      // case String(type.match(/^quick-assign-.*/)):
+      //   if (verifyQuickType('assign', type)) {
+      //     app.quickAssign(type.replace('quick-assign-', ''));
+      //   }
+      //   break;
       default:
         return null;
     }
