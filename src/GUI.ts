@@ -76,10 +76,12 @@ const watchIncomingMessages = (): void => {
     },
   ) => {
     const { pluginMessage } = event.data;
+    const { payload } = pluginMessage;
+    const { selected } = payload;
 
     switch (pluginMessage.action) {
       case 'refreshState':
-        updateSelected(pluginMessage.payload);
+        updateSelected(selected);
         break;
       // case 'resetState':
       //   setButtonState('ready');

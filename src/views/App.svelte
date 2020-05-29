@@ -9,10 +9,6 @@
   export let inspect = 'components';
   export let items = null;
 
-  $: {
-    console.log(items)
-  }
-
   const setIsStyles = (currentlyInspecting) => {
     const isStylesLocal = currentlyInspecting === 'styles';
     isStyles.set(isStylesLocal);

@@ -17,7 +17,7 @@
           className="form-unit split-40"
           itemIsLocked={item.locked}
           kind="inputText"
-          labelText={`${item.group}   /`}
+          labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
           nameId={`item-group-${item.id}`}
           value={item.group}
         />
