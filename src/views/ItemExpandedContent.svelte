@@ -5,11 +5,24 @@
   import FormUnit from './forms-controls/FormUnit';
 
   export let item = null;
+
+  const dirtyItem = Object.assign({}, item);
+  let isDirty = false;
+
+  $: {
+    isDirty = false;
+    Object.entries(item).forEach(([key, value]) => {
+      if (dirtyItem[key] !== value) {
+        isDirty = true;
+      }
+    });
+  }
 </script>
 
 <section class={`expanded-content${item.locked ? ' locked' : ''}`}>
   <span class="divider-top"><hr class="inner"></span>
 
+  <span>isDirty: {isDirty}</span>
   <span class="form-element-holder">
     {#if item.group}
       <span class="form-row">
@@ -19,7 +32,7 @@
           kind="inputText"
           labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
           nameId={`item-group-${item.id}`}
-          value={item.group}
+          bind:value={dirtyItem.group}
         />
         <FormUnit
           className="form-unit split-60"
@@ -27,7 +40,7 @@
           kind="inputText"
           labelText="Name"
           nameId={`item-name-${item.id}`}
-          value={item.name}
+          bind:value={dirtyItem.name}
         />
       </span>
     {:else}
@@ -37,7 +50,7 @@
         kind="inputText"
         labelText="Name"
         nameId={`item-name-${item.id}`}
-        value={item.name}
+        bind:value={dirtyItem.name}
       />
     {/if}
 
@@ -48,7 +61,7 @@
       labelText="Description"
       nameId={`item-description-${item.id}`}
       placeholder="Description"
-      value={item.description}
+      bind:value={dirtyItem.description}
     />
 
     <FormUnit

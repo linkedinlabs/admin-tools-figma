@@ -181,6 +181,7 @@
                 />
                 {#if item.isOpen}
                   <ItemExpandedContent
+                    on:handleUpdate={() => handleItemUpdate(item)}
                     groupIsLocked={group.lockingStatus}
                     item={item}
                   />

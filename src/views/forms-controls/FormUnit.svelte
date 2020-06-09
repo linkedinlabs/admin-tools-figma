@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
   import FigmaInput from './FigmaInput';
   import FigmaSelectmenu from './FigmaSelectmenu';
   import FigmaTextarea from './FigmaTextarea';
@@ -9,6 +9,7 @@
   export let disableActions = false;
   export let disableCopy = false;
   export let invertView = false;
+  export let isDirty = false;
   export let itemIsLocked = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
@@ -16,8 +17,8 @@
   export let nameId = 'text-input-id';
   export let value = null;
 
+  const dispatch = createEventDispatcher();
   const originalValue = value;
-  let isDirty = false;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
 
@@ -31,15 +32,17 @@
       restoreValue();
     }
 
-    // update the comparion variable
+    // update the comparison variable
     wasUnlocked = isLocked;
   }
 
   afterUpdate(() => {
     if (value !== originalValue) {
       isDirty = true;
+      dispatch('setDirty');
     } else {
       isDirty = false;
+      dispatch('clearDirty');
     }
   });
 </script>
