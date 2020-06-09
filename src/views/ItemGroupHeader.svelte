@@ -27,6 +27,10 @@
 
   if (!isTypeContainer && typeIsLocked === 'locked') {
     isLocked = true;
+
+    if (isGroupContainer) {
+      groupIsLocked = 'locked';
+    }
   }
 
   // watch parent locking changes to match an item unlock
