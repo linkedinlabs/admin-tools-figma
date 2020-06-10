@@ -1,5 +1,4 @@
 import Messenger from './Messenger';
-// import Painter from './Painter';
 import { asyncForEach, resizeGUI } from './Tools';
 import { GUI_SETTINGS } from './constants';
 
