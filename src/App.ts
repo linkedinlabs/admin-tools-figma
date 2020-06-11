@@ -1,3 +1,4 @@
+import Editor from './Editor';
 import Messenger from './Messenger';
 import { asyncForEach, resizeGUI } from './Tools';
 import { GUI_SETTINGS } from './constants';
@@ -88,6 +89,35 @@ export default class App {
   }) {
     this.shouldTerminate = shouldTerminate;
     this.terminatePlugin = terminatePlugin;
+  }
+
+  /**
+   * @description Resets the plugin GUI back to the original state or closes it entirely,
+   * terminating the plugin.
+   *
+   * @kind function
+   * @name handleUpdate
+   *
+   * @returns {null}
+   */
+  handleUpdate() {
+    const { messenger } = assemble(figma);
+
+    if (this.shouldTerminate) {
+      return this.terminatePlugin();
+    }
+
+    // temp
+    const item = null;
+    const updatedItem = null;
+
+    const editor = new Editor({ for: item });
+
+    const updateResult = editor.update(updatedItem);
+
+    // display the message and terminate the plugin
+    messenger.handleResult(updateResult);
+    return this.closeOrReset();
   }
 
   /**
