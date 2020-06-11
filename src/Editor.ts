@@ -1,3 +1,5 @@
+import Presenter from './Presenter';
+
 /** WIP
  * @description A class to handle traversing an array of selected items and return useful items
  * (child nodes, first in selection, node position, dimensions and position of node gaps
@@ -11,9 +13,9 @@
  * @property selectionArray The item of selected items.
  */
 export default class Editor {
-  item: BaseNode | BaseStyle;
-  constructor({ for: itemToUpdate }) {
-    this.item = itemToUpdate;
+  array: Array<BaseNode | BaseStyle>;
+  constructor({ for: currentSelection }) {
+    this.array = currentSelection;
   }
 
   /** WIP
@@ -40,15 +42,54 @@ export default class Editor {
       },
     };
 
-    /* eslint-disable no-console */
-    console.log('update the thing');
-    console.log(this.item);
-    console.log(updatedItem);
-    /* eslint-enable no-console */
+    // grab existing style presentation object for comparison
+    const selectIndex = 0;
+    const presenter = new Presenter({ for: this.array });
+    const existingItems = presenter.extractStyles();
+    const existingItem = existingItems.filter(item => item.id === updatedItem.id)[selectIndex];
+
+    // kick out if we can't find a match
+    if (!existingItem) {
+      result.status = 'error';
+      result.messages.log = `Could not find ${updatedItem.id} in selection`;
+      return result;
+    }
+
+    // grab the Figma `BaseStyle` for updating
+    const baseStyle: BaseStyle = figma.getStyleById(existingItem.id);
+
+    // kick out if we can't find a match
+    if (!baseStyle) {
+      result.status = 'error';
+      result.messages.log = `Could not find ${updatedItem.id} in document`;
+      return result;
+    }
+
+    // console.log(existingItem);
+    // console.log(updatedItem);
+
+    // iterate the presentation objects, locating changes
+    Object.entries(updatedItem).forEach(([key, value]) => {
+      if (existingItem[key] && existingItem[key] !== value) {
+        switch (key) {
+          case 'name':
+          case 'group': {
+            const updatedName = `${updatedItem.group} / ${updatedItem.name}`;
+            baseStyle.name = updatedName;
+            break;
+          }
+          default: {
+            if (baseStyle[key]) {
+              baseStyle[key] = value;
+            }
+          }
+        }
+      }
+    });
 
     // return a successful result
     result.status = 'success';
-    result.messages.log = `Item ${this.item.id} updated`;
+    result.messages.log = `Item ${updatedItem.id} updated`;
     return result;
   }
 }
