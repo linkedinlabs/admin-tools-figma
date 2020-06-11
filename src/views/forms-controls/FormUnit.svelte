@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate, createEventDispatcher } from 'svelte';
+  import { afterUpdate } from 'svelte';
   import FigmaInput from './FigmaInput';
   import FigmaSelectmenu from './FigmaSelectmenu';
   import FigmaTextarea from './FigmaTextarea';
@@ -17,7 +17,6 @@
   export let nameId = 'text-input-id';
   export let value = null;
 
-  const dispatch = createEventDispatcher();
   const originalValue = value;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
@@ -39,10 +38,8 @@
   afterUpdate(() => {
     if (value !== originalValue) {
       isDirty = true;
-      dispatch('setDirty');
     } else {
       isDirty = false;
-      dispatch('clearDirty');
     }
   });
 </script>

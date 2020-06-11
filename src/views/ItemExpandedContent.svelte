@@ -6,8 +6,22 @@
 
   export let item = null;
 
-  const dirtyItem = Object.assign({}, item);
+  let dirtyItem = Object.assign({}, item);
   let isDirty = false;
+
+  const handleReset = () => {
+    dirtyItem = Object.assign({}, item);
+    isDirty = false;
+  };
+
+  const handleSave = () => {
+    parent.postMessage({
+      pluginMessage: {
+        action: 'submit',
+        payload: { updatedItem: dirtyItem },
+      },
+    }, '*');
+  };
 
   $: {
     isDirty = false;
@@ -22,7 +36,6 @@
 <section class={`expanded-content${item.locked ? ' locked' : ''}`}>
   <span class="divider-top"><hr class="inner"></span>
 
-  <span>isDirty: {isDirty}</span>
   <span class="form-element-holder">
     {#if item.group}
       <span class="form-row">
@@ -114,4 +127,19 @@
     </span>
     
   </span>
+
+  {#if isDirty}
+    <span>
+      <button
+        on:click={() => handleReset()}
+      >
+        Restore
+      </button>
+      <button
+        on:click={() => handleSave()}
+      >
+        Save Changes
+      </button>
+    </span>
+  {/if}
 </section>
