@@ -84,7 +84,7 @@ const dispatcher = async (action: {
 
     switch (type) {
       case 'submit':
-        app.handleUpdate(payload);
+        app.handleUpdate(payload, sessionKey);
         break;
       case 'tools':
         App.showToolbar(sessionKey);

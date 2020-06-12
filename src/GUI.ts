@@ -52,6 +52,8 @@ const updateSelected = (items: Array<{
 }>): void => {
   if (items) {
     app.items = items;
+  console.log('here here')
+
   }
 };
 
@@ -76,6 +78,9 @@ const watchIncomingMessages = (): void => {
     },
   ) => {
     const { pluginMessage } = event.data;
+    console.log(`incoming message ${pluginMessage.action}`);
+    console.log(pluginMessage)
+
     const { payload } = pluginMessage;
     const { selected } = payload;
 
@@ -83,9 +88,6 @@ const watchIncomingMessages = (): void => {
       case 'refreshState':
         updateSelected(selected);
         break;
-      // case 'resetState':
-      //   setButtonState('ready');
-      //   break;
       default:
         return null;
     }

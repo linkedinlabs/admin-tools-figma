@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import {
     existsInArray,
     filterByKey,
@@ -118,10 +118,19 @@
     }
   };
 
+  $: {
+    console.log('items here')
+    console.log(items)
+  }
+
   onMount(async () => {
     types = setTypes(masterItems);
     groups = setGroups(masterItems, types);
   });
+
+  afterUpdate(async () => {
+    masterItems = items;
+  })
 </script>
 
 <section class="options" id="action-options">

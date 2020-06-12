@@ -106,13 +106,13 @@ export default class App {
       return this.terminatePlugin();
     }
 
-    // reset the working state
-    const message: {
-      action: string,
-    } = {
-      action: 'resetState',
-    };
-    figma.ui.postMessage(message);
+    // reset the working state - disable temp
+    // const message: {
+    //   action: string,
+    // } = {
+    //   action: 'resetState',
+    // };
+    // figma.ui.postMessage(message);
     return null;
   }
 
@@ -125,7 +125,7 @@ export default class App {
    *
    * @returns {null}
    */
-  handleUpdate(payload) {
+  handleUpdate(payload, sessionKey: number) {
     const { messenger, selection } = assemble(figma);
     const { updatedItem } = payload;
 
@@ -141,6 +141,10 @@ export default class App {
 
     // display the message and terminate the plugin
     messenger.handleResult(updateResult);
+
+    if (updateResult.status === 'success') {
+      App.refreshGUI(sessionKey);
+    }
     return this.closeOrReset();
   }
 

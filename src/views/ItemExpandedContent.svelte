@@ -24,6 +24,9 @@
   };
 
   $: {
+    console.log('single item')
+    console.log(item)
+
     isDirty = false;
     Object.entries(item).forEach(([key, value]) => {
       if (dirtyItem[key] !== value) {
