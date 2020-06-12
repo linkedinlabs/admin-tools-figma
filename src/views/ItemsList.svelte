@@ -1,5 +1,6 @@
 <script>
   import { afterUpdate, onMount } from 'svelte';
+  import { lockedItems, openItems } from './stores';
   import {
     existsInArray,
     filterByKey,
@@ -97,14 +98,43 @@
     }
   };
 
-  const handleItemUpdate = (item) => {
-    const updatedItem = item;
+  const toggleItemState = (itemId, operationType = 'toggleOpen') => {
+    const addOrRemoveEntry = (itemsArray) => {
+      let updatedItemsArray = itemsArray;
+      const itemIndex = itemsArray.findIndex(
+        foundId => (foundId === itemId),
+      );
 
-    // toggle `isOpen`
-    updatedItem.isOpen = !item.isOpen;
+      // add or remove entry
+      if (itemIndex > -1) {
+        updatedItemsArray = [
+          ...updatedItemsArray.slice(0, itemIndex),
+          ...updatedItemsArray.slice(itemIndex + 1),
+        ];
+      } else {
+        updatedItemsArray.push(itemId);
+      }
 
-    // re-insert back into masterItems list based on item `id`
-    masterItems = runUpdateArray(masterItems, updatedItem, 'id', 'update');
+      return updatedItemsArray;
+    };
+
+    // ---- toggle `isOpen`
+    if (operationType === 'toggleOpen') {
+      // retrieve open list from store and check for existing entry
+      const updatedOpenItems = addOrRemoveEntry($openItems);
+
+      // commit updated list to store
+      openItems.set(updatedOpenItems);
+    }
+
+    // ---- toggle `isLocked`
+    if (operationType === 'toggleLock') {
+      // retrieve open list from store and check for existing entry
+      const updatedLockedItems = addOrRemoveEntry($lockedItems);
+
+      // commit updated list to store
+      lockedItems.set(updatedLockedItems);
+    }
   };
 
   const handleIsOpenUpdate = (type) => {
@@ -118,10 +148,33 @@
     }
   };
 
-  $: {
-    console.log('items here')
-    console.log(items)
-  }
+  const checkIsLocked = (itemId) => {
+    let itemIsLocked = false;
+
+    // check the store to see if an entry exists
+    const itemIndex = $lockedItems.findIndex(foundId => (foundId === itemId));
+
+    // if the index exists, the item is locked
+    if (itemIndex > -1) {
+      itemIsLocked = true;
+    }
+
+    return itemIsLocked;
+  };
+
+  const checkIsOpen = (itemId) => {
+    let itemIsOpen = false;
+
+    // check the store to see if an entry exists
+    const itemIndex = $openItems.findIndex(foundId => (foundId === itemId));
+
+    // if the index exists, the item is open
+    if (itemIndex > -1) {
+      itemIsOpen = true;
+    }
+
+    return itemIsOpen;
+  };
 
   onMount(async () => {
     types = setTypes(masterItems);
@@ -130,7 +183,7 @@
 
   afterUpdate(async () => {
     masterItems = items;
-  })
+  });
 </script>
 
 <section class="options" id="action-options">
@@ -177,21 +230,21 @@
 
           {#if group.isOpen}
             {#each runFilterByKey(masterItems, 'group', group.name) as item (item.id)}
-              <li class={`master-item${item.isOpen ? ' expanded' : ''}`}>
+              <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}
-                  on:handleUpdate={() => handleItemUpdate(item)}
+                  on:handleUpdate={customEvent => toggleItemState(item.id, customEvent.detail)}
                   groupIsLocked={group.lockingStatus}
-                  bind:isLocked={item.locked}
-                  isOpen={item.isOpen}
+                  isLocked={checkIsLocked(item.id)}
+                  isOpen={checkIsOpen(item.id)}
                   labelGroupText={item.group}
                   labelText={item.name}
                   type="master-item"
                 />
-                {#if item.isOpen}
+                {#if checkIsOpen(item.id)}
                   <ItemExpandedContent
-                    on:handleUpdate={() => handleItemUpdate(item)}
                     groupIsLocked={group.lockingStatus}
+                    isLocked={checkIsLocked(item.id)}
                     item={item}
                   />
                 {/if}

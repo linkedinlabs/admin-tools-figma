@@ -111,10 +111,14 @@
   <span class="right">
     <span class="actions">
       {#if type !== 'bulk-editor'}
-        <ButtonLock bind:isLocked={isLocked}/>
+        <!-- <ButtonLock bind:isLocked={isLocked}/> -->
+        <ButtonLock
+          on:handleUpdate={() => dispatch('handleUpdate', 'toggleLock')}
+          isLocked={isLocked}
+        />
       {/if}
       <ButtonOpenClose
-        on:handleUpdate={() => dispatch('handleUpdate')}
+        on:handleUpdate={() => dispatch('handleUpdate', 'toggleOpen')}
         isOpen={isOpen}
       />
     </span>

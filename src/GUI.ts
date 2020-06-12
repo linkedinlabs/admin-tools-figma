@@ -1,6 +1,12 @@
 import './assets/css/main.scss';
 import App from './views/App.svelte'; // eslint-disable-line import/extensions
 
+type TypeName =
+  'Effect'
+  | 'Grid'
+  | 'Typography'
+  | 'Color & Fill';
+
 const app = new App({
   target: document.body,
   props: {
@@ -41,19 +47,15 @@ const sendLoadedMsg = (): void => {
  */
 const updateSelected = (items: Array<{
   id: string,
-  assignment: string,
+  description: string,
+  group: string,
+  kind: string,
   name: string,
-  nodeType: 'text' | 'shape',
-  originalImage: Uint8Array,
-  originalText: string,
-  proposedText: string,
-  rounded: 'all' | 'none' | 'some',
-  locked: boolean,
+  type: StyleType,
+  typeName: TypeName,
 }>): void => {
   if (items) {
     app.items = items;
-  console.log('here here')
-
   }
 };
 
@@ -78,9 +80,6 @@ const watchIncomingMessages = (): void => {
     },
   ) => {
     const { pluginMessage } = event.data;
-    console.log(`incoming message ${pluginMessage.action}`);
-    console.log(pluginMessage)
-
     const { payload } = pluginMessage;
     const { selected } = payload;
 

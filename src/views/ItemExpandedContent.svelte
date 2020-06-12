@@ -4,6 +4,7 @@
   import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 
+  export let isLocked = false;
   export let item = null;
 
   let dirtyItem = Object.assign({}, item);
@@ -24,9 +25,6 @@
   };
 
   $: {
-    console.log('single item')
-    console.log(item)
-
     isDirty = false;
     Object.entries(item).forEach(([key, value]) => {
       if (dirtyItem[key] !== value) {
@@ -36,7 +34,7 @@
   }
 </script>
 
-<section class={`expanded-content${item.locked ? ' locked' : ''}`}>
+<section class={`expanded-content${isLocked ? ' locked' : ''}`}>
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
@@ -44,7 +42,7 @@
       <span class="form-row">
         <FormUnit
           className="form-unit split-40"
-          itemIsLocked={item.locked}
+          itemIsLocked={isLocked}
           kind="inputText"
           labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
           nameId={`item-group-${item.id}`}
@@ -52,7 +50,7 @@
         />
         <FormUnit
           className="form-unit split-60"
-          itemIsLocked={item.locked}
+          itemIsLocked={isLocked}
           kind="inputText"
           labelText="Name"
           nameId={`item-name-${item.id}`}
@@ -62,7 +60,7 @@
     {:else}
       <FormUnit
         className="form-row"
-        itemIsLocked={item.locked}
+        itemIsLocked={isLocked}
         kind="inputText"
         labelText="Name"
         nameId={`item-name-${item.id}`}
@@ -72,7 +70,7 @@
 
     <FormUnit
       className="form-row"
-      itemIsLocked={item.locked}
+      itemIsLocked={isLocked}
       kind="inputTextarea"
       labelText="Description"
       nameId={`item-description-${item.id}`}
@@ -82,7 +80,7 @@
 
     <FormUnit
       className="form-row"
-      itemIsLocked={item.locked}
+      itemIsLocked={isLocked}
       kind="inputText"
       labelText="Label text here"
       nameId={`item-label-link-${item.id}`}
@@ -98,13 +96,13 @@
       />
       <FigmaInput
         className="form-element element-type-text-new split-40"
-        disabled={item.locked}
+        disabled={isLocked}
         nameId={`add-new-label-${item.id}`}
         placeholder="Add stuff to me…"
       />
       <FigmaInput
         className="form-element element-type-text-new split-60"
-        disabled={item.locked}
+        disabled={isLocked}
         nameId={`add-new-text-${item.id}`}
         placeholder="Add other stuff to me…"
       />
@@ -113,7 +111,7 @@
     <FormUnit
       className="form-row"
       disableCopy={true}
-      itemIsLocked={item.locked}
+      itemIsLocked={isLocked}
       kind="inputSelect"
       labelText="Library"
       nameId={`item-library-${item.id}`}
@@ -123,7 +121,7 @@
     <span class="form-row">
       <FigmaSwitch
         className="form-element element-type-switch"
-        disabled={item.locked}
+        disabled={isLocked}
         labelText="Interactive?"
         nameId="is-interactive"
       />

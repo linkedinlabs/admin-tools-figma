@@ -28,10 +28,8 @@ export default class Presenter {
     const presentationArray: Array<{
       id: string,
       description: string,
-      isOpen: boolean,
       group: string,
       kind: string,
-      locked: boolean,
       name: string,
       type: StyleType,
       typeName: TypeName,
@@ -106,10 +104,8 @@ export default class Presenter {
         presentationArray.push({
           id,
           description,
-          isOpen: false,
           group: nameGroup,
           kind,
-          locked: false,
           name: nameClean,
           type,
           typeName,
