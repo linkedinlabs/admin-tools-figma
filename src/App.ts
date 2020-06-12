@@ -187,7 +187,7 @@ export default class App {
     // resize the UI
     let newGUIHeight = GUI_SETTINGS.default.height;
     if (nodesCount > 0) {
-      newGUIHeight = ((nodesCount - 1) * 62) + newGUIHeight;
+      newGUIHeight = 1200;
     }
 
     figma.ui.resize(

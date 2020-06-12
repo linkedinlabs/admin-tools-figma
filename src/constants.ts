@@ -113,8 +113,7 @@ const GUI_CONTENT = {
 const GUI_SETTINGS = {
   default: {
     width: 360,
-    height: 380, // temp
-    // height: 180,
+    height: 215,
   },
   quick: {
     width: 200,
