@@ -15,9 +15,10 @@
   export let labelText = 'Type something…';
   export let placeholder = null;
   export let nameId = 'text-input-id';
+  export let resetValue = false;
   export let value = null;
 
-  const originalValue = value;
+  let originalValue = value;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
 
@@ -25,20 +26,24 @@
     value = originalValue;
   };
 
-  // watch locking changes and restore value if item becomes locked
-  $: {
+  afterUpdate(() => {
+    // watch locking changes and restore value if item becomes locked
     if (!wasUnlocked && isLocked) {
       restoreValue();
     }
 
     // update the comparison variable
     wasUnlocked = isLocked;
-  }
 
-  afterUpdate(() => {
     if (value !== originalValue) {
       isDirty = true;
     } else {
+      isDirty = false;
+    }
+
+    // reset based on higher-level update
+    if (resetValue) {
+      originalValue = value;
       isDirty = false;
     }
   });

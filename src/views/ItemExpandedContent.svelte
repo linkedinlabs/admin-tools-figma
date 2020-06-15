@@ -1,4 +1,5 @@
 <script>
+  import { afterUpdate, beforeUpdate } from 'svelte';
   import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormLabel from './forms-controls/FormLabel';
@@ -8,11 +9,15 @@
   export let item = null;
 
   let dirtyItem = Object.assign({}, item);
+  let originalItem = Object.assign({}, item);
   let isDirty = false;
+  // let wasDirty = false;
+  let resetValue = false;
 
   const handleReset = () => {
     dirtyItem = Object.assign({}, item);
     isDirty = false;
+    resetValue = true;
   };
 
   const handleSave = () => {
@@ -24,14 +29,29 @@
     }, '*');
   };
 
-  $: {
+  beforeUpdate(() => {
+    // check `item` against dirty to see if it was updated in the form
     isDirty = false;
     Object.entries(item).forEach(([key, value]) => {
       if (dirtyItem[key] !== value) {
         isDirty = true;
       }
     });
-  }
+
+    // check `item` against original to see if it was updated on the Figma side
+    Object.entries(item).forEach(([key, value]) => {
+      if (originalItem[key] !== value) {
+        resetValue = true;
+      }
+    });
+  });
+
+  afterUpdate(() => {
+    if (resetValue) {
+      resetValue = false;
+      originalItem = Object.assign({}, item);
+    }
+  });
 </script>
 
 <section class={`expanded-content${isLocked ? ' locked' : ''}`}>
@@ -46,6 +66,7 @@
           kind="inputText"
           labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
           nameId={`item-group-${item.id}`}
+          resetValue={resetValue}
           bind:value={dirtyItem.group}
         />
         <FormUnit
@@ -54,6 +75,7 @@
           kind="inputText"
           labelText="Name"
           nameId={`item-name-${item.id}`}
+          resetValue={resetValue}
           bind:value={dirtyItem.name}
         />
       </span>
@@ -64,6 +86,7 @@
         kind="inputText"
         labelText="Name"
         nameId={`item-name-${item.id}`}
+        resetValue={resetValue}
         bind:value={dirtyItem.name}
       />
     {/if}
@@ -75,6 +98,7 @@
       labelText="Description"
       nameId={`item-description-${item.id}`}
       placeholder="Description"
+      resetValue={resetValue}
       bind:value={dirtyItem.description}
     />
 
@@ -85,6 +109,7 @@
       labelText="Label text here"
       nameId={`item-label-link-${item.id}`}
       placeholder="Type something…"
+      resetValue={resetValue}
       value="I am some text to measure against"
     />
 
@@ -115,6 +140,7 @@
       kind="inputSelect"
       labelText="Library"
       nameId={`item-library-${item.id}`}
+      resetValue={resetValue}
       value="unassigned"
     />
     
