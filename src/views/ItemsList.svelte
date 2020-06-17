@@ -67,6 +67,22 @@
         // toggle `isOpen`
         updatedType.isOpen = !type.isOpen;
         break;
+      case 'toggleLock': {
+        if (type.lockingStatus === 'locked') {
+          updatedType.lockingStatus = 'unlocked';
+        } else {
+          updatedType.lockingStatus = 'locked';
+        }
+        break;
+      }
+      case 'setLock': {
+        updatedType.lockingStatus = 'locked';
+        break;
+      }
+      case 'setUnlock': {
+        updatedType.lockingStatus = 'unlocked';
+        break;
+      }
       default:
     }
 
@@ -83,6 +99,22 @@
         // toggle `isOpen`
         updatedGroup.isOpen = !group.isOpen;
         break;
+      case 'toggleLock': {
+        if (group.lockingStatus === 'locked') {
+          updatedGroup.lockingStatus = 'unlocked';
+        } else {
+          updatedGroup.lockingStatus = 'locked';
+        }
+        break;
+      }
+      case 'setLock': {
+        updatedGroup.lockingStatus = 'locked';
+        break;
+      }
+      case 'setUnlock': {
+        updatedGroup.lockingStatus = 'unlocked';
+        break;
+      }
       case 'partialUnlock':
         updatedType = type;
         updatedGroup.lockingStatus = 'partial';
@@ -98,7 +130,7 @@
     }
   };
 
-  const toggleItemState = (itemId, operationType = 'toggleOpen') => {
+  const updateItemState = (itemId, operationType = 'toggleOpen') => {
     const addOrRemoveEntry = (itemsArray) => {
       let updatedItemsArray = itemsArray;
       const itemIndex = itemsArray.findIndex(
@@ -118,6 +150,31 @@
       return updatedItemsArray;
     };
 
+    const removeEntry = (itemsArray) => {
+      let updatedItemsArray = itemsArray;
+      const itemIndex = itemsArray.findIndex(
+        foundId => (foundId === itemId),
+      );
+
+      // add or remove entry
+      if (itemIndex > -1) {
+        updatedItemsArray = [
+          ...updatedItemsArray.slice(0, itemIndex),
+          ...updatedItemsArray.slice(itemIndex + 1),
+        ];
+      }
+
+      return updatedItemsArray;
+    };
+
+    const addEntry = (itemsArray) => {
+      // remove first to prevent duplicates
+      const updatedItemsArray = removeEntry(itemsArray);
+      updatedItemsArray.push(itemId);
+
+      return updatedItemsArray;
+    };
+
     // ---- toggle `isOpen`
     if (operationType === 'toggleOpen') {
       // retrieve open list from store and check for existing entry
@@ -127,10 +184,28 @@
       openItems.set(updatedOpenItems);
     }
 
-    // ---- toggle `isLocked`
+    // ---- toggle locking
     if (operationType === 'toggleLock') {
       // retrieve open list from store and check for existing entry
       const updatedLockedItems = addOrRemoveEntry($lockedItems);
+
+      // commit updated list to store
+      lockedItems.set(updatedLockedItems);
+    }
+
+    // ---- force locking
+    if (operationType === 'setLock') {
+      // retrieve open list from store and check for existing entry
+      const updatedLockedItems = addEntry($lockedItems);
+
+      // commit updated list to store
+      lockedItems.set(updatedLockedItems);
+    }
+
+    // ---- force unlocking
+    if (operationType === 'setUnlock') {
+      // retrieve open list from store and check for existing entry
+      const updatedLockedItems = removeEntry($lockedItems);
 
       // commit updated list to store
       lockedItems.set(updatedLockedItems);
@@ -203,7 +278,7 @@
     {#each types as type (type.name)}
       <li class="style-type">
         <ItemGroupHeader
-          on:handleUpdate={() => handleTypeUpdate(type)}
+          on:handleUpdate={customEvent => handleTypeUpdate(type, customEvent.detail)}
           isLocked={type.lockingStatus === 'locked'}
           isOpen={type.isOpen}
           isTypeContainer={true}
@@ -217,7 +292,7 @@
         {#each runFilterByKey(groups, 'type', type.type) as group (group.name)}
           <li class="group-type">
             <ItemGroupHeader
-              on:handleUpdate={() => handleGroupUpdate(group, type)}
+              on:handleUpdate={customEvent => handleGroupUpdate(group, type, customEvent.detail)}
               bind:groupIsLocked={group.lockingStatus}
               isGroupContainer={true}
               isLocked={group.lockingStatus === 'locked'}
@@ -233,7 +308,7 @@
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}
-                  on:handleUpdate={customEvent => toggleItemState(item.id, customEvent.detail)}
+                  on:handleUpdate={customEvent => updateItemState(item.id, customEvent.detail)}
                   groupIsLocked={group.lockingStatus}
                   isLocked={checkIsLocked(item.id)}
                   isOpen={checkIsOpen(item.id)}

@@ -11,7 +11,6 @@
   let dirtyItem = Object.assign({}, item);
   let originalItem = Object.assign({}, item);
   let isDirty = false;
-  // let wasDirty = false;
   let resetValue = false;
 
   const handleReset = () => {

@@ -1,5 +1,9 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import {
+    beforeUpdate,
+    createEventDispatcher,
+    onMount,
+  } from 'svelte';
 
   import ButtonLock from './forms-controls/ButtonLock';
   import ButtonOpenClose from './forms-controls/ButtonOpenClose';
@@ -18,41 +22,28 @@
 
   let groupWasUnlocked = 'unlocked';
   let typeWasUnlocked = 'unlocked';
-  let wasUnlocked = 'unlocked';
-
-  // set initial locking status
-  if (!isGroupContainer && groupIsLocked === 'locked') {
-    isLocked = true;
-  }
-
-  if (!isTypeContainer && typeIsLocked === 'locked') {
-    isLocked = true;
-
-    if (isGroupContainer) {
-      groupIsLocked = 'locked';
-    }
-  }
+  let wasUnlocked = false;
 
   // watch parent locking changes to match an item unlock
-  $: {
+  beforeUpdate(() => {
     // lock item if type is locked
     if ((typeWasUnlocked !== 'locked') && (typeIsLocked === 'locked')) {
-      isLocked = true;
+      dispatch('handleUpdate', 'setLock');
     }
 
     // lock item if group is locked
     if ((groupWasUnlocked !== 'locked') && (groupIsLocked === 'locked')) {
-      isLocked = true;
+      dispatch('handleUpdate', 'setLock');
     }
 
     // unlock item if group is unlocked
     if (!isTypeContainer && !isGroupContainer && (groupWasUnlocked === 'locked') && (groupIsLocked === 'unlocked')) {
-      isLocked = false;
+      dispatch('handleUpdate', 'setUnlock');
     }
 
     // unlock group if type is unlocked
     if (isGroupContainer && (typeWasUnlocked === 'locked') && (typeIsLocked === 'unlocked') && (groupWasUnlocked === 'locked') && (groupIsLocked === 'locked')) {
-      isLocked = false;
+      dispatch('handleUpdate', 'setUnlock');
     }
 
     // the header is a type header
@@ -90,7 +81,22 @@
     groupWasUnlocked = groupIsLocked;
     typeWasUnlocked = typeIsLocked;
     wasUnlocked = isLocked;
-  }
+  });
+
+  onMount(() => {
+    // set initial locking status
+    if (!isTypeContainer && !isGroupContainer && groupIsLocked === 'locked') {
+      dispatch('handleUpdate', 'setLock');
+    }
+
+    if (!isTypeContainer && isGroupContainer && typeIsLocked === 'locked') {
+      dispatch('handleUpdate', 'setLock');
+
+      if (isGroupContainer) {
+        groupIsLocked = 'locked';
+      }
+    }
+  });
 </script>
 
 <style>
