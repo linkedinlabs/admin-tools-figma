@@ -13,7 +13,6 @@ type PresenterTypeGroup = {
   id: string,
   name: string,
   lockingStatus: 'locked' | 'partial' | 'unlocked',
-  isOpen: boolean,
   type: StyleType,
   typeId?: string,
 };

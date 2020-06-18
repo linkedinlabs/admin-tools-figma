@@ -87,77 +87,6 @@
     return filteredArray;
   };
 
-  const handleTypeUpdate = (type, operationType = 'toggleOpen') => {
-    const updatedType = type;
-
-    switch (operationType) {
-      case 'toggleOpen':
-        // toggle `isOpen`
-        updatedType.isOpen = !type.isOpen;
-        break;
-      case 'toggleLock': {
-        if (type.lockingStatus === 'locked') {
-          updatedType.lockingStatus = 'unlocked';
-        } else {
-          updatedType.lockingStatus = 'locked';
-        }
-        break;
-      }
-      case 'setLock': {
-        updatedType.lockingStatus = 'locked';
-        break;
-      }
-      case 'setUnlock': {
-        updatedType.lockingStatus = 'unlocked';
-        break;
-      }
-      default:
-    }
-
-    // re-insert back into types list based on type `name`
-    types = updateArray(types, updatedType, 'name', 'update');
-  };
-
-  const handleGroupUpdate = (group, type = null, operationType = 'toggleOpen') => {
-    const updatedGroup = group;
-    let updatedType = null;
-
-    switch (operationType) {
-      case 'toggleOpen':
-        // toggle `isOpen`
-        updatedGroup.isOpen = !group.isOpen;
-        break;
-      case 'toggleLock': {
-        if (group.lockingStatus === 'locked') {
-          updatedGroup.lockingStatus = 'unlocked';
-        } else {
-          updatedGroup.lockingStatus = 'locked';
-        }
-        break;
-      }
-      case 'setLock': {
-        updatedGroup.lockingStatus = 'locked';
-        break;
-      }
-      case 'setUnlock': {
-        updatedGroup.lockingStatus = 'unlocked';
-        break;
-      }
-      case 'partialUnlock':
-        updatedType = type;
-        updatedGroup.lockingStatus = 'partial';
-        updatedType.lockingStatus = 'partial';
-        break;
-      default:
-    }
-
-    // re-insert back into groups list based on group `name`
-    groups = updateArray(groups, updatedGroup, 'name', 'update');
-    if (updatedType) {
-      types = updateArray(types, updatedType, 'name', 'update');
-    }
-  };
-
   const updateItemState = (itemId, operationType = 'toggleOpen') => {
     const addOrRemoveEntry = (itemsArray) => {
       let updatedItemsArray = itemsArray;
@@ -240,6 +169,75 @@
     }
   };
 
+  const handleTypeUpdate = (type, operationType = 'toggleOpen') => {
+    const updatedType = type;
+
+    switch (operationType) {
+      case 'toggleOpen':
+        updateItemState(updatedType.id, operationType);
+        break;
+      case 'toggleLock': {
+        if (type.lockingStatus === 'locked') {
+          updatedType.lockingStatus = 'unlocked';
+        } else {
+          updatedType.lockingStatus = 'locked';
+        }
+        break;
+      }
+      case 'setLock': {
+        updatedType.lockingStatus = 'locked';
+        break;
+      }
+      case 'setUnlock': {
+        updatedType.lockingStatus = 'unlocked';
+        break;
+      }
+      default:
+    }
+
+    // re-insert back into types list based on type `name`
+    types = updateArray(types, updatedType, 'name', 'update');
+  };
+
+  const handleGroupUpdate = (group, type = null, operationType = 'toggleOpen') => {
+    const updatedGroup = group;
+    let updatedType = null;
+
+    switch (operationType) {
+      case 'toggleOpen':
+        updateItemState(updatedGroup.id, operationType);
+        break;
+      case 'toggleLock': {
+        if (group.lockingStatus === 'locked') {
+          updatedGroup.lockingStatus = 'unlocked';
+        } else {
+          updatedGroup.lockingStatus = 'locked';
+        }
+        break;
+      }
+      case 'setLock': {
+        updatedGroup.lockingStatus = 'locked';
+        break;
+      }
+      case 'setUnlock': {
+        updatedGroup.lockingStatus = 'unlocked';
+        break;
+      }
+      case 'partialUnlock':
+        updatedType = type;
+        updatedGroup.lockingStatus = 'partial';
+        updatedType.lockingStatus = 'partial';
+        break;
+      default:
+    }
+
+    // re-insert back into groups list based on group `name`
+    groups = updateArray(groups, updatedGroup, 'name', 'update');
+    if (updatedType) {
+      types = updateArray(types, updatedType, 'name', 'update');
+    }
+  };
+
   const handleIsOpenUpdate = (type) => {
     switch (type) { // eslint-disable-line default-case
       case 'editor':
@@ -279,6 +277,16 @@
     return itemIsOpen;
   };
 
+  const setGroupsTypesOpen = (groupsTypes) => {
+    groupsTypes.forEach((groupType) => {
+      updateItemState(groupType.id, 'toggleOpen');
+    });
+  };
+
+  // set open initially
+  setGroupsTypesOpen(types);
+  setGroupsTypesOpen(groups);
+
   afterUpdate(async () => {
     groups = selected.groups;
     items = selected.items;
@@ -305,7 +313,7 @@
         <ItemGroupHeader
           on:handleUpdate={customEvent => handleTypeUpdate(type, customEvent.detail)}
           isLocked={type.lockingStatus === 'locked'}
-          isOpen={type.isOpen}
+          isOpen={checkIsOpen(type.id)}
           isTypeContainer={true}
           labelText={type.name}
           type="style-type"
@@ -313,7 +321,7 @@
         />
       </li>
 
-      {#if type.isOpen}
+      {#if checkIsOpen(type.id)}
         {#each filterByKey(groups, 'typeId', type.id) as group (group.id)}
           <li class="group-type">
             <ItemGroupHeader
@@ -321,14 +329,14 @@
               bind:groupIsLocked={group.lockingStatus}
               isGroupContainer={true}
               isLocked={group.lockingStatus === 'locked'}
-              isOpen={group.isOpen}
+              isOpen={checkIsOpen(group.id)}
               labelText={`${group.name} ${type.name}`}
               type="group-type"
               typeIsLocked={type.lockingStatus}
             />
           </li>
 
-          {#if group.isOpen}
+          {#if checkIsOpen(group.id)}
             {#each filterByKey(items, 'groupId', group.id) as item (item.id)}
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
