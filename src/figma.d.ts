@@ -1,6 +1,35 @@
 // Figma Plugin API version 1, update 11
 
 declare global {
+// Internal Declarations
+
+type PresenterTypeName =
+  'Effect'
+  | 'Grid'
+  | 'Typography'
+  | 'Color & Fill';
+
+type PresenterTypeGroup = {
+  id: string,
+  name: string,
+  lockingStatus: 'locked' | 'partial' | 'unlocked',
+  isOpen: boolean,
+  type: StyleType,
+  typeId?: string,
+};
+
+type PresenterItem = {
+  id: string,
+  description: string,
+  group: string,
+  groupId: string,
+  kind: string,
+  name: string,
+  type: StyleType,
+  typeId: string,
+  typeName: PresenterTypeName,
+};
+
 // Vendor Declarations
 
 // for attaching Svelte to window global

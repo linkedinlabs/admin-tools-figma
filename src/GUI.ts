@@ -1,17 +1,11 @@
 import './assets/css/main.scss';
 import App from './views/App.svelte'; // eslint-disable-line import/extensions
 
-type TypeName =
-  'Effect'
-  | 'Grid'
-  | 'Typography'
-  | 'Color & Fill';
-
 const app = new App({
   target: document.body,
   props: {
     inspect: 'styles', // 'styles' or 'components'
-    items: null,
+    selected: null,
   },
 });
 
@@ -45,17 +39,13 @@ const sendLoadedMsg = (): void => {
  *
  * @returns {null}
  */
-const updateSelected = (items: Array<{
-  id: string,
-  description: string,
-  group: string,
-  kind: string,
-  name: string,
-  type: StyleType,
-  typeName: TypeName,
-}>): void => {
-  if (items) {
-    app.items = items;
+const updateSelected = (selected: {
+  items: Array<PresenterItem>,
+  groups: Array<PresenterTypeGroup>,
+  types: Array<PresenterTypeGroup>,
+}): void => {
+  if (selected) {
+    app.selected = selected;
   }
 };
 

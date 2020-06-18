@@ -7,7 +7,7 @@
   import StatusBar from './StatusBar';
 
   export let inspect = 'components';
-  export let items = null;
+  export let selected = null;
 
   const setIsStyles = (currentlyInspecting) => {
     const isStylesLocal = currentlyInspecting === 'styles';
@@ -25,11 +25,11 @@
   <FontPreload/>
   <SceneNavigator />
 
-  {#if items && items.length > 0}
-    <ItemsList items={items}/>
+  {#if selected && selected.items.length > 0}
+    <ItemsList selected={selected}/>
   {:else}
     <BlankState/>
   {/if}
 
-  <StatusBar numberSelected={items ? items.length : 0}/>
+  <StatusBar numberSelected={selected ? selected.items.length : 0}/>
 </div>

@@ -1,63 +1,23 @@
 <script>
-  import { afterUpdate, onMount } from 'svelte';
+  import { afterUpdate } from 'svelte';
   import { lockedItems, openItems } from './stores';
-  import {
-    existsInArray,
-    filterByKey,
-    updateArray,
-  } from '../Tools';
+  import { filterByKey, updateArray } from '../Tools';
   import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
 
   // props
-  export let items = null;
+  export let selected = null;
 
   // locals
   let isOpenEditor = false;
   let isOpenTypography = true;
-  let groups = [];
-  let masterItems = items;
-  let types = [];
+  let { groups, types } = selected;
+  let masterItems = selected.items;
 
   // imported helpers used in the UI need a local reference
   const runFilterByKey = filterByKey;
   const runUpdateArray = updateArray;
-
-  const setTypes = (allItems) => {
-    const typeItems = [];
-    allItems.forEach((item) => {
-      if (!typeItems.includes(item.type)) {
-        types.push({
-          name: item.typeName,
-          lockingStatus: 'unlocked', // locked, partial, unlocked
-          isOpen: true,
-          type: item.type,
-        });
-        typeItems.push(item.type);
-      }
-    });
-    return types;
-  };
-
-  const setGroups = (allItems, typesToMatch) => {
-    let groupItems = [];
-    allItems.forEach((item) => {
-      const grabIndex = 0;
-      const typeItem = typesToMatch.filter(type => type.name === item.typeName)[grabIndex];
-      if (typeItem && !existsInArray(groupItems, 'name', item.group)) {
-        const groupItem = {
-          name: item.group,
-          lockingStatus: 'unlocked', // locked, partial, unlocked
-          isOpen: true,
-          type: typeItem.type,
-        };
-        groupItems = [...groupItems, groupItem];
-      }
-    });
-
-    return groupItems;
-  };
 
   const handleTypeUpdate = (type, operationType = 'toggleOpen') => {
     const updatedType = type;
@@ -251,13 +211,8 @@
     return itemIsOpen;
   };
 
-  onMount(async () => {
-    types = setTypes(masterItems);
-    groups = setGroups(masterItems, types);
-  });
-
   afterUpdate(async () => {
-    masterItems = items;
+    masterItems = selected.items;
   });
 </script>
 
@@ -267,7 +222,7 @@
       <ItemGroupHeader
         on:handleUpdate={() => handleIsOpenUpdate('editor')}
         isOpen={isOpenEditor}
-        labelText={isOpenEditor ? `Modifying ${items ? items.length : 0} styles` : 'Modify all unlocked'}
+        labelText={isOpenEditor ? `Modifying ${selected.items ? selected.items.length : 0} styles` : 'Modify all unlocked'}
         type="bulk-editor"
       />
       {#if isOpenEditor}
@@ -275,7 +230,7 @@
       {/if}
     </li>
 
-    {#each types as type (type.name)}
+    {#each types as type (type.id)}
       <li class="style-type">
         <ItemGroupHeader
           on:handleUpdate={customEvent => handleTypeUpdate(type, customEvent.detail)}
@@ -289,7 +244,7 @@
       </li>
 
       {#if type.isOpen}
-        {#each runFilterByKey(groups, 'type', type.type) as group (group.name)}
+        {#each runFilterByKey(groups, 'typeId', type.id) as group (group.id)}
           <li class="group-type">
             <ItemGroupHeader
               on:handleUpdate={customEvent => handleGroupUpdate(group, type, customEvent.detail)}
@@ -304,7 +259,7 @@
           </li>
 
           {#if group.isOpen}
-            {#each runFilterByKey(masterItems, 'group', group.name) as item (item.id)}
+            {#each runFilterByKey(masterItems, 'groupId', group.id) as item (item.id)}
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}

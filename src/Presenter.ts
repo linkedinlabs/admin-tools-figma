@@ -1,4 +1,61 @@
 /** WIP
+ * @description Looks into the selection array for any groups and pulls out individual nodes,
+ * effectively flattening the selection.
+ *
+ * @kind function
+ * @name update
+ *
+ * @returns {Object} All items (including children) individual in an updated array.
+ */
+const setTypes = (allItems) => {
+  const types: Array<PresenterTypeGroup> = [];
+
+  const typeIds: Array<string> = [];
+  allItems.forEach((item) => {
+    if (!typeIds.includes(item.typeId)) {
+      types.push({
+        id: item.typeId,
+        name: item.typeName,
+        lockingStatus: 'unlocked', // locked, partial, unlocked
+        isOpen: true,
+        type: item.type,
+      });
+      typeIds.push(item.typeId);
+    }
+  });
+  return types;
+};
+
+/** WIP
+ * @description Looks into the selection array for any groups and pulls out individual nodes,
+ * effectively flattening the selection.
+ *
+ * @kind function
+ * @name update
+ *
+ * @returns {Object} All items (including children) individual in an updated array.
+ */
+const setGroups = (allItems) => {
+  const groups: Array<PresenterTypeGroup> = [];
+
+  const groupIds: Array<string> = [];
+  allItems.forEach((item) => {
+    if (!groupIds.includes(item.groupId)) {
+      groups.push({
+        id: item.groupId,
+        name: item.group,
+        lockingStatus: 'unlocked', // locked, partial, unlocked
+        isOpen: true,
+        type: item.type,
+        typeId: item.type.toLowerCase(),
+      });
+      groupIds.push(item.groupId);
+    }
+  });
+  return groups;
+};
+
+/** WIP
  * @description A class to bridge Figma objects and the presentation layer.
  *
  * @class
@@ -15,25 +72,21 @@ export default class Presenter {
   }
 
   extractStyles = () => {
-    type TypeName =
-      'Effect'
-      | 'Grid'
-      | 'Typography'
-      | 'Color & Fill';
-
     const { nodes } = this;
     const styleIds = [];
 
     // set array of data with information from each node
-    const presentationArray: Array<{
-      id: string,
-      description: string,
-      group: string,
-      kind: string,
-      name: string,
-      type: StyleType,
-      typeName: TypeName,
-    }> = [];
+    const presentationObject: {
+      items: Array<PresenterItem>,
+      groups: Array<PresenterTypeGroup>,
+      types: Array<PresenterTypeGroup>,
+    } = {
+      items: null,
+      groups: null,
+      types: null,
+    };
+
+    const items: Array<PresenterItem> = [];
 
     // get styles here
     const extractedStyles: Array<BaseStyle> = [];
@@ -69,6 +122,8 @@ export default class Presenter {
         const { id, description, name } = style;
         const kind: 'style' | 'component' = 'style';
         const { type }: { type: StyleType } = style;
+        const typeId = type.toLowerCase();
+        let groupId = null;
 
         const nameArray = name.split(' / ');
         let nameGroup: string = null;
@@ -80,9 +135,11 @@ export default class Presenter {
 
           nameArray.shift();
           nameClean = nameArray.join(' / ');
+
+          groupId = `${typeId}-${nameGroup}`;
         }
 
-        let typeName: TypeName = null;
+        let typeName: PresenterTypeName = null;
 
         switch (type) {
           case 'EFFECT':
@@ -101,18 +158,27 @@ export default class Presenter {
         extractedStyles.push(style);
 
         // update the bundle of info for the current `node` in the selection
-        presentationArray.push({
+        items.push({
           id,
           description,
           group: nameGroup,
+          groupId,
           kind,
           name: nameClean,
           type,
+          typeId,
           typeName,
         });
       }
     });
 
-    return presentationArray;
+    const types = setTypes(items);
+    const groups = setGroups(items);
+
+    presentationObject.items = items;
+    presentationObject.groups = groups;
+    presentationObject.types = types;
+
+    return presentationObject;
   }
 }

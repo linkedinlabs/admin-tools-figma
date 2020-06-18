@@ -45,8 +45,10 @@ export default class Editor {
     // grab existing style presentation object for comparison
     const selectIndex = 0;
     const presenter = new Presenter({ for: this.array });
-    const existingItems = presenter.extractStyles();
-    const existingItem = existingItems.filter(item => item.id === updatedItem.id)[selectIndex];
+    const extractedStyles = presenter.extractStyles();
+    const existingItem = extractedStyles.items.filter(
+      item => item.id === updatedItem.id,
+    )[selectIndex];
 
     // kick out if we can't find a match
     if (!existingItem) {
