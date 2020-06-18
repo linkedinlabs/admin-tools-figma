@@ -1,3 +1,4 @@
+import Crawler from './Crawler';
 import Editor from './Editor';
 import Presenter from './Presenter';
 import Messenger from './Messenger';
@@ -134,7 +135,8 @@ export default class App {
     }
 
     // set up the Editor class to manipulate the selection
-    const editor = new Editor({ for: selection });
+    const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
+    const editor = new Editor({ for: nodes });
 
     // commit the updates
     const updateResult = editor.update(updatedItem);
@@ -173,9 +175,9 @@ export default class App {
    */
   static async refreshGUI(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
-    const nodes: Array<SceneNode> = selection;
 
-    const presenter = new Presenter({ for: selection });
+    const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
+    const presenter = new Presenter({ for: nodes });
     const selected = presenter.extractStyles();
 
     // send the updates to the UI
