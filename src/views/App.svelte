@@ -1,20 +1,29 @@
 <script>
-  import { isStyles } from './stores';
+  import { beforeUpdate } from 'svelte';
+  import { currentFilter, isStyles } from './stores';
   import BlankState from './BlankState';
   import FontPreload from './FontPreload';
   import ItemsList from './ItemsList';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
 
+  export let filter = 'all-components';
   export let inspect = 'components';
   export let selected = null;
 
-  const setIsStyles = (currentlyInspecting) => {
-    const isStylesLocal = currentlyInspecting === 'styles';
-    isStyles.set(isStylesLocal);
+  const setCurrentFilter = (newFilter) => {
+    currentFilter.set(newFilter);
   };
 
-  setIsStyles(inspect);
+  const setIsStyles = (currentlyInspecting) => {
+    const newIsStyles = currentlyInspecting === 'styles';
+    isStyles.set(newIsStyles);
+  };
+
+  beforeUpdate(() => {
+    setIsStyles(inspect);
+    setCurrentFilter(filter);
+  });
 </script>
 
 <!-- compile options -->

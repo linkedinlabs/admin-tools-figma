@@ -173,10 +173,17 @@ export default class App {
    *
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
-  static async refreshGUI(sessionKey: number) {
+  static async refreshGUI(
+    sessionKey: number,
+    filteringPayload?: {
+      newFilter?: string,
+      newIsStyles?: boolean,
+    },
+  ) {
     const { messenger, selection } = assemble(figma);
 
     const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
+    const filters = filteringPayload;
     const presenter = new Presenter({ for: nodes });
     const selected = presenter.extractStyles();
 
@@ -184,8 +191,9 @@ export default class App {
     figma.ui.postMessage({
       action: 'refreshState',
       payload: {
-        sessionKey,
+        filters,
         selected,
+        sessionKey,
       },
     });
 

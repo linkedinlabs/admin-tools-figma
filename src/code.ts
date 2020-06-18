@@ -83,6 +83,9 @@ const dispatcher = async (action: {
     // };
 
     switch (type) {
+      case 'setFilters':
+        App.refreshGUI(sessionKey, payload);
+        break;
       case 'submit':
         app.handleUpdate(payload, sessionKey);
         break;

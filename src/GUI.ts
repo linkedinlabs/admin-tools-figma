@@ -4,7 +4,8 @@ import App from './views/App.svelte'; // eslint-disable-line import/extensions
 const app = new App({
   target: document.body,
   props: {
-    inspect: 'styles', // 'styles' or 'components'
+    inspect: 'styles',
+    filter: 'all-styles',
     selected: null,
   },
 });
@@ -39,13 +40,28 @@ const sendLoadedMsg = (): void => {
  *
  * @returns {null}
  */
-const updateSelected = (selected: {
-  items: Array<PresenterItem>,
-  groups: Array<PresenterTypeGroup>,
-  types: Array<PresenterTypeGroup>,
-}): void => {
+const updateSelected = (
+  selected: {
+    items: Array<PresenterItem>,
+    groups: Array<PresenterTypeGroup>,
+    types: Array<PresenterTypeGroup>,
+  },
+  filters: {
+    newFilter?: string,
+    newIsStyles?: boolean,
+  },
+): void => {
   if (selected) {
     app.selected = selected;
+  }
+
+  if (filters) {
+    if (filters.newFilter) {
+      app.filter = filters.newFilter;
+    }
+
+    const newInspect = filters.newIsStyles ? 'styles' : 'components';
+    app.inspect = newInspect;
   }
 };
 
@@ -71,11 +87,11 @@ const watchIncomingMessages = (): void => {
   ) => {
     const { pluginMessage } = event.data;
     const { payload } = pluginMessage;
+    const { filters } = payload;
     const { selected } = payload;
-
     switch (pluginMessage.action) {
       case 'refreshState':
-        updateSelected(selected);
+        updateSelected(selected, filters);
         break;
       default:
         return null;
