@@ -12,8 +12,7 @@
   // locals
   let isOpenEditor = false;
   let isOpenTypography = true;
-  let { groups, types } = selected;
-  let masterItems = selected.items;
+  let { groups, items, types } = selected;
 
   // imported helpers used in the UI need a local reference
   const runFilterByKey = filterByKey;
@@ -212,7 +211,9 @@
   };
 
   afterUpdate(async () => {
-    masterItems = selected.items;
+    groups = selected.groups;
+    items = selected.items;
+    types = selected.types;
   });
 </script>
 
@@ -222,7 +223,7 @@
       <ItemGroupHeader
         on:handleUpdate={() => handleIsOpenUpdate('editor')}
         isOpen={isOpenEditor}
-        labelText={isOpenEditor ? `Modifying ${selected.items ? selected.items.length : 0} styles` : 'Modify all unlocked'}
+        labelText={isOpenEditor ? `Modifying ${items ? items.length : 0} styles` : 'Modify all unlocked'}
         type="bulk-editor"
       />
       {#if isOpenEditor}
@@ -259,7 +260,7 @@
           </li>
 
           {#if group.isOpen}
-            {#each runFilterByKey(masterItems, 'groupId', group.id) as item (item.id)}
+            {#each runFilterByKey(items, 'groupId', group.id) as item (item.id)}
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}
