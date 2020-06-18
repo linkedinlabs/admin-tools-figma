@@ -1,7 +1,6 @@
 <script>
   import { afterUpdate } from 'svelte';
   import { lockedItems, openItems } from './stores';
-  import { filterByKey, updateArray } from '../Tools';
   import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
@@ -14,9 +13,79 @@
   let isOpenTypography = true;
   let { groups, items, types } = selected;
 
-  // imported helpers used in the UI need a local reference
-  const runFilterByKey = filterByKey;
-  const runUpdateArray = updateArray;
+  /**
+   * @description A reusable helper function to take an array and add or remove data from it
+   * based on a top-level key and a defined action.
+   *
+   * @kind function
+   * @name updateArray
+   *
+   * @param {Array} array The array to be modified.
+   * @param {Object} item Object containing the new bit of data to add, remove, or update.
+   * @param {string} itemKey String representing the key to match (default is `id`).
+   * @param {string} action Constant string representing the action to take
+   * (`add`, `update`, or `remove`).
+   *
+   * @returns {Object} The modified array.
+   */
+  const updateArray = (
+    array,
+    item,
+    itemKey,
+    action,
+  ) => {
+    let updatedArray = array;
+
+    // find the index of a pre-existing `id` match on the array
+    const itemIndex = updatedArray.findIndex(
+      foundItem => (foundItem[itemKey] === item[itemKey]),
+    );
+
+    // if a match exists
+    if (itemIndex > -1) {
+      if (action === 'update') {
+        // remove it and re-add it
+        updatedArray = [
+          ...updatedArray.slice(0, itemIndex),
+          ...[item],
+          ...updatedArray.slice(itemIndex + 1),
+        ];
+      } else {
+        // remove it
+        updatedArray = [
+          ...updatedArray.slice(0, itemIndex),
+          ...updatedArray.slice(itemIndex + 1),
+        ];
+      }
+    }
+
+    // if the `action` is `add`, append the new `item` to the array
+    if (action === 'add') {
+      updatedArray.push(item);
+    }
+
+    return updatedArray;
+  };
+
+  /** WIP
+   * @description A reusable helper function to take an array and add or remove data from it
+   * based on a top-level key and a defined action.
+   *
+   * @kind function
+   * @name filterByKey
+   *
+   * @param {Array} array The array to be modified.
+   * @param {Object} item Object containing the new bit of data to add, remove, or update.
+   * @param {string} itemKey String representing the key to match (default is `id`).
+   * @param {string} action Constant string representing the action to take
+   * (`add`, `update`, or `remove`).
+   *
+   * @returns {Object} The modified array.
+   */
+  const filterByKey = (array, key, value) => {
+    const filteredArray = array.filter(item => item[key] === value);
+    return filteredArray;
+  };
 
   const handleTypeUpdate = (type, operationType = 'toggleOpen') => {
     const updatedType = type;
@@ -46,7 +115,7 @@
     }
 
     // re-insert back into types list based on type `name`
-    types = runUpdateArray(types, updatedType, 'name', 'update');
+    types = updateArray(types, updatedType, 'name', 'update');
   };
 
   const handleGroupUpdate = (group, type = null, operationType = 'toggleOpen') => {
@@ -83,9 +152,9 @@
     }
 
     // re-insert back into groups list based on group `name`
-    groups = runUpdateArray(groups, updatedGroup, 'name', 'update');
+    groups = updateArray(groups, updatedGroup, 'name', 'update');
     if (updatedType) {
-      types = runUpdateArray(types, updatedType, 'name', 'update');
+      types = updateArray(types, updatedType, 'name', 'update');
     }
   };
 
@@ -245,7 +314,7 @@
       </li>
 
       {#if type.isOpen}
-        {#each runFilterByKey(groups, 'typeId', type.id) as group (group.id)}
+        {#each filterByKey(groups, 'typeId', type.id) as group (group.id)}
           <li class="group-type">
             <ItemGroupHeader
               on:handleUpdate={customEvent => handleGroupUpdate(group, type, customEvent.detail)}
@@ -260,7 +329,7 @@
           </li>
 
           {#if group.isOpen}
-            {#each runFilterByKey(items, 'groupId', group.id) as item (item.id)}
+            {#each filterByKey(items, 'groupId', group.id) as item (item.id)}
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}
