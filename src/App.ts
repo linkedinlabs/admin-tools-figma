@@ -174,7 +174,6 @@ export default class App {
   static async refreshGUI(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
     const nodes: Array<SceneNode> = selection;
-    const nodesCount = nodes.length;
 
     const presenter = new Presenter({ for: selection });
     const selected = presenter.extractStyles();
@@ -190,7 +189,7 @@ export default class App {
 
     // resize the UI
     let newGUIHeight = GUI_SETTINGS.default.height;
-    if (nodesCount > 0) {
+    if (selected.items.length > 0) {
       newGUIHeight = 1200;
     }
 

@@ -118,7 +118,7 @@ export default class Presenter {
     // iterate style IDs and load the styles into the `extractedStyles` array
     uniqueStyleIds.forEach((styleId) => {
       const style: BaseStyle = figma.getStyleById(styleId);
-      if (style) {
+      if (style && !style.remote) {
         const { id, description, name } = style;
         const kind: 'style' | 'component' = 'style';
         const { type }: { type: StyleType } = style;
