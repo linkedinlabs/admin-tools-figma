@@ -87,6 +87,34 @@
     return filteredArray;
   };
 
+  const checkIsLocked = (itemId) => {
+    let itemIsLocked = false;
+
+    // check the store to see if an entry exists
+    const itemIndex = $lockedItems.findIndex(foundId => (foundId === itemId));
+
+    // if the index exists, the item is locked
+    if (itemIndex > -1) {
+      itemIsLocked = true;
+    }
+
+    return itemIsLocked;
+  };
+
+  const checkIsOpen = (itemId) => {
+    let itemIsOpen = false;
+
+    // check the store to see if an entry exists
+    const itemIndex = $openItems.findIndex(foundId => (foundId === itemId));
+
+    // if the index exists, the item is open
+    if (itemIndex > -1) {
+      itemIsOpen = true;
+    }
+
+    return itemIsOpen;
+  };
+
   const updateItemState = (itemId, operationType = 'toggleOpen') => {
     const addOrRemoveEntry = (itemsArray) => {
       let updatedItemsArray = itemsArray;
@@ -154,7 +182,6 @@
     if (operationType === 'setLock') {
       // retrieve open list from store and check for existing entry
       const updatedLockedItems = addEntry($lockedItems);
-
       // commit updated list to store
       lockedItems.set(updatedLockedItems);
     }
@@ -169,7 +196,7 @@
     }
   };
 
-  const handleTypeUpdate = (type, operationType = 'toggleOpen') => {
+  const handleTypeUpdate = (type, currentGroups, currentItems, operationType = 'toggleOpen') => {
     const updatedType = type;
 
     switch (operationType) {
@@ -177,19 +204,23 @@
         updateItemState(updatedType.id, operationType);
         break;
       case 'toggleLock': {
-        if (type.lockingStatus === 'locked') {
-          updatedType.lockingStatus = 'unlocked';
+        let itemsOperationType = operationType;
+        if (checkIsLocked(updatedType.id)) {
+          itemsOperationType = 'setUnlock';
         } else {
-          updatedType.lockingStatus = 'locked';
+          itemsOperationType = 'setLock';
         }
-        break;
-      }
-      case 'setLock': {
-        updatedType.lockingStatus = 'locked';
-        break;
-      }
-      case 'setUnlock': {
-        updatedType.lockingStatus = 'unlocked';
+
+        // update the type
+        updateItemState(updatedType.id, operationType);
+
+        // update the groups
+        const typeGroups = currentGroups.filter(group => group.typeId === type.id);
+        typeGroups.forEach(group => updateItemState(group.id, itemsOperationType));
+
+        // set all of the group’s items
+        const typeItems = currentItems.filter(item => item.typeId === type.id);
+        typeItems.forEach(item => updateItemState(item.id, itemsOperationType));
         break;
       }
       default:
@@ -199,7 +230,7 @@
     types = updateArray(types, updatedType, 'name', 'update');
   };
 
-  const handleGroupUpdate = (group, type = null, operationType = 'toggleOpen') => {
+  const handleGroupUpdate = (group, type, currentItems, operationType = 'toggleOpen') => {
     const updatedGroup = group;
     let updatedType = null;
 
@@ -208,25 +239,33 @@
         updateItemState(updatedGroup.id, operationType);
         break;
       case 'toggleLock': {
-        if (group.lockingStatus === 'locked') {
-          updatedGroup.lockingStatus = 'unlocked';
+        let itemsOperationType = operationType;
+        if (checkIsLocked(updatedGroup.id)) {
+          // unlock the type
+          updatedType = type;
+          updateItemState(updatedType.id, 'setUnlock');
+
+          // set items op
+          itemsOperationType = 'setUnlock';
         } else {
-          updatedGroup.lockingStatus = 'locked';
+          itemsOperationType = 'setLock';
         }
-        break;
-      }
-      case 'setLock': {
-        updatedGroup.lockingStatus = 'locked';
-        break;
-      }
-      case 'setUnlock': {
-        updatedGroup.lockingStatus = 'unlocked';
+
+        // update the group
+        updateItemState(updatedGroup.id, operationType);
+
+        // set all of the group’s items
+        const groupItems = currentItems.filter(item => item.groupId === group.id);
+        groupItems.forEach(item => updateItemState(item.id, itemsOperationType));
         break;
       }
       case 'partialUnlock':
+        // unlock the type
         updatedType = type;
-        updatedGroup.lockingStatus = 'partial';
-        updatedType.lockingStatus = 'partial';
+        updateItemState(updatedType.id, 'setUnlock');
+
+        // unlock the group
+        updateItemState(updatedGroup.id, 'setUnlock');
         break;
       default:
     }
@@ -249,45 +288,17 @@
     }
   };
 
-  const checkIsLocked = (itemId) => {
-    let itemIsLocked = false;
-
-    // check the store to see if an entry exists
-    const itemIndex = $lockedItems.findIndex(foundId => (foundId === itemId));
-
-    // if the index exists, the item is locked
-    if (itemIndex > -1) {
-      itemIsLocked = true;
-    }
-
-    return itemIsLocked;
-  };
-
-  const checkIsOpen = (itemId) => {
-    let itemIsOpen = false;
-
-    // check the store to see if an entry exists
-    const itemIndex = $openItems.findIndex(foundId => (foundId === itemId));
-
-    // if the index exists, the item is open
-    if (itemIndex > -1) {
-      itemIsOpen = true;
-    }
-
-    return itemIsOpen;
-  };
-
   const setGroupsTypesOpen = (groupsTypes) => {
     groupsTypes.forEach((groupType) => {
       updateItemState(groupType.id, 'toggleOpen');
     });
   };
 
-  // set open initially
+  // set groups/types open initially
   setGroupsTypesOpen(types);
   setGroupsTypesOpen(groups);
 
-  afterUpdate(async () => {
+  afterUpdate(() => {
     groups = selected.groups;
     items = selected.items;
     types = selected.types;
@@ -311,13 +322,12 @@
     {#each types as type (type.id)}
       <li class="style-type">
         <ItemGroupHeader
-          on:handleUpdate={customEvent => handleTypeUpdate(type, customEvent.detail)}
-          isLocked={type.lockingStatus === 'locked'}
+          on:handleUpdate={customEvent => handleTypeUpdate(type, groups, items, customEvent.detail)}
+          isLocked={checkIsLocked(type.id)}
           isOpen={checkIsOpen(type.id)}
           isTypeContainer={true}
           labelText={type.name}
           type="style-type"
-          bind:typeIsLocked={type.lockingStatus}
         />
       </li>
 
@@ -325,14 +335,12 @@
         {#each filterByKey(groups, 'typeId', type.id) as group (group.id)}
           <li class="group-type">
             <ItemGroupHeader
-              on:handleUpdate={customEvent => handleGroupUpdate(group, type, customEvent.detail)}
-              bind:groupIsLocked={group.lockingStatus}
+              on:handleUpdate={customEvent => handleGroupUpdate(group, type, items, customEvent.detail)}
               isGroupContainer={true}
-              isLocked={group.lockingStatus === 'locked'}
+              isLocked={checkIsLocked(group.id)}
               isOpen={checkIsOpen(group.id)}
               labelText={`${group.name} ${type.name}`}
               type="group-type"
-              typeIsLocked={type.lockingStatus}
             />
           </li>
 
@@ -340,9 +348,8 @@
             {#each filterByKey(items, 'groupId', group.id) as item (item.id)}
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
-                  on:handleUnlock={() => handleGroupUpdate(group, type, 'partialUnlock')}
+                  on:handleUnlock={() => handleGroupUpdate(group, type, items, 'partialUnlock')}
                   on:handleUpdate={customEvent => updateItemState(item.id, customEvent.detail)}
-                  groupIsLocked={group.lockingStatus}
                   isLocked={checkIsLocked(item.id)}
                   isOpen={checkIsOpen(item.id)}
                   labelGroupText={item.group}
@@ -351,7 +358,6 @@
                 />
                 {#if checkIsOpen(item.id)}
                   <ItemExpandedContent
-                    groupIsLocked={group.lockingStatus}
                     isLocked={checkIsLocked(item.id)}
                     item={item}
                   />

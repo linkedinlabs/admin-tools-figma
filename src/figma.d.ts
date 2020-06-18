@@ -12,7 +12,6 @@ type PresenterTypeName =
 type PresenterTypeGroup = {
   id: string,
   name: string,
-  lockingStatus: 'locked' | 'partial' | 'unlocked',
   type: StyleType,
   typeId?: string,
 };

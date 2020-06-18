@@ -16,7 +16,6 @@ const setTypes = (allItems) => {
       types.push({
         id: item.typeId,
         name: item.typeName,
-        lockingStatus: 'unlocked', // locked, partial, unlocked
         type: item.type,
       });
       typeIds.push(item.typeId);
@@ -43,7 +42,6 @@ const setGroups = (allItems) => {
       groups.push({
         id: item.groupId,
         name: item.group,
-        lockingStatus: 'unlocked', // locked, partial, unlocked
         type: item.type,
         typeId: item.type.toLowerCase(),
       });
