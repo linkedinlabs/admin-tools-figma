@@ -67,7 +67,7 @@ export default class Presenter {
     this.nodes = nodesArray;
   }
 
-  extractStyles = () => {
+  extractStyles = (filter?: 'typography' | 'color-fill' | 'effects' | 'grid') => {
     const { nodes } = this;
     const styleIds = [];
 
@@ -82,7 +82,7 @@ export default class Presenter {
       types: null,
     };
 
-    const items: Array<PresenterItem> = [];
+    let items: Array<PresenterItem> = [];
 
     // get styles here
     const extractedStyles: Array<BaseStyle> = [];
@@ -168,9 +168,35 @@ export default class Presenter {
       }
     });
 
+    // apply filter
+    if (filter) {
+      let filterType: StyleType = null;
+      switch (filter) {
+        case 'color-fill':
+          filterType = 'PAINT';
+          break;
+        case 'effects':
+          filterType = 'EFFECT';
+          break;
+        case 'grid':
+          filterType = 'GRID';
+          break;
+        case 'typography':
+          filterType = 'TEXT';
+          break;
+        default:
+      }
+
+      if (filterType) {
+        items = items.filter(item => item.type === filterType);
+      }
+    }
+
+    // create top-level types and groups
     const types = setTypes(items);
     const groups = setGroups(items);
 
+    // set everything to the `presentationObject`
     presentationObject.items = items;
     presentationObject.groups = groups;
     presentationObject.types = types;

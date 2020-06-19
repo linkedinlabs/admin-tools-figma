@@ -175,17 +175,32 @@ export default class App {
    */
   static async refreshGUI(
     sessionKey: number,
-    filteringPayload?: {
+    filteringPayload: {
       newFilter?: string,
-      newIsStyles?: boolean,
+      newIsStyles: boolean,
+    } = {
+      newFilter: null,
+      newIsStyles: true,
     },
   ) {
     const { messenger, selection } = assemble(figma);
+    const { newIsStyles, newFilter } = filteringPayload;
 
     const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
     const filters = filteringPayload;
     const presenter = new Presenter({ for: nodes });
-    const selected = presenter.extractStyles();
+
+    let selected = null;
+
+    if (newIsStyles) {
+      let filter: 'typography' | 'color-fill' | 'effects' | 'grid' = null;
+      if (newFilter !== 'all-styles') {
+        filter = newFilter as 'typography' | 'color-fill' | 'effects' | 'grid';
+      }
+      selected = presenter.extractStyles(filter);
+    } else {
+      selected = { items: [] };
+    }
 
     // send the updates to the UI
     figma.ui.postMessage({
@@ -199,7 +214,7 @@ export default class App {
 
     // resize the UI
     let newGUIHeight = GUI_SETTINGS.default.height;
-    if (selected.items.length > 0) {
+    if (selected && selected.items && selected.items.length > 0) {
       newGUIHeight = 1200;
     }
 
