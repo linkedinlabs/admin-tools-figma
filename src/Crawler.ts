@@ -47,14 +47,15 @@ export default class Crawler {
       if (
         node.type !== CONTAINER_NODE_TYPES.group
         && node.type !== CONTAINER_NODE_TYPES.frame
-        && node.type !== CONTAINER_NODE_TYPES.component
-        && node.type !== CONTAINER_NODE_TYPES.instance
         && node.visible
         && !node.locked
       ) {
         // non-frame or -group nodes get added to the final selection
         flatSelection.push(node);
       } else {
+        // +++ frames and groups are added for their own styles to be evaluated
+        flatSelection.push(node);
+
         // +++ frames and groups are checked for child nodes
 
         // set initial holding array and add first level of children
@@ -92,14 +93,15 @@ export default class Crawler {
             if (
               innerLayer.type !== CONTAINER_NODE_TYPES.group
               && innerLayer.type !== CONTAINER_NODE_TYPES.frame
-              && innerLayer.type !== CONTAINER_NODE_TYPES.component
-              && innerLayer.type !== CONTAINER_NODE_TYPES.instance
               && innerLayer.visible
               && !innerLayer.locked
             ) {
               // non-frame or -group nodes get added to the final selection
               flatSelection.push(innerLayer);
             } else if (innerLayer.visible && !innerLayer.locked) {
+              // frames and groups are added for their own styles to be evaluated
+              flatSelection.push(innerLayer);
+
               innerLayer.children.forEach((child) => {
                 if (child.visible && !child.locked) {
                   innerLayers.push(child);
