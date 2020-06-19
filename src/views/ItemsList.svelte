@@ -169,6 +169,24 @@
       openItems.set(updatedOpenItems);
     }
 
+    // ---- force open
+    if (operationType === 'setOpen') {
+      // retrieve open list from store and check for existing entry
+      const updatedOpenItems = addEntry($openItems);
+
+      // commit updated list to store
+      openItems.set(updatedOpenItems);
+    }
+
+    // ---- force closed
+    if (operationType === 'setClosed') {
+      // retrieve open list from store and check for existing entry
+      const updatedOpenItems = removeEntry($openItems);
+
+      // commit updated list to store
+      openItems.set(updatedOpenItems);
+    }
+
     // ---- toggle locking
     if (operationType === 'toggleLock') {
       // retrieve open list from store and check for existing entry
@@ -290,7 +308,7 @@
 
   const setGroupsTypesOpen = (groupsTypes) => {
     groupsTypes.forEach((groupType) => {
-      updateItemState(groupType.id, 'toggleOpen');
+      updateItemState(groupType.id, 'setOpen');
     });
   };
 
