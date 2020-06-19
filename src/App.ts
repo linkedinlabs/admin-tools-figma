@@ -3,7 +3,7 @@ import Editor from './Editor';
 import Presenter from './Presenter';
 import Messenger from './Messenger';
 import { resizeGUI } from './Tools';
-import { GUI_SETTINGS } from './constants';
+import { DATA_KEYS, GUI_SETTINGS } from './constants';
 
 /**
  * @description A shared helper function to set up in-UI messages and the logger.
@@ -117,6 +117,31 @@ export default class App {
     return null;
   }
 
+  /** WIP
+   * @description Triggers a UI refresh with the current selection.
+   *
+   * @kind function
+   * @name refreshGUI
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async setFilters(
+    filters: {
+      newFilter?: string,
+      newIsStyles: boolean,
+    },
+    sessionKey: number,
+  ) {
+    // save filters into options for re-use
+    const options = {
+      isStyles: filters.newIsStyles,
+      filter: filters.newFilter,
+    };
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    App.refreshGUI(sessionKey);
+  }
+
   /**
    * @description Resets the plugin GUI back to the original state or closes it entirely,
    * terminating the plugin.
@@ -158,10 +183,10 @@ export default class App {
    *
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
-  static showToolbar(sessionKey: number) {
+  static async showToolbar(sessionKey: number) {
     const { messenger } = assemble(figma);
 
-    App.refreshGUI(sessionKey);
+    await App.refreshGUI(sessionKey);
     App.showGUI({ messenger });
   }
 
@@ -173,29 +198,41 @@ export default class App {
    *
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
-  static async refreshGUI(
-    sessionKey: number,
-    filteringPayload: {
+  static async refreshGUI(sessionKey: number) {
+    const { messenger, selection } = assemble(figma);
+
+    // set default filter
+    const filters: {
       newFilter?: string,
       newIsStyles: boolean,
     } = {
       newFilter: null,
       newIsStyles: true,
-    },
-  ) {
-    const { messenger, selection } = assemble(figma);
-    const { newIsStyles, newFilter } = filteringPayload;
+    };
 
+    // set up initial selection and Presenter class
     const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
-    const filters = filteringPayload;
     const presenter = new Presenter({ for: nodes });
 
-    let selected = null;
+    // get last-used filters from options
+    const lastUsedOptions: {
+      isStyles: boolean,
+      filter: string,
+    } = await figma.clientStorage.getAsync(DATA_KEYS.options);
+    if (lastUsedOptions
+      && lastUsedOptions.isStyles !== undefined
+      && lastUsedOptions.filter !== undefined
+    ) {
+      filters.newFilter = lastUsedOptions.filter;
+      filters.newIsStyles = lastUsedOptions.isStyles;
+    }
 
-    if (newIsStyles) {
+    // set up selection based on filters
+    let selected = null;
+    if (filters.newIsStyles) {
       let filter: 'typography' | 'color-fill' | 'effects' | 'grid' = null;
-      if (newFilter !== 'all-styles') {
-        filter = newFilter as 'typography' | 'color-fill' | 'effects' | 'grid';
+      if (filters.newFilter !== 'all-styles') {
+        filter = filters.newFilter as 'typography' | 'color-fill' | 'effects' | 'grid';
       }
       selected = presenter.extractStyles(filter);
     } else {
@@ -223,7 +260,7 @@ export default class App {
       newGUIHeight,
     );
 
-    messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'layer' : 'layers'}`);
+    messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
   }
 
   /**
