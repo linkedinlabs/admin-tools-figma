@@ -312,6 +312,35 @@
     });
   };
 
+  const setEditableItems = (currentItems, lockedIdsArray) => {
+    const unlockedItemIds = [];
+    const unlockedItems = [];
+    currentItems.forEach((item) => {
+      // find the index of the locked ID
+      const lockedIndex = lockedIdsArray.findIndex(
+        foundId => (foundId === item.id),
+      );
+
+      if (lockedIndex < 0) {
+        unlockedItems.push(item);
+        unlockedItemIds.push(item.id);
+      }
+    });
+
+    const editableItems = {
+      items: unlockedItems,
+      itemsIdArray: unlockedItemIds,
+    };
+    return editableItems;
+  };
+
+  const generateEditableLabel = (currentItems, lockedIdsArray) => {
+    const itemCount = setEditableItems(currentItems, lockedIdsArray).itemsIdArray.length;
+    const itemText = itemCount === 1 ? 'style' : 'styles';
+    const labelText = `Modifying ${itemCount} ${itemText}`;
+    return labelText;
+  };
+
   // set groups/types open initially
   setGroupsTypesOpen(types);
   setGroupsTypesOpen(groups);
@@ -329,11 +358,13 @@
       <ItemGroupHeader
         on:handleUpdate={() => handleIsOpenUpdate('editor')}
         isOpen={isOpenEditor}
-        labelText={isOpenEditor ? `Modifying ${items ? items.length : 0} styles` : 'Modify all unlocked'}
+        labelText={isOpenEditor ? generateEditableLabel(items, $lockedItems) : 'Modify all unlocked'}
         type="bulk-editor"
       />
       {#if isOpenEditor}
-        <EditorExpandedContent/>
+        <EditorExpandedContent
+          editableItems={setEditableItems(items, $lockedItems)}
+        />
       {/if}
     </li>
 

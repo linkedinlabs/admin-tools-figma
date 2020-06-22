@@ -3,7 +3,7 @@
 
   import FigmaSwitch from './forms-controls/FigmaSwitch';
 
-  export let watchSelection = false;
+  export let watchSelection = true;
   export let numberSelected = 0;
 
   if (!$isStyles && !watchSelection) {
@@ -34,6 +34,7 @@
   {#if $isStyles}
   <FigmaSwitch
     bind:checked={watchSelection}
+    disabled
     labelText="Watch selection"
     nameId="watch-selection"
   />

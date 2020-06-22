@@ -8,6 +8,7 @@
   export let className = null;
   export let disableActions = false;
   export let disableCopy = false;
+  export let hasMultiple = false;
   export let invertView = false;
   export let isDirty = false;
   export let itemIsLocked = false;
@@ -69,7 +70,7 @@
       disabled={isLocked || itemIsLocked}
       invertView={invertView}
       nameId={nameId}
-      placeholder={placeholder}
+      placeholder={hasMultiple ? 'multiple…' : placeholder}
       bind:value={value}
     />
   {/if}
@@ -80,7 +81,7 @@
       disabled={isLocked || itemIsLocked}
       invertView={invertView}
       nameId={nameId}
-      placeholder={placeholder}
+      placeholder={hasMultiple ? 'multiple…' : placeholder}
       bind:value={value}
     />
   {/if}
