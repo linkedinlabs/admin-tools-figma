@@ -151,7 +151,6 @@
         nameId="is-interactive"
       />
     </span>
-    
   </span>
 
   {#if isDirty}

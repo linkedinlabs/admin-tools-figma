@@ -329,13 +329,60 @@
 
     const editableItems = {
       items: unlockedItems,
-      itemsIdArray: unlockedItemIds,
+      itemIds: unlockedItemIds,
     };
     return editableItems;
   };
 
+  const setEditorItem = (currentItems, lockedIdsArray) => {
+    const itemsToCompare = setEditableItems(currentItems, lockedIdsArray).items;
+    const editorItem = {
+      id: 'editor-item',
+      description: null,
+      descriptionHasValues: false,
+      group: null,
+      groupHasValues: false,
+      kind: null,
+      kindHasValues: false,
+      name: null,
+      nameHasValues: false,
+    };
+
+    const currentDescriptions = [];
+    const currentGroups = [];
+    const currentNames = [];
+    itemsToCompare.forEach((item) => {
+      if (!currentDescriptions.includes(item.description)) {
+        currentDescriptions.push(item.description);
+      }
+      if (!currentGroups.includes(item.group)) {
+        currentGroups.push(item.group);
+      }
+      if (!currentNames.includes(item.name)) {
+        currentNames.push(item.name);
+      }
+    });
+
+    if (currentGroups.length >= 1) {
+      editorItem.group = currentGroups.length === 1 ? currentGroups[0] : null;
+      editorItem.groupHasValues = true;
+    }
+
+    if (currentNames.length >= 1) {
+      editorItem.name = currentNames.length === 1 ? currentNames[0] : null;
+      editorItem.nameHasValues = true;
+    }
+
+    if (currentDescriptions.length >= 1) {
+      editorItem.description = currentDescriptions.length === 1 ? currentDescriptions[0] : null;
+      editorItem.descriptionHasValues = true;
+    }
+
+    return editorItem;
+  };
+
   const generateEditableLabel = (currentItems, lockedIdsArray) => {
-    const itemCount = setEditableItems(currentItems, lockedIdsArray).itemsIdArray.length;
+    const itemCount = setEditableItems(currentItems, lockedIdsArray).itemIds.length;
     const itemText = itemCount === 1 ? 'style' : 'styles';
     const labelText = `Modifying ${itemCount} ${itemText}`;
     return labelText;
@@ -363,7 +410,8 @@
       />
       {#if isOpenEditor}
         <EditorExpandedContent
-          editableItems={setEditableItems(items, $lockedItems)}
+          editorItem={setEditorItem(items, $lockedItems)}
+          editableItemIds={setEditableItems(items, $lockedItems).itemIds}
         />
       {/if}
     </li>

@@ -153,7 +153,7 @@ export default class App {
    */
   handleUpdate(payload, sessionKey: number) {
     const { messenger, selection } = assemble(figma);
-    const { updatedItem } = payload;
+    const { updatedItem, itemIds } = payload;
 
     if (this.shouldTerminate) {
       return this.terminatePlugin();
@@ -164,7 +164,12 @@ export default class App {
     const editor = new Editor({ for: nodes });
 
     // commit the updates
-    const updateResult = editor.update(updatedItem);
+    let updateResult = null;
+    if (itemIds) {
+      updateResult = editor.updateBulk(updatedItem, itemIds);
+    } else {
+      updateResult = editor.update(updatedItem);
+    }
 
     // display the message and terminate the plugin
     messenger.handleResult(updateResult);

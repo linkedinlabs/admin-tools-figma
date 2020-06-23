@@ -6,91 +6,66 @@
   import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 
-  export let editableItems = [];
+  export let editorItem;
+  export let editableItemIds = [];
 
-  let editableItemIds = [];
-  let resetItems = false;
-  const editorItem = {
-    id: 'editor-item',
-    description: {
-      value: null,
-      hasValues: false,
-    },
-    group: {
-      value: null,
-      hasValues: false,
-    },
-    kind: {
-      value: null,
-      hasValues: false,
-    },
-    name: {
-      value: null,
-      hasValues: false,
-    },
+  let originalEditableItemIds = editableItemIds;
+  let dirtyItem = Object.assign({}, editorItem);
+  let originalItem = Object.assign({}, editorItem);
+  let isDirty = false;
+  let resetValue = false;
+
+  const handleReset = () => {
+    dirtyItem = Object.assign({}, editorItem);
+    isDirty = false;
+    resetValue = true;
   };
 
-  const setEditorItem = (itemsToCompare) => {
-    const descriptions = [];
-    const groups = [];
-    const names = [];
-
-    itemsToCompare.forEach((item) => {
-      if (!descriptions.includes(item.description)) {
-        descriptions.push(item.description);
-      }
-      if (!groups.includes(item.group)) {
-        groups.push(item.group);
-      }
-      if (!names.includes(item.name)) {
-        names.push(item.name);
-      }
-    });
-
-    if (groups.length >= 1) {
-      editorItem.group.value = groups.length === 1 ? groups[0] : null;
-      editorItem.group.hasValues = true;
-    }
-
-    if (names.length >= 1) {
-      editorItem.name.value = names.length === 1 ? names[0] : null;
-      editorItem.name.hasValues = true;
-    }
-
-    if (descriptions.length >= 1) {
-      editorItem.description.value = descriptions.length === 1 ? descriptions[0] : null;
-      editorItem.description.hasValues = true;
-    }
+  const handleSave = (currentItem, itemIds) => {
+    parent.postMessage({
+      pluginMessage: {
+        action: 'submit-bulk',
+        payload: {
+          updatedItem: dirtyItem,
+          itemIds,
+        },
+      },
+    }, '*');
   };
 
-  const extractValue = (item) => {
-    if (item.value && item.hasValues) {
-      return item.value;
-    }
-    return null;
-  };
-
-  const setClasses = (classes, item) => {
-    if (!item.value && item.hasValues) {
+  const setClasses = (classes, hasValues) => {
+    if (hasValues) {
       return `${classes} has-multiple`;
     }
     return classes;
   };
 
-  const hasMultiple = item => (!item.value && item.hasValues);
-
   beforeUpdate(() => {
-    if (editableItemIds !== editableItems.itemsIdArray) {
-      resetItems = true;
+    // check `editorItem` against dirty to see if it was updated in the form
+    isDirty = false;
+    Object.entries(editorItem).forEach(([key, value]) => {
+      if (dirtyItem[key] !== value) {
+        isDirty = true;
+      }
+    });
+
+    // check `editorItem` against original to see if it was updated on the Figma side
+    Object.entries(editorItem).forEach(([key, value]) => {
+      if (originalItem[key] !== value) {
+        resetValue = true;
+      }
+    });
+
+    if (editableItemIds !== originalEditableItemIds) {
+      originalEditableItemIds = editableItemIds;
+      handleReset();
     }
   });
 
   afterUpdate(() => {
-    setEditorItem(editableItems.items);
-    editableItemIds = editableItems.itemsIdArray;
-
-    if (resetItems) {
-      resetItems = false;
+    if (resetValue) {
+      resetValue = false;
+      originalItem = Object.assign({}, editorItem);
     }
   });
 </script>
@@ -101,37 +76,37 @@
   <span class="form-element-holder">
     <span class="form-row">
       <FormUnit
-        className={setClasses('form-unit split-40', editorItem.group)}
-        hasMultiple={hasMultiple(editorItem.name)}
+        className={setClasses('form-unit split-40', editorItem.groupHasValues)}
+        hasMultiple={editorItem.groupHasValues}
         invertView={true}
         kind="inputText"
         labelText="Group&nbsp;&nbsp;&nbsp;/"
         nameId="editor-test-group"
-        resetValue={resetItems}
-        value={extractValue(editorItem.group)}
+        resetValue={resetValue}
+        bind:value={dirtyItem.group}
       />
       <FormUnit
-        className={setClasses('form-unit split-60', editorItem.name)}
-        hasMultiple={hasMultiple(editorItem.name)}
+        className={setClasses('form-unit split-60', editorItem.nameHasValues)}
+        hasMultiple={editorItem.nameHasValues}
         invertView={true}
         kind="inputText"
         labelText="Name"
         nameId="editor-test-name"
-        resetValue={resetItems}
-        value={extractValue(editorItem.name)}
+        resetValue={resetValue}
+        bind:value={dirtyItem.name}
       />
     </span>
     
     <FormUnit
-      className={setClasses('form-row', editorItem.description)}
-      hasMultiple={hasMultiple(editorItem.name)}
+      className={setClasses('form-row', editorItem.descriptionHasValues)}
+      hasMultiple={editorItem.descriptionHasValues}
       invertView={true}
       kind="inputTextarea"
       labelText="Description"
       nameId="editor-test-description"
       placeholder="Description"
-      resetValue={resetItems}
-      value={extractValue(editorItem.description)}
+      resetValue={resetValue}
+      bind:value={dirtyItem.description}
     />
 
     <span class="form-row">
@@ -173,6 +148,20 @@
         nameId="is-interactive"
       />
     </span>
-    
   </span>
+
+  {#if isDirty}
+    <span>
+      <button
+        on:click={() => handleReset()}
+      >
+        Restore
+      </button>
+      <button
+        on:click={() => handleSave(dirtyItem, editableItemIds)}
+      >
+        Save Changes
+      </button>
+    </span>
+  {/if}
 </section>

@@ -75,6 +75,15 @@ svg {
             &.split-60 {
               width: calc(60% - #{em(3)});
             }
+
+            &.has-multiple {
+              #{$all-text-inputs} {
+                &::placeholder {
+                  font-style: italic;
+                  color: rgba($wl-type-01-invert, 0.8);
+                }
+              }
+            }
           }
         }
       }
