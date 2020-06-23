@@ -401,20 +401,22 @@
 
 <section class="options" id="action-options">
   <ul id="sample-list">
-    <li class={`bulk-editor${isOpenEditor ? ' expanded' : ''}`}>
-      <ItemGroupHeader
-        on:handleUpdate={() => handleIsOpenUpdate('editor')}
-        isOpen={isOpenEditor}
-        labelText={isOpenEditor ? generateEditableLabel(items, $lockedItems) : 'Modify all unlocked'}
-        type="bulk-editor"
-      />
-      {#if isOpenEditor}
-        <EditorExpandedContent
-          editorItem={setEditorItem(items, $lockedItems)}
-          editableItemIds={setEditableItems(items, $lockedItems).itemIds}
+    {#if items.length > 1 || isOpenEditor}
+      <li class={`bulk-editor${isOpenEditor ? ' expanded' : ''}`}>
+        <ItemGroupHeader
+          on:handleUpdate={() => handleIsOpenUpdate('editor')}
+          isOpen={isOpenEditor}
+          labelText={isOpenEditor ? generateEditableLabel(items, $lockedItems) : 'Modify all unlocked'}
+          type="bulk-editor"
         />
-      {/if}
-    </li>
+        {#if isOpenEditor}
+          <EditorExpandedContent
+            editorItem={setEditorItem(items, $lockedItems)}
+            editableItemIds={setEditableItems(items, $lockedItems).itemIds}
+          />
+        {/if}
+      </li>
+    {/if}
 
     {#each types as type (type.id)}
       <li class="style-type">
