@@ -1,5 +1,6 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
+  import Description from './Description';
   import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormLabel from './forms-controls/FormLabel';
@@ -90,6 +91,13 @@
       />
     {/if}
 
+    <Description
+      bind:description={dirtyItem.description}
+      isLocked={isLocked}
+      itemId={item.id}
+      resetValue={resetValue}
+    />
+
     <FormUnit
       className="form-row"
       itemIsLocked={isLocked}
@@ -99,17 +107,6 @@
       placeholder="Description"
       resetValue={resetValue}
       bind:value={dirtyItem.description}
-    />
-
-    <FormUnit
-      className="form-row"
-      itemIsLocked={isLocked}
-      kind="inputText"
-      labelText="Label text here"
-      nameId={`item-label-link-${item.id}`}
-      placeholder="Type something…"
-      resetValue={resetValue}
-      value="I am some text to measure against"
     />
 
     <span class="form-row">

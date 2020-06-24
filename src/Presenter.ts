@@ -3,33 +3,7 @@
  * effectively flattening the selection.
  *
  * @kind function
- * @name update
- *
- * @returns {Object} All items (including children) individual in an updated array.
- */
-const setTypes = (allItems) => {
-  const types: Array<PresenterTypeGroup> = [];
-
-  const typeIds: Array<string> = [];
-  allItems.forEach((item) => {
-    if (!typeIds.includes(item.typeId)) {
-      types.push({
-        id: item.typeId,
-        name: item.typeName,
-        type: item.type,
-      });
-      typeIds.push(item.typeId);
-    }
-  });
-  return types;
-};
-
-/** WIP
- * @description Looks into the selection array for any groups and pulls out individual nodes,
- * effectively flattening the selection.
- *
- * @kind function
- * @name update
+ * @name setGroups
  *
  * @returns {Object} All items (including children) individual in an updated array.
  */
@@ -49,6 +23,32 @@ const setGroups = (allItems) => {
     }
   });
   return groups;
+};
+
+/** WIP
+ * @description Looks into the selection array for any groups and pulls out individual nodes,
+ * effectively flattening the selection.
+ *
+ * @kind function
+ * @name setTypes
+ *
+ * @returns {Object} All items (including children) individual in an updated array.
+ */
+const setTypes = (allItems) => {
+  const types: Array<PresenterTypeGroup> = [];
+
+  const typeIds: Array<string> = [];
+  allItems.forEach((item) => {
+    if (!typeIds.includes(item.typeId)) {
+      types.push({
+        id: item.typeId,
+        name: item.typeName,
+        type: item.type,
+      });
+      typeIds.push(item.typeId);
+    }
+  });
+  return types;
 };
 
 /** WIP

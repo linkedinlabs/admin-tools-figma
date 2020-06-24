@@ -401,7 +401,7 @@
 
 <section class="options" id="action-options">
   <ul id="sample-list">
-    {#if items.length > 1 || isOpenEditor}
+    {#if setEditableItems(items, $lockedItems).itemIds.length > 1 || isOpenEditor}
       <li class={`bulk-editor${isOpenEditor ? ' expanded' : ''}`}>
         <ItemGroupHeader
           on:handleUpdate={() => handleIsOpenUpdate('editor')}
