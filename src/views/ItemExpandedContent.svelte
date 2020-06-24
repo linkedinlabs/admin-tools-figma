@@ -98,17 +98,6 @@
       resetValue={resetValue}
     />
 
-    <FormUnit
-      className="form-row"
-      itemIsLocked={isLocked}
-      kind="inputTextarea"
-      labelText="Description"
-      nameId={`item-description-${item.id}`}
-      placeholder="Description"
-      resetValue={resetValue}
-      bind:value={dirtyItem.description}
-    />
-
     <span class="form-row">
       <FormLabel
         labelText="Add new…"
