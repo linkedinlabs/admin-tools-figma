@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
   import FigmaInput from './FigmaInput';
   import FigmaSelectmenu from './FigmaSelectmenu';
   import FigmaTextarea from './FigmaTextarea';
@@ -10,6 +10,7 @@
   export let disableCopy = false;
   export let hasMultiple = false;
   export let invertView = false;
+  export let isDeletable = false;
   export let isDirty = false;
   export let itemIsLocked = false;
   export let kind = 'inputText';
@@ -19,12 +20,17 @@
   export let resetValue = false;
   export let value = null;
 
+  const dispatch = createEventDispatcher();
   let originalValue = value;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
 
   const restoreValue = () => {
     value = originalValue;
+  };
+
+  const handleDelete = () => {
+    dispatch('deleteSignal');
   };
 
   afterUpdate(() => {
@@ -95,5 +101,11 @@
       nameId={nameId}
       bind:value={value}
     />
+  {/if}
+
+  {#if isDeletable}
+    <button on:click={() => handleDelete()}>
+      Delete me
+    </button>
   {/if}
 </span>

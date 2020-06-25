@@ -57,18 +57,33 @@
     return string;
   };
 
-  const handleDescriptionAddition = (keyValuePair, currentDescriptionArray) => {
+  const addEntry = (keyValuePair) => {
     const { key, value } = keyValuePair;
-    const keyExists = currentDescriptionArray.filter(item => item.key === key).length !== 0;
+    const keyExists = descriptionArray.filter(item => item.key === key).length !== 0;
 
     // add new description entry if unique
     if (!keyExists && key && value) {
-      currentDescriptionArray.push(keyValuePair);
+      descriptionArray.push(keyValuePair);
       description = compileDescription(descriptionArray);
       newKeyValuePair = {
         key: null,
         value: null,
       };
+      dispatch('saveSignal');
+    }
+  };
+
+  const removeEntry = (key) => {
+    const keyIndex = descriptionArray.findIndex(item => item.key === key);
+
+    if (keyIndex > -1) {
+      // remove it
+      descriptionArray = [
+        ...descriptionArray.slice(0, keyIndex),
+        ...descriptionArray.slice(keyIndex + 1),
+      ];
+
+      description = compileDescription(descriptionArray);
       dispatch('saveSignal');
     }
   };
@@ -94,6 +109,8 @@
 {#each descriptionArray as descriptionEntry, i (descriptionEntry.key)}
   <FormUnit
     className="form-row"
+    on:deleteSignal={() => removeEntry(descriptionEntry.key)}
+    isDeletable={true}
     itemIsLocked={isLocked}
     kind="inputText"
     labelText={descriptionEntry.key}
@@ -116,7 +133,7 @@
     disabled={isLocked}
     nameId={`add-new-description-key-${itemId}`}
     placeholder="Add stuff to me…"
-    on:saveSignal={() => handleDescriptionAddition(newKeyValuePair, descriptionArray)}
+    on:saveSignal={() => addEntry(newKeyValuePair)}
     bind:value={newKeyValuePair.key}
   />
   <FigmaInput
@@ -124,7 +141,7 @@
     disabled={isLocked}
     nameId={`add-new-description-value-${itemId}`}
     placeholder="Add other stuff to me…"
-    on:saveSignal={() => handleDescriptionAddition(newKeyValuePair, descriptionArray)}
+    on:saveSignal={() => addEntry(newKeyValuePair)}
     bind:value={newKeyValuePair.value}
   />
 </span>
