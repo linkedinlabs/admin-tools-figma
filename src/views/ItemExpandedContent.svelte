@@ -67,6 +67,7 @@
           labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
           nameId={`item-group-${item.id}`}
           resetValue={resetValue}
+          on:saveSignal={() => handleSave()}
           bind:value={dirtyItem.group}
         />
         <FormUnit
@@ -76,6 +77,7 @@
           labelText="Name"
           nameId={`item-name-${item.id}`}
           resetValue={resetValue}
+          on:saveSignal={() => handleSave()}
           bind:value={dirtyItem.name}
         />
       </span>
@@ -87,6 +89,7 @@
         labelText="Name"
         nameId={`item-name-${item.id}`}
         resetValue={resetValue}
+        on:saveSignal={() => handleSave()}
         bind:value={dirtyItem.name}
       />
     {/if}
@@ -96,6 +99,7 @@
       isLocked={isLocked}
       itemId={item.id}
       resetValue={resetValue}
+      on:saveSignal={() => handleSave()}
     />
 
     <span class="form-row">

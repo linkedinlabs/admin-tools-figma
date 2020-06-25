@@ -71,6 +71,7 @@
       invertView={invertView}
       nameId={nameId}
       placeholder={hasMultiple ? 'multiple…' : placeholder}
+      on:saveSignal
       bind:value={value}
     />
   {/if}

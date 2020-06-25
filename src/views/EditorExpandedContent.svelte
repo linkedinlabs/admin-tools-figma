@@ -1,6 +1,5 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
-  // import { lockedItems } from './stores';
   import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormLabel from './forms-controls/FormLabel';
@@ -83,6 +82,7 @@
         labelText="Group&nbsp;&nbsp;&nbsp;/"
         nameId="editor-test-group"
         resetValue={resetValue}
+        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
         bind:value={dirtyItem.group}
       />
       <FormUnit
@@ -93,6 +93,7 @@
         labelText="Name"
         nameId="editor-test-name"
         resetValue={resetValue}
+        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
         bind:value={dirtyItem.name}
       />
     </span>

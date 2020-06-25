@@ -77,6 +77,7 @@
     nameId={`item-description-${i}-${itemId}`}
     placeholder="Type something…"
     resetValue={resetValue}
+    on:saveSignal
     bind:value={descriptionEntry.value}
   />
 {/each}
