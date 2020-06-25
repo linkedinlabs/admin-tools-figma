@@ -1,5 +1,6 @@
 <script>
   import { afterUpdate, createEventDispatcher } from 'svelte';
+  import ButtonRemove from './ButtonRemove';
   import FigmaInput from './FigmaInput';
   import FigmaSelectmenu from './FigmaSelectmenu';
   import FigmaTextarea from './FigmaTextarea';
@@ -104,8 +105,6 @@
   {/if}
 
   {#if isDeletable}
-    <button on:click={() => handleDelete()}>
-      Delete me
-    </button>
+    <ButtonRemove on:handleUpdate={() => handleDelete()}/>
   {/if}
 </span>
