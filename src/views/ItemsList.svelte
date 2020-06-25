@@ -335,6 +335,11 @@
   };
 
   const setEditorItem = (currentItems, lockedIdsArray) => {
+    const combineDescriptions = (descriptionStringsArray) => {
+      const combinedDescription = descriptionStringsArray.join('\n');
+      return combinedDescription;
+    };
+
     const itemsToCompare = setEditableItems(currentItems, lockedIdsArray).items;
     const editorItem = {
       id: 'editor-item',
@@ -374,7 +379,7 @@
     }
 
     if (currentDescriptions.length >= 1) {
-      editorItem.description = currentDescriptions.length === 1 ? currentDescriptions[0] : null;
+      editorItem.description = combineDescriptions(currentDescriptions);
       editorItem.descriptionHasValues = true;
     }
 
