@@ -71,40 +71,42 @@
     value={value}
   />
 
-  {#if kind === 'inputText'}
-    <FigmaInput
-      className="form-element element-type-text"
-      disabled={isLocked || itemIsLocked}
-      invertView={invertView}
-      nameId={nameId}
-      placeholder={hasMultiple ? 'multiple…' : placeholder}
-      on:saveSignal
-      bind:value={value}
-    />
-  {/if}
+  <span class="form-inner-row">
+    {#if kind === 'inputText'}
+      <FigmaInput
+        className="form-element element-type-text"
+        disabled={isLocked || itemIsLocked}
+        invertView={invertView}
+        nameId={nameId}
+        placeholder={hasMultiple ? 'multiple…' : placeholder}
+        on:saveSignal
+        bind:value={value}
+      />
+    {/if}
 
-  {#if kind === 'inputTextarea'}
-    <FigmaTextarea
-      className="form-element element-type-textarea"
-      disabled={isLocked || itemIsLocked}
-      invertView={invertView}
-      nameId={nameId}
-      placeholder={hasMultiple ? 'multiple…' : placeholder}
-      bind:value={value}
-    />
-  {/if}
+    {#if kind === 'inputTextarea'}
+      <FigmaTextarea
+        className="form-element element-type-textarea"
+        disabled={isLocked || itemIsLocked}
+        invertView={invertView}
+        nameId={nameId}
+        placeholder={hasMultiple ? 'multiple…' : placeholder}
+        bind:value={value}
+      />
+    {/if}
 
-  {#if kind === 'inputSelect'}
-    <FigmaSelectmenu
-      className="form-element element-type-select split-50"
-      disabled={isLocked || itemIsLocked}
-      invertView={invertView}
-      nameId={nameId}
-      bind:value={value}
-    />
-  {/if}
+    {#if kind === 'inputSelect'}
+      <FigmaSelectmenu
+        className="form-element element-type-select split-50"
+        disabled={isLocked || itemIsLocked}
+        invertView={invertView}
+        nameId={nameId}
+        bind:value={value}
+      />
+    {/if}
 
-  {#if isDeletable}
-    <ButtonRemove on:handleUpdate={() => handleDelete()}/>
-  {/if}
+    {#if isDeletable}
+      <ButtonRemove on:handleUpdate={() => handleDelete()}/>
+    {/if}
+  </span>
 </span>

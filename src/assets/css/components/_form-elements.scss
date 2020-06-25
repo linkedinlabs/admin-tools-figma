@@ -116,6 +116,11 @@
 }
 
 .form-element-holder {
+  .form-inner-row {
+    display: flex;
+    width: 100%;
+  }
+
   .form-label {
     @include form-label;
 
