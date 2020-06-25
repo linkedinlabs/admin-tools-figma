@@ -1,9 +1,7 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
   import Description from './Description';
-  import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
-  import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 
   export let isLocked = false;
@@ -101,26 +99,6 @@
       resetValue={resetValue}
       on:saveSignal={() => handleSave()}
     />
-
-    <span class="form-row">
-      <FormLabel
-        labelText="Add new…"
-        nameId={`add-new-label-${item.id}`}
-        disableActions={true}
-      />
-      <FigmaInput
-        className="form-element element-type-text-new split-40"
-        disabled={isLocked}
-        nameId={`add-new-label-${item.id}`}
-        placeholder="Add stuff to me…"
-      />
-      <FigmaInput
-        className="form-element element-type-text-new split-60"
-        disabled={isLocked}
-        nameId={`add-new-text-${item.id}`}
-        placeholder="Add other stuff to me…"
-      />
-    </span>
 
     <FormUnit
       className="form-row"

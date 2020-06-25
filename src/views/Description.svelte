@@ -1,5 +1,7 @@
 <script>
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
+  import FigmaInput from './forms-controls/FigmaInput';
+  import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 
   export let description = null;
@@ -7,7 +9,12 @@
   export let itemId = null;
   export let resetValue = false;
 
+  const dispatch = createEventDispatcher();
   let descriptionArray = [];
+  let newKeyValuePair = {
+    key: null,
+    value: null,
+  };
 
   /** WIP
    * @description Looks into the selection array for any groups and pulls out individual nodes,
@@ -50,6 +57,22 @@
     return string;
   };
 
+  const handleDescriptionAddition = (keyValuePair, currentDescriptionArray) => {
+    const { key, value } = keyValuePair;
+    const keyExists = currentDescriptionArray.filter(item => item.key === key).length !== 0;
+
+    // add new description entry if unique
+    if (!keyExists && key && value) {
+      currentDescriptionArray.push(keyValuePair);
+      description = compileDescription(descriptionArray);
+      newKeyValuePair = {
+        key: null,
+        value: null,
+      };
+      dispatch('saveSignal');
+    }
+  };
+
   afterUpdate(() => {
     if (description && descriptionArray.length < 1) {
       // update display array
@@ -81,3 +104,27 @@
     bind:value={descriptionEntry.value}
   />
 {/each}
+
+<span class="form-row">
+  <FormLabel
+    labelText="Add new…"
+    nameId={`add-new-description-key-${itemId}`}
+    disableActions={true}
+  />
+  <FigmaInput
+    className="form-element element-type-text-new split-40"
+    disabled={isLocked}
+    nameId={`add-new-description-key-${itemId}`}
+    placeholder="Add stuff to me…"
+    on:saveSignal={() => handleDescriptionAddition(newKeyValuePair, descriptionArray)}
+    bind:value={newKeyValuePair.key}
+  />
+  <FigmaInput
+    className="form-element element-type-text-new split-60"
+    disabled={isLocked}
+    nameId={`add-new-description-value-${itemId}`}
+    placeholder="Add other stuff to me…"
+    on:saveSignal={() => handleDescriptionAddition(newKeyValuePair, descriptionArray)}
+    bind:value={newKeyValuePair.value}
+  />
+</span>
