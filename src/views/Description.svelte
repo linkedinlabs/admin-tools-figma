@@ -1,5 +1,6 @@
 <script>
   import { afterUpdate, createEventDispatcher } from 'svelte';
+  import { sessionKey } from './stores';
   import FigmaInput from './forms-controls/FigmaInput';
   import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
@@ -98,11 +99,16 @@
     const keyIndex = descriptionArray.findIndex(item => item.key === key);
 
     if (keyIndex > -1) {
-      // remove it
-      descriptionArray = [
-        ...descriptionArray.slice(0, keyIndex),
-        ...descriptionArray.slice(keyIndex + 1),
-      ];
+      if (!isEditor) {
+        // remove it
+        descriptionArray = [
+          ...descriptionArray.slice(0, keyIndex),
+          ...descriptionArray.slice(keyIndex + 1),
+        ];
+      } else {
+        // for editor, add a flag
+        descriptionArray[keyIndex].value = `remove-${$sessionKey}`;
+      }
 
       description = compileDescription(descriptionArray);
       dispatch('saveSignal');

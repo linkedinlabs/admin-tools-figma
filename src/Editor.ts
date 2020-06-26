@@ -74,8 +74,11 @@ const compileDescription = (currentDescriptionArray) => {
  */
 export default class Editor {
   array: Array<BaseNode | BaseStyle>;
-  constructor({ for: currentSelection }) {
+  sessionKey: string;
+
+  constructor({ for: currentSelection, sessionKey }) {
     this.array = currentSelection;
+    this.sessionKey = sessionKey;
   }
 
   /** WIP
@@ -232,7 +235,7 @@ export default class Editor {
               }
               case 'description': {
                 const updatedDescriptionArray = parseDescription(updatedItem.description);
-                const existingDescriptionArray = parseDescription(existingItem.description);
+                let existingDescriptionArray = parseDescription(existingItem.description);
 
                 updatedDescriptionArray.forEach((updatedDescriptionItem) => {
                   if (updatedDescriptionItem.value) {
@@ -241,7 +244,16 @@ export default class Editor {
                     );
 
                     if (existingIndex > -1) {
-                      existingDescriptionArray[existingIndex].value = updatedDescriptionItem.value;
+                      if (updatedDescriptionItem.value === `remove-${this.sessionKey}`) {
+                        // remove it
+                        existingDescriptionArray = [
+                          ...existingDescriptionArray.slice(0, existingIndex),
+                          ...existingDescriptionArray.slice(existingIndex + 1),
+                        ];
+                      } else {
+                        existingDescriptionArray[
+                          existingIndex].value = updatedDescriptionItem.value;
+                      }
                     } else {
                       existingDescriptionArray.push(updatedDescriptionItem);
                     }

@@ -161,7 +161,7 @@ export default class App {
 
     // set up the Editor class to manipulate the selection
     const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
-    const editor = new Editor({ for: nodes });
+    const editor = new Editor({ for: nodes, sessionKey });
 
     // commit the updates
     let updateResult = null;

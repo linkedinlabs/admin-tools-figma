@@ -1,6 +1,6 @@
 <script>
   import { beforeUpdate } from 'svelte';
-  import { currentFilter, isStyles } from './stores';
+  import { currentFilter, isStyles, sessionKey } from './stores';
   import BlankState from './BlankState';
   import FontPreload from './FontPreload';
   import ItemsList from './ItemsList';
@@ -10,6 +10,7 @@
   export let filter = 'all-components';
   export let inspect = 'components';
   export let selected = null;
+  export let newSessionKey = null;
 
   const setCurrentFilter = (newFilter) => {
     currentFilter.set(newFilter);
@@ -20,9 +21,11 @@
     isStyles.set(newIsStyles);
   };
 
+
   beforeUpdate(() => {
     setIsStyles(inspect);
     setCurrentFilter(filter);
+    sessionKey.set(newSessionKey);
   });
 </script>
 

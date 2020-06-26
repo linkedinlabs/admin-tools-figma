@@ -7,6 +7,7 @@ const app = new App({
     inspect: 'styles',
     filter: 'all-styles',
     selected: null,
+    newSessionKey: null,
   },
 });
 
@@ -50,6 +51,7 @@ const updateSelected = (
     newFilter?: string,
     newIsStyles?: boolean,
   },
+  sessionKey: string,
 ): void => {
   if (selected) {
     app.selected = selected;
@@ -62,6 +64,7 @@ const updateSelected = (
 
     const newInspect = filters.newIsStyles ? 'styles' : 'components';
     app.inspect = newInspect;
+    app.newSessionKey = sessionKey;
   }
 };
 
@@ -87,11 +90,11 @@ const watchIncomingMessages = (): void => {
   ) => {
     const { pluginMessage } = event.data;
     const { payload } = pluginMessage;
-    const { filters } = payload;
-    const { selected } = payload;
+    const { filters, selected, sessionKey } = payload;
+
     switch (pluginMessage.action) {
       case 'refreshState':
-        updateSelected(selected, filters);
+        updateSelected(selected, filters, sessionKey);
         break;
       default:
         return null;
