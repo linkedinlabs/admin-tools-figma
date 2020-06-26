@@ -9,6 +9,7 @@
   export let invertView = false;
   export let isEditor = false;
   export let isLocked = false;
+  export let itemCount = 1;
   export let itemId = null;
   export let resetValue = false;
 
@@ -17,6 +18,7 @@
   let newKeyValuePair = {
     key: null,
     value: null,
+    count: 0,
   };
 
   /** WIP
@@ -41,6 +43,7 @@
         const newKeyValue = {
           key: split[keyIndex].replace(': ', ''),
           value: split[valueIndex] || null,
+          count: 1,
         };
 
         if (!currentDescriptionArray.includes(newKeyValue)) {
@@ -51,6 +54,7 @@
               if (keyValue.value !== newKeyValue.value) {
                 keyValue.value = null; // eslint-disable-line no-param-reassign
               }
+              keyValue.count += 1; // eslint-disable-line no-param-reassign
             }
           });
 
@@ -90,6 +94,7 @@
       newKeyValuePair = {
         key: null,
         value: null,
+        count: 0,
       };
       dispatch('saveSignal');
     }
@@ -113,6 +118,15 @@
       description = compileDescription(descriptionArray);
       dispatch('saveSignal');
     }
+  };
+
+  const editorLabel = (labelText, count) => {
+    let fullText = labelText;
+    if (itemCount !== count) {
+      const endText = count === 1 ? 'field' : 'fields';
+      fullText = `${labelText} (${count} ${endText})`;
+    }
+    return fullText;
   };
 
   afterUpdate(() => {
@@ -142,7 +156,7 @@
     isDeletable={true}
     itemIsLocked={isLocked}
     kind="inputText"
-    labelText={descriptionEntry.key}
+    labelText={!isEditor ? descriptionEntry.key : editorLabel(descriptionEntry.key, descriptionEntry.count)}
     nameId={`item-description-${i}-${itemId}`}
     placeholder="Type something…"
     resetValue={resetValue}

@@ -13,6 +13,7 @@
   let dirtyItem = Object.assign({}, editorItem);
   let originalItem = Object.assign({}, editorItem);
   let isDirty = false;
+  let itemCount = originalEditableItemIds.length;
   let resetValue = false;
 
   const handleReset = () => {
@@ -58,6 +59,7 @@
 
     if (editableItemIds !== originalEditableItemIds) {
       originalEditableItemIds = editableItemIds;
+      itemCount = originalEditableItemIds.length;
       handleReset();
     }
 
@@ -106,6 +108,7 @@
       bind:description={dirtyItem.description}
       invertView={true}
       isEditor={true}
+      itemCount={itemCount}
       itemId="editor-test"
       resetValue={resetValue}
       on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
