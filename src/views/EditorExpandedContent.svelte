@@ -104,6 +104,7 @@
 
     <Description
       bind:description={dirtyItem.description}
+      invertView={true}
       isEditor={true}
       itemId="editor-test"
       resetValue={resetValue}

@@ -1,6 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
 
+  export let invertView = false;
+
   const dispatch = createEventDispatcher();
   const handleClick = () => {
     dispatch('handleUpdate');
@@ -12,7 +14,7 @@
 </style>
 
 <button
-  class="inline-button action-remove"
+  class={`inline-button action-remove${invertView ? ' inverted' : ''}`}
   on:click={() => handleClick()}
 >
   <span class="label">

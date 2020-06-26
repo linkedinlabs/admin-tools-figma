@@ -5,6 +5,7 @@
   import FormUnit from './forms-controls/FormUnit';
 
   export let description = null;
+  export let invertView = false;
   export let isEditor = false;
   export let isLocked = false;
   export let itemId = null;
@@ -131,6 +132,7 @@
     className="form-row"
     on:deleteSignal={() => removeEntry(descriptionEntry.key)}
     hasMultiple={isEditor && descriptionEntry.value === null}
+    invertView={invertView}
     isDeletable={true}
     itemIsLocked={isLocked}
     kind="inputText"
@@ -145,6 +147,7 @@
 
 <span class="form-row">
   <FormLabel
+    invertView={invertView}
     labelText="Add new…"
     nameId={`add-new-description-key-${itemId}`}
     disableActions={true}
@@ -152,6 +155,7 @@
   <FigmaInput
     className="form-element element-type-text-new split-40"
     disabled={isLocked}
+    invertView={invertView}
     nameId={`add-new-description-key-${itemId}`}
     placeholder="Add stuff to me…"
     on:saveSignal={() => addEntry(newKeyValuePair)}
@@ -160,6 +164,7 @@
   <FigmaInput
     className="form-element element-type-text-new split-60"
     disabled={isLocked}
+    invertView={invertView}
     nameId={`add-new-description-value-${itemId}`}
     placeholder="Add other stuff to me…"
     on:saveSignal={() => addEntry(newKeyValuePair)}

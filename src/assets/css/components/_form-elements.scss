@@ -200,6 +200,12 @@
       @include button-icon($wl-action-secondary-accent, 32, $wl-action-tertiary);
       width: em(32);
       height: em(32);
+
+      &.inverted {
+        @include button-icon($wl-action-tertiary, 32, $wl-action-secondary);
+        width: em(32);
+        height: em(32);
+      }
     }
   }
 }

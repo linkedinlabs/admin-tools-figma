@@ -106,7 +106,10 @@
     {/if}
 
     {#if isDeletable}
-      <ButtonRemove on:handleUpdate={() => handleDelete()}/>
+      <ButtonRemove
+        on:handleUpdate={() => handleDelete()}
+        invertView={invertView}
+      />
     {/if}
   </span>
 </span>
