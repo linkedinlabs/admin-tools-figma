@@ -5,6 +5,7 @@
   import FormUnit from './forms-controls/FormUnit';
 
   export let description = null;
+  export let isEditor = false;
   export let isLocked = false;
   export let itemId = null;
   export let resetValue = false;
@@ -35,10 +36,26 @@
         const valueIndex = 1;
         const split = line.split(/: (.+)/);
 
-        currentDescriptionArray.push({
-          key: split[keyIndex],
-          value: split[valueIndex],
-        });
+        const newKeyValue = {
+          key: split[keyIndex].replace(': ', ''),
+          value: split[valueIndex] || null,
+        };
+
+        if (!currentDescriptionArray.includes(newKeyValue)) {
+          let keyExists = false;
+          currentDescriptionArray.forEach((keyValue) => {
+            if (keyValue.key === newKeyValue.key) {
+              keyExists = true;
+              if (keyValue.value !== newKeyValue.value) {
+                keyValue.value = null; // eslint-disable-line no-param-reassign
+              }
+            }
+          });
+
+          if (!keyExists) {
+            currentDescriptionArray.push(newKeyValue);
+          }
+        }
       }
     });
 
@@ -49,7 +66,10 @@
     let string = null;
     const stringArray = [];
     currentDescriptionArray.forEach((item) => {
-      const snippet = `${item.key}: ${item.value}`;
+      let snippet = `${item.key}: ${item.value}`;
+      if (!item.value) {
+        snippet = `${item.key}: `;
+      }
       stringArray.push(snippet);
     });
 
@@ -110,6 +130,7 @@
   <FormUnit
     className="form-row"
     on:deleteSignal={() => removeEntry(descriptionEntry.key)}
+    hasMultiple={isEditor && descriptionEntry.value === null}
     isDeletable={true}
     itemIsLocked={isLocked}
     kind="inputText"

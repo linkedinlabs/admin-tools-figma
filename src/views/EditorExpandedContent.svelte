@@ -1,5 +1,6 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
+  import Description from './Description';
   import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormLabel from './forms-controls/FormLabel';
@@ -59,11 +60,14 @@
       originalEditableItemIds = editableItemIds;
       handleReset();
     }
+
+    if (resetValue) {
+      resetValue = false;
+    }
   });
 
   afterUpdate(() => {
     if (resetValue) {
-      resetValue = false;
       originalItem = Object.assign({}, editorItem);
     }
   });
@@ -97,6 +101,14 @@
         bind:value={dirtyItem.name}
       />
     </span>
+
+    <Description
+      bind:description={dirtyItem.description}
+      isEditor={true}
+      itemId="editor-test"
+      resetValue={resetValue}
+      on:saveSignal={() => handleSave()}
+    />
     
     <FormUnit
       className={setClasses('form-row', editorItem.descriptionHasValues)}
@@ -107,7 +119,7 @@
       nameId="editor-test-description"
       placeholder="Description"
       resetValue={resetValue}
-      bind:value={dirtyItem.description}
+      value={dirtyItem.description}
     />
 
     <span class="form-row">

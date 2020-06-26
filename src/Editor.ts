@@ -1,6 +1,66 @@
 import Presenter from './Presenter';
 
 /** WIP
+ * @description Looks into the selection array for any groups and pulls out individual nodes,
+ * effectively flattening the selection.
+ *
+ * @kind function
+ * @name parseDescription
+ *
+ * @returns {Object} All items (including children) individual in an updated array.
+ */
+const parseDescription = (currentDescription) => {
+  const currentDescriptionArray = [];
+  const lineArray = currentDescription.split('\n');
+
+  lineArray.forEach((line) => {
+    if (line && line !== '') {
+      const keyIndex = 0;
+      const valueIndex = 1;
+      const split = line.split(/: (.+)/);
+
+      const newKeyValue = {
+        key: split[keyIndex].replace(': ', ''),
+        value: split[valueIndex] || null,
+      };
+
+      if (!currentDescriptionArray.includes(newKeyValue)) {
+        let keyExists = false;
+        currentDescriptionArray.forEach((keyValue) => {
+          if (keyValue.key === newKeyValue.key) {
+            keyExists = true;
+            if (keyValue.value !== newKeyValue.value) {
+              keyValue.value = null; // eslint-disable-line no-param-reassign
+            }
+          }
+        });
+
+        if (!keyExists) {
+          currentDescriptionArray.push(newKeyValue);
+        }
+      }
+    }
+  });
+
+  return currentDescriptionArray;
+};
+
+const compileDescription = (currentDescriptionArray) => {
+  let string = null;
+  const stringArray = [];
+  currentDescriptionArray.forEach((item) => {
+    let snippet = `${item.key}: ${item.value}`;
+    if (!item.value) {
+      snippet = `${item.key}: `;
+    }
+    stringArray.push(snippet);
+  });
+
+  string = stringArray.join('\n');
+  return string;
+};
+
+/** WIP
  * @description A class to handle traversing an array of selected items and return useful items
  * (child nodes, first in selection, node position, dimensions and position of node gaps
  * and overlapping node negative space).
@@ -66,9 +126,6 @@ export default class Editor {
       result.messages.log = `Could not find ${updatedItem.id} in document`;
       return result;
     }
-
-    // console.log(existingItem);
-    // console.log(updatedItem);
 
     // iterate the presentation objects, locating changes
     Object.entries(updatedItem).forEach(([key, value]) => {
@@ -171,6 +228,25 @@ export default class Editor {
                   updatedName = `${existingItem.group} / ${updatedItem.name}`;
                 }
                 baseStyle.name = updatedName;
+                break;
+              }
+              case 'description': {
+                const updatedDescriptionArray = parseDescription(updatedItem.description);
+                const existingDescriptionArray = parseDescription(existingItem.description);
+
+                updatedDescriptionArray.forEach((updatedDescriptionItem) => {
+                  if (updatedDescriptionItem.value) {
+                    const existingIndex = existingDescriptionArray.findIndex(
+                      existing => existing.key === updatedDescriptionItem.key,
+                    );
+                    if (existingIndex > -1) {
+                      existingDescriptionArray[existingIndex].value = updatedDescriptionItem.value;
+                    }
+                  }
+                });
+
+                const updatedDescription = compileDescription(existingDescriptionArray);
+                baseStyle.description = updatedDescription;
                 break;
               }
               case 'id':
