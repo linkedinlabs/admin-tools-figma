@@ -254,7 +254,7 @@ export default class Editor {
                         existingDescriptionArray[
                           existingIndex].value = updatedDescriptionItem.value;
                       }
-                    } else {
+                    } else if (updatedDescriptionItem.value !== `remove-${this.sessionKey}`) {
                       existingDescriptionArray.push(updatedDescriptionItem);
                     }
                   }
