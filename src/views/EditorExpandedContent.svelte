@@ -107,7 +107,7 @@
       isEditor={true}
       itemId="editor-test"
       resetValue={resetValue}
-      on:saveSignal={() => handleSave()}
+      on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
     />
     
     <FormUnit

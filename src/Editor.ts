@@ -239,8 +239,11 @@ export default class Editor {
                     const existingIndex = existingDescriptionArray.findIndex(
                       existing => existing.key === updatedDescriptionItem.key,
                     );
+
                     if (existingIndex > -1) {
                       existingDescriptionArray[existingIndex].value = updatedDescriptionItem.value;
+                    } else {
+                      existingDescriptionArray.push(updatedDescriptionItem);
                     }
                   }
                 });
