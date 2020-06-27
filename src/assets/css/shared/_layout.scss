@@ -85,6 +85,15 @@ svg {
               }
             }
           }
+
+          &.has-multiple {
+            #{$all-text-inputs} {
+              &::placeholder {
+                font-style: italic;
+                color: rgba($wl-type-01-invert, 0.8);
+              }
+            }
+          }
         }
       }
     }
