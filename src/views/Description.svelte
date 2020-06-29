@@ -68,10 +68,52 @@
     return currentDescriptionArray;
   };
 
-  const compileDescription = (currentDescriptionArray) => {
+  const parseDescriptionSimple = (currentDescription) => {
+    const currentDescriptionArray = [];
+    const lineArray = currentDescription.split('\n');
+
+    lineArray.forEach((line) => {
+      if (line && line !== '') {
+        const keyIndex = 0;
+        const valueIndex = 1;
+        const split = line.split(/: (.+)/);
+
+        const newKeyValue = {
+          key: split[keyIndex].replace(': ', ''),
+          value: split[valueIndex] || null,
+        };
+
+        currentDescriptionArray.push(newKeyValue);
+      }
+    });
+
+    return currentDescriptionArray;
+  };
+
+  const compileDescription = (updatedDescriptionArray, existingDescription) => {
+    let existingDescriptionArray = [];
+
+    // for bulk editing, use descriptions from all selected
+    if (isEditor) {
+      existingDescriptionArray = parseDescriptionSimple(existingDescription);
+
+      updatedDescriptionArray.forEach((updatedDescriptionItem) => {
+        if (updatedDescriptionItem.value) {
+          existingDescriptionArray.forEach((item) => {
+            if (item.key === updatedDescriptionItem.key) {
+              item.value = updatedDescriptionItem.value; // eslint-disable-line no-param-reassign
+            }
+          });
+        }
+      });
+    } else {
+      existingDescriptionArray = updatedDescriptionArray;
+    }
+
+    // compile the description
     let string = null;
     const stringArray = [];
-    currentDescriptionArray.forEach((item) => {
+    existingDescriptionArray.forEach((item) => {
       let snippet = `${item.key}: ${item.value}`;
       if (!item.value) {
         snippet = `${item.key}: `;
@@ -135,9 +177,8 @@
       descriptionArray = parseDescription(description);
     }
 
-    if (!resetValue) {
-      // update bound description
-      description = compileDescription(descriptionArray);
+    if (!resetValue && description && descriptionArray.length > 1) {
+      description = compileDescription(descriptionArray, description);
     }
 
     if (resetValue) {

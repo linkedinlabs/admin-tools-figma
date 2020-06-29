@@ -41,6 +41,23 @@
     return classes;
   };
 
+  const compareEditableIds = (currentArray, originalArray) => {
+    let isEqual = true;
+    currentArray.forEach((id) => {
+      if (!originalArray.includes(id)) {
+        isEqual = false;
+      }
+    });
+
+    originalArray.forEach((id) => {
+      if (!currentArray.includes(id)) {
+        isEqual = false;
+      }
+    });
+
+    return isEqual;
+  };
+
   beforeUpdate(() => {
     // check `editorItem` against dirty to see if it was updated in the form
     isDirty = false;
@@ -57,19 +74,16 @@
       }
     });
 
-    if (editableItemIds !== originalEditableItemIds) {
+    if (!compareEditableIds(editableItemIds, originalEditableItemIds)) {
       originalEditableItemIds = editableItemIds;
       itemCount = originalEditableItemIds.length;
       handleReset();
-    }
-
-    if (resetValue) {
-      resetValue = false;
     }
   });
 
   afterUpdate(() => {
     if (resetValue) {
+      resetValue = false;
       originalItem = Object.assign({}, editorItem);
     }
   });
