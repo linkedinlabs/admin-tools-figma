@@ -7,12 +7,13 @@ type PresenterTypeName =
   'Effect'
   | 'Grid'
   | 'Typography'
-  | 'Color & Fill';
+  | 'Color & Fill'
+  | 'Component';
 
 type PresenterTypeGroup = {
   id: string,
   name: string,
-  type: StyleType,
+  type: StyleType | NodeType,
   typeId?: string,
 };
 
@@ -23,7 +24,7 @@ type PresenterItem = {
   groupId: string,
   kind: string,
   name: string,
-  type: StyleType,
+  type: StyleType | NodeType,
   typeId: string,
   typeName: PresenterTypeName,
 };

@@ -1,3 +1,5 @@
+import { CONTAINER_NODE_TYPES } from './constants';
+
 /** WIP
  * @description Looks into the selection array for any groups and pulls out individual nodes,
  * effectively flattening the selection.
@@ -67,6 +69,15 @@ export default class Presenter {
     this.nodes = nodesArray;
   }
 
+  /** WIP
+   * @description Looks into the selection array for any groups and pulls out individual nodes,
+   * effectively flattening the selection.
+   *
+   * @kind function
+   * @name extractStyles
+   *
+   * @returns {Object} All items (including children) individual in an updated array.
+   */
   extractStyles = (filter?: 'typography' | 'color-fill' | 'effects' | 'grid') => {
     const { nodes } = this;
     const styleIds = [];
@@ -191,6 +202,129 @@ export default class Presenter {
         items = items.filter(item => item.type === filterType);
       }
     }
+
+    // create top-level types and groups
+    const types = setTypes(items);
+    const groups = setGroups(items);
+
+    // set everything to the `presentationObject`
+    presentationObject.items = items;
+    presentationObject.groups = groups;
+    presentationObject.types = types;
+
+    return presentationObject;
+  }
+
+  /** WIP
+   * @description Looks into the selection array for any groups and pulls out individual nodes,
+   * effectively flattening the selection.
+   *
+   * @kind function
+   * @name extractComponents
+   *
+   * @returns {Object} All items (including children) individual in an updated array.
+   */
+  extractComponents = (filter?: 'typography' | 'color-fill' | 'effects' | 'grid') => { // eslint-disable-line @typescript-eslint/no-unused-vars
+    const { nodes } = this;
+    const componentIds = [];
+
+    // set array of data with information from each node
+    const presentationObject: {
+      items: Array<PresenterItem>,
+      groups: Array<PresenterTypeGroup>,
+      types: Array<PresenterTypeGroup>,
+    } = {
+      items: null,
+      groups: null,
+      types: null,
+    };
+
+    const items: Array<PresenterItem> = [];
+
+    // get styles here
+    const extractedComponents: Array<ComponentNode> = [];
+
+    nodes.forEach((node: SceneNode) => {
+      if (
+        (node.type === CONTAINER_NODE_TYPES.component)
+        || (node.type === CONTAINER_NODE_TYPES.instance)
+      ) {
+        if (node.type === CONTAINER_NODE_TYPES.instance) {
+          const instanceNode = node as InstanceNode;
+          componentIds.push(instanceNode.masterComponent.id);
+        } else {
+          componentIds.push(node.id);
+        }
+      }
+    });
+
+    const uniqueComponentIds: Array<string> = [...new Set(componentIds)];
+
+    // iterate component IDs and load the components into the `extractedComponents` array
+    uniqueComponentIds.forEach((componentId) => {
+      const component = figma.getNodeById(componentId) as ComponentNode;
+      if (component && !component.remote) {
+        const { id, description, name } = component;
+        const kind: 'style' | 'component' = 'component';
+        const { type }: { type: NodeType } = component;
+        const typeId = type.toLowerCase();
+        let groupId = null;
+
+        const nameArray = name.split(' / ');
+        let nameGroup: string = null;
+        let nameClean: string = name;
+
+        if (nameArray.length > 1) {
+          const gIndex: number = 0;
+          nameGroup = nameArray[gIndex].trim();
+
+          nameArray.shift();
+          nameClean = nameArray.join(' / ');
+
+          groupId = `${typeId}-${nameGroup}`;
+        }
+        const typeName: PresenterTypeName = 'Component';
+
+        extractedComponents.push(component);
+
+        // update the bundle of info for the current `node` in the selection
+        items.push({
+          id,
+          description,
+          group: nameGroup,
+          groupId,
+          kind,
+          name: nameClean,
+          type,
+          typeId,
+          typeName,
+        });
+      }
+    });
+
+    // apply filter - tktkt
+    // if (filter) {
+    //   let filterType: StyleType = null;
+    //   switch (filter) {
+    //     case 'color-fill':
+    //       filterType = 'PAINT';
+    //       break;
+    //     case 'effects':
+    //       filterType = 'EFFECT';
+    //       break;
+    //     case 'grid':
+    //       filterType = 'GRID';
+    //       break;
+    //     case 'typography':
+    //       filterType = 'TEXT';
+    //       break;
+    //     default:
+    //   }
+
+    //   if (filterType) {
+    //     items = items.filter(item => item.type === filterType);
+    //   }
+    // }
 
     // create top-level types and groups
     const types = setTypes(items);

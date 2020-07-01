@@ -241,7 +241,8 @@ export default class App {
       }
       selected = presenter.extractStyles(filter);
     } else {
-      selected = { items: [] };
+      // selected = { items: [] };
+      selected = presenter.extractComponents(null);
     }
 
     // send the updates to the UI

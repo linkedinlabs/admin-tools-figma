@@ -424,16 +424,18 @@
     {/if}
 
     {#each types as type (type.id)}
-      <li class="style-type">
-        <ItemGroupHeader
-          on:handleUpdate={customEvent => handleTypeUpdate(type, groups, items, customEvent.detail)}
-          isLocked={checkIsLocked(type.id)}
-          isOpen={checkIsOpen(type.id)}
-          isTypeContainer={true}
-          labelText={type.name}
-          type="style-type"
-        />
-      </li>
+      {#if type.name !== 'Component'}
+        <li class="style-type">
+          <ItemGroupHeader
+            on:handleUpdate={customEvent => handleTypeUpdate(type, groups, items, customEvent.detail)}
+            isLocked={checkIsLocked(type.id)}
+            isOpen={checkIsOpen(type.id)}
+            isTypeContainer={true}
+            labelText={type.name}
+            type="style-type"
+          />
+        </li>
+      {/if}
 
       {#if checkIsOpen(type.id)}
         {#each filterByKey(groups, 'typeId', type.id) as group (group.id)}
@@ -443,7 +445,7 @@
               isGroupContainer={true}
               isLocked={checkIsLocked(group.id)}
               isOpen={checkIsOpen(group.id)}
-              labelText={`${group.name ? group.name : 'Ungrouped'} ${type.name}`}
+              labelText={`${group.name ? group.name : 'Ungrouped'} ${type.name !== 'Component' ? type.name : ''}`}
               type="group-type"
             />
           </li>
