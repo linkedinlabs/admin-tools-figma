@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate, createEventDispatcher } from 'svelte';
+  import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte';
   import { sessionKey } from './stores';
   import FigmaInput from './forms-controls/FigmaInput';
   import FormLabel from './forms-controls/FormLabel';
@@ -51,7 +51,10 @@
           currentDescriptionArray.forEach((keyValue) => {
             if (keyValue.key === newKeyValue.key) {
               keyExists = true;
-              if (keyValue.value !== newKeyValue.value) {
+              if (
+                (keyValue.value !== newKeyValue.value)
+                && (keyValue.value !== `remove-${$sessionKey}`)
+              ) {
                 keyValue.value = null; // eslint-disable-line no-param-reassign
               }
               keyValue.count += 1; // eslint-disable-line no-param-reassign
@@ -99,11 +102,21 @@
 
       updatedDescriptionArray.forEach((updatedDescriptionItem) => {
         if (updatedDescriptionItem.value) {
+          let keyExists = false;
           existingDescriptionArray.forEach((item) => {
             if (item.key === updatedDescriptionItem.key) {
+              keyExists = true;
               item.value = updatedDescriptionItem.value; // eslint-disable-line no-param-reassign
             }
           });
+
+          if (!keyExists) {
+            let currentCount = 0;
+            while (currentCount < itemCount) {
+              existingDescriptionArray.push(updatedDescriptionItem);
+              currentCount += 1;
+            }
+          }
         }
       });
     } else {
@@ -132,7 +145,7 @@
     // add new description entry if unique
     if (!keyExists && key && value) {
       descriptionArray.push(keyValuePair);
-      description = compileDescription(descriptionArray);
+      description = compileDescription(descriptionArray, description);
       newKeyValuePair = {
         key: null,
         value: null,
@@ -157,7 +170,7 @@
         descriptionArray[keyIndex].value = `remove-${$sessionKey}`;
       }
 
-      description = compileDescription(descriptionArray);
+      description = compileDescription(descriptionArray, description);
       dispatch('saveSignal');
     }
   };
@@ -171,6 +184,14 @@
     return fullText;
   };
 
+  beforeUpdate(() => {
+    if (resetValue) {
+      // update display array because of parent-level changes
+      descriptionArray = parseDescription(description);
+      description = compileDescription(descriptionArray, description);
+    }
+  });
+
   afterUpdate(() => {
     if (description && descriptionArray.length < 1) {
       // update display array
@@ -179,11 +200,6 @@
 
     if (!resetValue && description && descriptionArray.length > 1) {
       description = compileDescription(descriptionArray, description);
-    }
-
-    if (resetValue) {
-      // update display array because of parent-level changes
-      descriptionArray = parseDescription(description);
     }
   });
 </script>

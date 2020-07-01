@@ -1,9 +1,7 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
   import Description from './Description';
-  import FigmaInput from './forms-controls/FigmaInput';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
-  import FormLabel from './forms-controls/FormLabel';
   import FormUnit from './forms-controls/FormUnit';
 
   export let editorItem;
@@ -15,9 +13,12 @@
   let isDirty = false;
   let itemCount = originalEditableItemIds.length;
   let resetValue = false;
+  let wasResetValue = false;
 
   const handleReset = () => {
+    originalItem = Object.assign({}, editorItem);
     dirtyItem = Object.assign({}, editorItem);
+    originalEditableItemIds = editableItemIds;
     isDirty = false;
     resetValue = true;
   };
@@ -74,17 +75,25 @@
       }
     });
 
+    // check selected item ids against original to see if items were locked/unlocked
     if (!compareEditableIds(editableItemIds, originalEditableItemIds)) {
       originalEditableItemIds = editableItemIds;
       itemCount = originalEditableItemIds.length;
       handleReset();
     }
+
+    // tee off a full reset
+    if (resetValue) {
+      handleReset();
+    }
+
+    // set tracker
+    wasResetValue = resetValue;
   });
 
   afterUpdate(() => {
-    if (resetValue) {
+    if (resetValue || wasResetValue) {
       resetValue = false;
-      originalItem = Object.assign({}, editorItem);
     }
   });
 </script>
@@ -127,39 +136,6 @@
       resetValue={resetValue}
       on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
     />
-    
-    <FormUnit
-      className={setClasses('form-row', editorItem.descriptionHasValues)}
-      hasMultiple={editorItem.descriptionHasValues}
-      invertView={true}
-      kind="inputTextarea"
-      labelText="Description"
-      nameId="editor-test-description"
-      placeholder="Description"
-      resetValue={resetValue}
-      value={dirtyItem.description}
-    />
-
-    <span class="form-row">
-      <FormLabel
-        invertView={true}
-        labelText="Add new…"
-        nameId="add-new-label"
-        disableActions={true}
-      />
-      <FigmaInput
-        className="form-element element-type-text-new split-40"
-        invertView={true}
-        nameId="add-new-label"
-        placeholder="Add stuff to me…"
-      />
-      <FigmaInput
-        className="form-element element-type-text-new split-60"
-        invertView={true}
-        nameId="add-new-text"
-        placeholder="Add other stuff to me…"
-      />
-    </span>
 
     <FormUnit
       className="form-row"

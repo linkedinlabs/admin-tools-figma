@@ -11,8 +11,10 @@
   let originalItem = Object.assign({}, item);
   let isDirty = false;
   let resetValue = false;
+  let wasResetValue = false;
 
   const handleReset = () => {
+    originalItem = Object.assign({}, item);
     dirtyItem = Object.assign({}, item);
     isDirty = false;
     resetValue = true;
@@ -42,12 +44,19 @@
         resetValue = true;
       }
     });
+
+    // tee off a full reset
+    if (resetValue) {
+      handleReset();
+    }
+
+    // set tracker
+    wasResetValue = resetValue;
   });
 
   afterUpdate(() => {
-    if (resetValue) {
+    if (resetValue || wasResetValue) {
       resetValue = false;
-      originalItem = Object.assign({}, item);
     }
   });
 </script>
