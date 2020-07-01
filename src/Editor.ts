@@ -132,7 +132,10 @@ export default class Editor {
 
     // iterate the presentation objects, locating changes
     Object.entries(updatedItem).forEach(([key, value]) => {
-      if (existingItem[key] && existingItem[key] !== value) {
+      if (
+        (existingItem[key] !== undefined)
+        && (existingItem[key] !== value)
+      ) {
         switch (key) {
           case 'name':
           case 'group': {
@@ -141,7 +144,7 @@ export default class Editor {
             break;
           }
           default: {
-            if (baseStyle[key]) {
+            if (baseStyle[key] !== undefined) {
               baseStyle[key] = value;
             }
           }
