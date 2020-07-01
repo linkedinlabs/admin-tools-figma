@@ -139,7 +139,10 @@ export default class Editor {
         switch (key) {
           case 'name':
           case 'group': {
-            const updatedName = `${updatedItem.group} / ${updatedItem.name}`;
+            let updatedName = updatedItem.name;
+            if (updatedItem.group) {
+              updatedName = `${updatedItem.group} / ${updatedItem.name}`;
+            }
             baseStyle.name = updatedName;
             break;
           }

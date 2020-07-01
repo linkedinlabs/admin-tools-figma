@@ -443,7 +443,7 @@
               isGroupContainer={true}
               isLocked={checkIsLocked(group.id)}
               isOpen={checkIsOpen(group.id)}
-              labelText={`${group.name} ${type.name}`}
+              labelText={`${group.name ? group.name : 'Ungrouped'} ${type.name}`}
               type="group-type"
             />
           </li>
