@@ -18,6 +18,6 @@
     </svg>
   </span>
   <span class="text">
-    To get started, select <br />a master component…
+    To get started, select <br />a component or layer with local styles…
   </span>
 </aside>
