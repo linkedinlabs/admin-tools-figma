@@ -12,6 +12,8 @@
   let isOpenEditor = false;
   let isOpenTypography = true;
   let { groups, items, types } = selected;
+  let originalTypes = types;
+  let originalGroups = groups;
 
   /**
    * @description A reusable helper function to take an array and add or remove data from it
@@ -92,6 +94,27 @@
       item => (item[key1] === value1) && (item[key2] === value2),
     );
     return filteredArray;
+  };
+
+  const compareTypesGroups = (currentArray, originalArray) => {
+    let isEqual = true;
+    if (currentArray.length !== originalArray.length) {
+      isEqual = false;
+    } else {
+      currentArray.forEach((id) => {
+        if (!originalArray.includes(id)) {
+          isEqual = false;
+        }
+      });
+
+      originalArray.forEach((id) => {
+        if (!currentArray.includes(id)) {
+          isEqual = false;
+        }
+      });
+    }
+
+    return isEqual;
   };
 
   const checkIsLocked = (itemId) => {
@@ -417,6 +440,16 @@
     groups = selected.groups;
     items = selected.items;
     types = selected.types;
+
+    if (!compareTypesGroups(types, originalTypes)) {
+      setGroupsTypesOpen(types);
+      originalTypes = types;
+    }
+
+    if (!compareTypesGroups(groups, originalGroups)) {
+      setGroupsTypesOpen(groups);
+      originalGroups = groups;
+    }
   });
 </script>
 
