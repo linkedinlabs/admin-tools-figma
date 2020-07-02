@@ -1,4 +1,5 @@
 import Presenter from './Presenter';
+import { CONTAINER_NODE_TYPES } from './constants';
 
 /** WIP
  * @description Looks into the selection array for any groups and pulls out individual nodes,
@@ -105,26 +106,46 @@ export default class Editor {
       },
     };
 
-    // grab existing style presentation object for comparison
     const selectIndex = 0;
     const presenter = new Presenter({ for: this.array });
-    const extractedStyles = presenter.extractStyles();
-    const existingItem = extractedStyles.items.filter(
-      item => item.id === updatedItem.id,
-    )[selectIndex];
+    let existingItem = null;
+    let baseItem: BaseStyle | ComponentNode = null;
+    if (updatedItem.type !== CONTAINER_NODE_TYPES.component) {
+      // grab existing style presentation object for comparison
+      const extractedStyles = presenter.extractStyles();
+      existingItem = extractedStyles.items.filter(
+        item => item.id === updatedItem.id,
+      )[selectIndex];
 
-    // kick out if we can't find a match
-    if (!existingItem) {
-      result.status = 'error';
-      result.messages.log = `Could not find ${updatedItem.id} in selection`;
-      return result;
+      // kick out if we can't find a match
+      if (!existingItem) {
+        result.status = 'error';
+        result.messages.log = `Could not find ${updatedItem.id} in selection`;
+        return result;
+      }
+
+      // grab the Figma `BaseStyle` for updating
+      baseItem = figma.getStyleById(existingItem.id) as BaseStyle;
+    } else {
+      // grab existing component presentation object for comparison
+      const extractedComponents = presenter.extractComponents();
+      existingItem = extractedComponents.items.filter(
+        item => item.id === updatedItem.id,
+      )[selectIndex];
+
+      // kick out if we can't find a match
+      if (!existingItem) {
+        result.status = 'error';
+        result.messages.log = `Could not find ${updatedItem.id} in selection`;
+        return result;
+      }
+
+      // grab the Figma `ComponentNode` for updating
+      baseItem = figma.getNodeById(existingItem.id) as ComponentNode;
     }
 
-    // grab the Figma `BaseStyle` for updating
-    const baseStyle: BaseStyle = figma.getStyleById(existingItem.id);
-
     // kick out if we can't find a match
-    if (!baseStyle) {
+    if (!baseItem) {
       result.status = 'error';
       result.messages.log = `Could not find ${updatedItem.id} in document`;
       return result;
@@ -143,12 +164,12 @@ export default class Editor {
             if (updatedItem.group) {
               updatedName = `${updatedItem.group} / ${updatedItem.name}`;
             }
-            baseStyle.name = updatedName;
+            baseItem.name = updatedName;
             break;
           }
           default: {
-            if (baseStyle[key] !== undefined) {
-              baseStyle[key] = value;
+            if (baseItem[key] !== undefined) {
+              baseItem[key] = value;
             }
           }
         }
@@ -185,36 +206,61 @@ export default class Editor {
       },
     };
 
-    // grab existing style presentation object for comparison
     const presenter = new Presenter({ for: this.array });
-    const extractedStyles = presenter.extractStyles();
     const existingItems = [];
-    extractedStyles.items.forEach((item) => {
-      if (itemIds.includes(item.id)) {
-        existingItems.push(item);
-      }
-    });
+    const baseItems: Array<BaseStyle | ComponentNode> = [];
+    if (updatedItem.type !== CONTAINER_NODE_TYPES.component) {
+      // grab existing style presentation objects for comparison
+      const extractedStyles = presenter.extractStyles();
+      extractedStyles.items.forEach((item) => {
+        if (itemIds.includes(item.id)) {
+          existingItems.push(item);
+        }
+      });
 
-    // kick out if we can't find a match
-    if (existingItems.length < 1) {
-      result.status = 'error';
-      result.messages.log = 'Could not find matching items in selection';
-      return result;
+      // kick out if we can't find a match
+      if (existingItems.length < 1) {
+        result.status = 'error';
+        result.messages.log = 'Could not find matching items in selection';
+        return result;
+      }
+
+      // grab the Figma `BaseStyle` for updating
+      existingItems.forEach((item) => {
+        const baseStyle = figma.getStyleById(item.id) as BaseStyle;
+        if (baseStyle) {
+          baseItems.push(baseStyle);
+        }
+      });
+    } else {
+      // grab existing component presentation objects for comparison
+      const extractedComponents = presenter.extractComponents();
+      extractedComponents.items.forEach((item) => {
+        if (itemIds.includes(item.id)) {
+          existingItems.push(item);
+        }
+      });
+
+      // kick out if we can't find a match
+      if (existingItems.length < 1) {
+        result.status = 'error';
+        result.messages.log = 'Could not find matching items in selection';
+        return result;
+      }
+
+      // grab the Figma `ComponentNode` for updating
+      existingItems.forEach((item) => {
+        const componentNode = figma.getNodeById(item.id) as ComponentNode;
+        if (componentNode) {
+          baseItems.push(componentNode);
+        }
+      });
     }
 
-    // grab the Figma `BaseStyle` for updating
-    const baseStyles: Array<BaseStyle> = [];
-    existingItems.forEach((item) => {
-      const baseStyle: BaseStyle = figma.getStyleById(item.id);
-      if (baseStyle) {
-        baseStyles.push(baseStyle);
-      }
-    });
-
-    // kick out if we can't find a match
-    if (baseStyles.length < 1) {
+    // kick out if we can't find matches
+    if (baseItems.length < 1) {
       result.status = 'error';
-      result.messages.log = 'Could not find matching styles in document';
+      result.messages.log = 'Could not find matching items in document';
       return result;
     }
 
@@ -223,8 +269,14 @@ export default class Editor {
       if (value) {
         existingItems.forEach((existingItem) => {
           const selectIndex = 0;
-          const baseStyle = baseStyles.filter(style => style.id === existingItem.id)[selectIndex];
-          if (baseStyle && existingItem[key] && existingItem[key] !== value) {
+          const baseItem = baseItems.filter(
+            styleOrNode => styleOrNode.id === existingItem.id,
+          )[selectIndex];
+          if (
+            baseItem
+            && existingItem[key] !== undefined
+            && existingItem[key] !== value
+          ) {
             switch (key) {
               case 'name':
               case 'group': {
@@ -236,7 +288,7 @@ export default class Editor {
                 } else {
                   updatedName = `${existingItem.group} / ${updatedItem.name}`;
                 }
-                baseStyle.name = updatedName;
+                baseItem.name = updatedName;
                 break;
               }
               case 'description': {
@@ -267,15 +319,17 @@ export default class Editor {
                 });
 
                 const updatedDescription = compileDescription(existingDescriptionArray);
-                baseStyle.description = updatedDescription;
+                baseItem.description = updatedDescription;
                 break;
               }
               case 'id':
+              case 'type':
                 // ID should never change
+                // type should never change
                 break;
               default: {
-                if (baseStyle[key]) {
-                  baseStyle[key] = value;
+                if (baseItem[key] !== undefined) {
+                  baseItem[key] = value;
                 }
               }
             }

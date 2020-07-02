@@ -351,11 +351,13 @@
       kindHasValues: false,
       name: null,
       nameHasValues: false,
+      type: 'style',
     };
 
     const currentDescriptions = [];
     const currentGroups = [];
     const currentNames = [];
+    let isComponents = true;
     itemsToCompare.forEach((item) => {
       if (!currentDescriptions.includes(item.description)) {
         currentDescriptions.push(item.description);
@@ -365,6 +367,9 @@
       }
       if (!currentNames.includes(item.name)) {
         currentNames.push(item.name);
+      }
+      if (item.type !== 'COMPONENT') {
+        isComponents = false;
       }
     });
 
@@ -381,6 +386,10 @@
     if (currentDescriptions.length >= 1) {
       editorItem.description = combineDescriptions(currentDescriptions);
       editorItem.descriptionHasValues = true;
+    }
+
+    if (isComponents) {
+      editorItem.type = 'COMPONENT';
     }
 
     return editorItem;
