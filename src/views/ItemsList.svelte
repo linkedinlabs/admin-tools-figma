@@ -87,6 +87,13 @@
     return filteredArray;
   };
 
+  const filterByKeys = (array, key1, value1, key2, value2) => {
+    const filteredArray = array.filter(
+      item => (item[key1] === value1) && (item[key2] === value2),
+    );
+    return filteredArray;
+  };
+
   const checkIsLocked = (itemId) => {
     let itemIsLocked = false;
 
@@ -460,7 +467,7 @@
           </li>
 
           {#if checkIsOpen(group.id)}
-            {#each filterByKey(items, 'groupId', group.id) as item (item.id)}
+            {#each filterByKeys(items, 'groupId', group.id, 'typeId', type.id) as item (item.id)}
               <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, items, 'partialUnlock')}

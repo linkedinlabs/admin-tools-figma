@@ -9,20 +9,22 @@ import { CONTAINER_NODE_TYPES } from './constants';
  *
  * @returns {Object} All items (including children) individual in an updated array.
  */
-const setGroups = (allItems) => {
+const setGroups = (allItems, types: Array<PresenterTypeGroup>) => {
   const groups: Array<PresenterTypeGroup> = [];
 
-  const groupIds: Array<string> = [];
-  allItems.forEach((item) => {
-    if (!groupIds.includes(item.groupId)) {
-      groups.push({
-        id: item.groupId,
-        name: item.group,
-        type: item.type,
-        typeId: item.type.toLowerCase(),
-      });
-      groupIds.push(item.groupId);
-    }
+  types.forEach((type) => {
+    const groupIds: Array<string> = [];
+    allItems.forEach((item) => {
+      if ((item.typeId === type.id) && !groupIds.includes(item.groupId)) {
+        groups.push({
+          id: item.groupId,
+          name: item.group,
+          type: item.type,
+          typeId: item.type.toLowerCase(),
+        });
+        groupIds.push(item.groupId);
+      }
+    });
   });
   return groups;
 };
@@ -205,7 +207,7 @@ export default class Presenter {
 
     // create top-level types and groups
     const types = setTypes(items);
-    const groups = setGroups(items);
+    const groups = setGroups(items, types);
 
     // set everything to the `presentationObject`
     presentationObject.items = items;
@@ -328,7 +330,7 @@ export default class Presenter {
 
     // create top-level types and groups
     const types = setTypes(items);
-    const groups = setGroups(items);
+    const groups = setGroups(items, types);
 
     // set everything to the `presentationObject`
     presentationObject.items = items;
