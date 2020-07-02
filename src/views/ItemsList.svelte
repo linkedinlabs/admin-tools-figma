@@ -1,5 +1,5 @@
 <script>
-  import { afterUpdate } from 'svelte';
+  import { beforeUpdate } from 'svelte';
   import { lockedItems, openItems } from './stores';
   import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
@@ -413,7 +413,7 @@
   setGroupsTypesOpen(types);
   setGroupsTypesOpen(groups);
 
-  afterUpdate(() => {
+  beforeUpdate(() => {
     groups = selected.groups;
     items = selected.items;
     types = selected.types;
