@@ -198,7 +198,7 @@
       descriptionArray = parseDescription(description);
     }
 
-    if (!resetValue && description && descriptionArray.length > 1) {
+    if (!resetValue && description && descriptionArray.length > 0) {
       description = compileDescription(descriptionArray, description);
     }
   });
