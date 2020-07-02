@@ -389,9 +389,8 @@
     const currentNames = [];
     let isComponents = true;
     itemsToCompare.forEach((item) => {
-      if (!currentDescriptions.includes(item.description)) {
-        currentDescriptions.push(item.description);
-      }
+      // add all descriptions (they are parsed in `Description`)
+      currentDescriptions.push(item.description);
       if (!currentGroups.includes(item.group)) {
         currentGroups.push(item.group);
       }
