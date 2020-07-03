@@ -247,7 +247,7 @@
 
 {#each descriptionArray as descriptionEntry, i (descriptionEntry.key)}
   <FormUnit
-    className="form-row"
+    className={`form-row${isEditor && (descriptionEntry.value === null) ? ' has-multiple' : ''}`}
     on:deleteSignal={() => removeEntry(descriptionEntry.key)}
     hasMultiple={isEditor && descriptionEntry.value === null}
     invertView={invertView}
