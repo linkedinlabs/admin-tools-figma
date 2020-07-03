@@ -38,6 +38,11 @@
     // watch locking changes and restore value if item becomes locked
     if (!wasUnlocked && isLocked) {
       restoreValue();
+      dispatch('lockUnlockSignal', isLocked);
+    }
+
+    if (wasUnlocked && !isLocked) {
+      dispatch('lockUnlockSignal', isLocked);
     }
 
     // update the comparison variable

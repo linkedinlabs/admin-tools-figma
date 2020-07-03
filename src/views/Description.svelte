@@ -15,6 +15,7 @@
 
   const dispatch = createEventDispatcher();
   let descriptionArray = [];
+  let lockedKeys = [];
   let newKeyValuePair = {
     key: null,
     value: null,
@@ -49,7 +50,7 @@
         if (!currentDescriptionArray.includes(newKeyValue)) {
           let keyExists = false;
           currentDescriptionArray.forEach((keyValue) => {
-            if (keyValue.key === newKeyValue.key) {
+            if ((keyValue.key === newKeyValue.key)) {
               keyExists = true;
               if (
                 (keyValue.value !== newKeyValue.value)
@@ -101,7 +102,7 @@
       existingDescriptionArray = parseDescriptionSimple(existingDescription);
 
       updatedDescriptionArray.forEach((updatedDescriptionItem) => {
-        if (updatedDescriptionItem.value) {
+        if (updatedDescriptionItem.value && !lockedKeys.includes(updatedDescriptionItem.key)) {
           let keyExists = false;
           existingDescriptionArray.forEach((item) => {
             if (item.key === updatedDescriptionItem.key) {
@@ -117,6 +118,26 @@
               currentCount += 1;
             }
           }
+        }
+      });
+
+      // temporarily remove keys of locked fields
+      lockedKeys.forEach((key) => {
+        const keyIndexes = [];
+        existingDescriptionArray.forEach((item, index) => {
+          if (item.key === key) {
+            keyIndexes.push(index);
+          }
+        });
+
+        if (keyIndexes.length > 0) {
+          // remove each
+          keyIndexes.forEach((keyIndex) => {
+            existingDescriptionArray = [
+              ...existingDescriptionArray.slice(0, keyIndex),
+              ...existingDescriptionArray.slice(keyIndex + 1),
+            ];
+          });
         }
       });
     } else {
@@ -175,6 +196,26 @@
     }
   };
 
+  const handleLockUnlock = (key, inputIsLocked) => {
+    if (inputIsLocked) {
+      if (!lockedKeys.includes(key)) {
+        lockedKeys.push(key);
+      }
+    } else {
+      const keyIndex = lockedKeys.findIndex(foundKey => foundKey === key);
+      if (keyIndex > -1) {
+        // remove it
+        lockedKeys = [
+          ...lockedKeys.slice(0, keyIndex),
+          ...lockedKeys.slice(keyIndex + 1),
+        ];
+      }
+    }
+
+    // trigger an update
+    description = compileDescription(descriptionArray, description);
+  };
+
   const editorLabel = (labelText, count) => {
     let fullText = labelText;
     if (itemCount !== count) {
@@ -214,6 +255,7 @@
     itemIsLocked={isLocked}
     kind="inputText"
     labelText={!isEditor ? descriptionEntry.key : editorLabel(descriptionEntry.key, descriptionEntry.count)}
+    on:lockUnlockSignal={customEvent => handleLockUnlock(descriptionEntry.key, customEvent.detail)}
     nameId={`item-description-${i}-${itemId}`}
     placeholder="Type something…"
     resetValue={resetValue}
