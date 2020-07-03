@@ -112,6 +112,7 @@
 
     {#if isDeletable}
       <ButtonRemove
+        disabled={isLocked || itemIsLocked}
         on:handleUpdate={() => handleDelete()}
         invertView={invertView}
       />
