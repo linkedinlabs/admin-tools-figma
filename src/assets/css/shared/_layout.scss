@@ -46,6 +46,7 @@ svg {
 .master-item {
   &.expanded {
     .expanded-content {
+      padding-bottom: em(12);
       border-bottom: 1px solid $wl-accent-tertiary;
 
       .divider-top {

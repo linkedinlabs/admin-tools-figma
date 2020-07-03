@@ -1,7 +1,7 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
   import Description from './Description';
-  import FigmaSwitch from './forms-controls/FigmaSwitch';
+  // import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
 
   export let editorItem;
@@ -137,6 +137,7 @@
       on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
     />
 
+    <!--
     <FormUnit
       className="form-row"
       disableCopy={true}
@@ -155,6 +156,7 @@
         nameId="is-interactive"
       />
     </span>
+    -->
   </span>
 
   {#if isDirty}
