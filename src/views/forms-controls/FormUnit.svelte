@@ -30,9 +30,7 @@
     value = originalValue;
   };
 
-  const handleDelete = () => {
-    dispatch('deleteSignal');
-  };
+  const handleDelete = () => dispatch('deleteSignal');
 
   afterUpdate(() => {
     // watch locking changes and restore value if item becomes locked

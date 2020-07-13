@@ -1,6 +1,7 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
   import Description from './Description';
+  import FormActions from './forms-controls/FormActions';
   // import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
 
@@ -160,17 +161,10 @@
   </span>
 
   {#if isDirty}
-    <span>
-      <button
-        on:click={() => handleReset()}
-      >
-        Restore
-      </button>
-      <button
-        on:click={() => handleSave(dirtyItem, editableItemIds)}
-      >
-        Save Changes
-      </button>
-    </span>
+    <FormActions
+      invertView={true}
+      on:resetSignal={() => handleReset()}
+      on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+    />
   {/if}
 </section>

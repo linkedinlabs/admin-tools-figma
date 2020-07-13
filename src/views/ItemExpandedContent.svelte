@@ -2,6 +2,7 @@
   import { afterUpdate, beforeUpdate } from 'svelte';
   import Description from './Description';
   // import FigmaSwitch from './forms-controls/FigmaSwitch';
+  import FormActions from './forms-controls/FormActions';
   import FormUnit from './forms-controls/FormUnit';
 
   export let isLocked = false;
@@ -133,17 +134,9 @@
   </span>
 
   {#if isDirty}
-    <span>
-      <button
-        on:click={() => handleReset()}
-      >
-        Restore
-      </button>
-      <button
-        on:click={() => handleSave()}
-      >
-        Save Changes
-      </button>
-    </span>
+    <FormActions
+      on:resetSignal={() => handleReset()}
+      on:saveSignal={() => handleSave()}
+    />
   {/if}
 </section>
