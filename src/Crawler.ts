@@ -47,6 +47,8 @@ export default class Crawler {
       if (
         node.type !== CONTAINER_NODE_TYPES.group
         && node.type !== CONTAINER_NODE_TYPES.frame
+        && node.type !== CONTAINER_NODE_TYPES.component
+        && node.type !== CONTAINER_NODE_TYPES.instance
         && node.visible
         && !node.locked
       ) {
@@ -93,6 +95,8 @@ export default class Crawler {
             if (
               innerLayer.type !== CONTAINER_NODE_TYPES.group
               && innerLayer.type !== CONTAINER_NODE_TYPES.frame
+              && innerLayer.type !== CONTAINER_NODE_TYPES.component
+              && innerLayer.type !== CONTAINER_NODE_TYPES.instance
               && innerLayer.visible
               && !innerLayer.locked
             ) {
