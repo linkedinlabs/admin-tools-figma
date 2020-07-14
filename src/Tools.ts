@@ -367,7 +367,7 @@ const deepCopy = (objectToClone: Object) => {
   clonedObject = Array.isArray(objectToClone) ? [] : {};
 
   Object.keys(objectToClone).forEach((key: string) => {
-    const value = objectToClone[key];
+    const value: any = objectToClone[key];
 
     // recursively copy for nested objects, including arrays
     clonedObject[key] = deepCopy(value);

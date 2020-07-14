@@ -40,6 +40,7 @@
     if (deepCompare(item, originalItem)) {
       resetValue = true;
     }
+
     // tee off a full reset
     if (resetValue) {
       handleReset();

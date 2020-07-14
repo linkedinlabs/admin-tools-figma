@@ -4,21 +4,22 @@
   import FormActions from './forms-controls/FormActions';
   // import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
+  import { deepCopy, deepCompare } from '../Tools';
 
   export let editorItem;
   export let editableItemIds = [];
 
   let originalEditableItemIds = editableItemIds;
-  let dirtyItem = Object.assign({}, editorItem);
-  let originalItem = Object.assign({}, editorItem);
+  let dirtyItem = deepCopy(editorItem);
+  let originalItem = deepCopy(editorItem);
   let isDirty = false;
   let itemCount = originalEditableItemIds.length;
   let resetValue = false;
   let wasResetValue = false;
 
   const handleReset = () => {
-    originalItem = Object.assign({}, editorItem);
-    dirtyItem = Object.assign({}, editorItem);
+    originalItem = deepCopy(editorItem);
+    dirtyItem = deepCopy(editorItem);
     originalEditableItemIds = editableItemIds;
     isDirty = false;
     resetValue = true;
@@ -62,19 +63,12 @@
 
   beforeUpdate(() => {
     // check `editorItem` against dirty to see if it was updated in the form
-    isDirty = false;
-    Object.entries(editorItem).forEach(([key, value]) => {
-      if (dirtyItem[key] !== value) {
-        isDirty = true;
-      }
-    });
+    isDirty = deepCompare(editorItem, dirtyItem);
 
     // check `editorItem` against original to see if it was updated on the Figma side
-    Object.entries(editorItem).forEach(([key, value]) => {
-      if (originalItem[key] !== value) {
-        resetValue = true;
-      }
-    });
+    if (deepCompare(editorItem, originalItem)) {
+      resetValue = true;
+    }
 
     // check selected item ids against original to see if items were locked/unlocked
     if (!compareEditableIds(editableItemIds, originalEditableItemIds)) {
