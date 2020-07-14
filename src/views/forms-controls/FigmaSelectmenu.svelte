@@ -14,16 +14,6 @@
       text: 'Not assigned',
       disabled: false,
     },
-    {
-      value: 'component',
-      text: 'Component',
-      disabled: false,
-    },
-    {
-      value: 'foundation',
-      text: 'Foundational Element',
-      disabled: false,
-    },
   ];
 
   // state

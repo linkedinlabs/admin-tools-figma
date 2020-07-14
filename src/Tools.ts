@@ -346,6 +346,67 @@ const updateArray = (
   return updatedArray;
 };
 
+/** WIP
+ * @description Takes a node object and traverses parent relationships until the top-level
+ * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
+ *
+ * @kind function
+ * @name deepCopy
+ * @param {Object} node A Figma node object.
+ *
+ * @returns {Object} The top-level `CONTAINER_NODE_TYPES.frame` node.
+ */
+const deepCopy = (objectToClone: Object) => {
+  let clonedObject: Object = null;
+
+  if (typeof objectToClone !== 'object' || objectToClone === null) {
+    return objectToClone; // return if objectToClone is not object
+  }
+
+  // create an array or object to hold the values
+  clonedObject = Array.isArray(objectToClone) ? [] : {};
+
+  Object.keys(objectToClone).forEach((key: string) => {
+    const value = objectToClone[key];
+
+    // recursively copy for nested objects, including arrays
+    clonedObject[key] = deepCopy(value);
+  });
+
+  return clonedObject;
+};
+
+/** WIP
+ * @description Takes a node object and traverses parent relationships until the top-level
+ * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
+ *
+ * @kind function
+ * @name deepCompare
+ * @param {Object} node A Figma node object.
+ *
+ * @returns {Object} The top-level `CONTAINER_NODE_TYPES.frame` node.
+ */
+const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
+  let isDifferent: boolean = false;
+
+  if (typeof unmodifiedObject !== 'object' || unmodifiedObject === null) {
+    return isDifferent;
+  }
+
+  Object.entries(unmodifiedObject).forEach(([key, value]) => {
+    // check for inner object first
+    if ((typeof value === 'object') && (value !== null)) {
+      if (deepCompare(value, modifiedObject[key])) {
+        isDifferent = true;
+      }
+    } else if (modifiedObject[key] !== value) {
+      isDifferent = true;
+    }
+  });
+
+  return isDifferent;
+};
+
 /**
  * @description Takes a node object and traverses parent relationships until the top-level
  * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
@@ -657,6 +718,8 @@ export {
   asyncNetworkRequest,
   awaitUIReadiness,
   dataNamespace,
+  deepCompare,
+  deepCopy,
   existsInArray,
   filterByKey,
   findTopComponent,

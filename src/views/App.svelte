@@ -1,6 +1,10 @@
 <script>
   import { beforeUpdate } from 'svelte';
-  import { currentFilter, isStyles, sessionKey } from './stores';
+  import {
+    currentFilter,
+    isStyles,
+    sessionKey,
+  } from './stores';
   import BlankState from './BlankState';
   import FontPreload from './FontPreload';
   import ItemsList from './ItemsList';

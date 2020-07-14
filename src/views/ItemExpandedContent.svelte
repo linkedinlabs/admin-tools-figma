@@ -1,22 +1,24 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
+  import { isStyles, libraryOptions } from './stores';
   import Description from './Description';
-  // import FigmaSwitch from './forms-controls/FigmaSwitch';
+  import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormActions from './forms-controls/FormActions';
   import FormUnit from './forms-controls/FormUnit';
+  import { deepCopy, deepCompare } from '../Tools';
 
   export let isLocked = false;
   export let item = null;
 
-  let dirtyItem = Object.assign({}, item);
-  let originalItem = Object.assign({}, item);
+  let dirtyItem = deepCopy(item);
+  let originalItem = deepCopy(item);
   let isDirty = false;
   let resetValue = false;
   let wasResetValue = false;
 
   const handleReset = () => {
-    originalItem = Object.assign({}, item);
-    dirtyItem = Object.assign({}, item);
+    originalItem = deepCopy(item);
+    dirtyItem = deepCopy(item);
     isDirty = false;
     resetValue = true;
   };
@@ -32,20 +34,12 @@
 
   beforeUpdate(() => {
     // check `item` against dirty to see if it was updated in the form
-    isDirty = false;
-    Object.entries(item).forEach(([key, value]) => {
-      if (dirtyItem[key] !== value) {
-        isDirty = true;
-      }
-    });
+    isDirty = deepCompare(item, dirtyItem);
 
     // check `item` against original to see if it was updated on the Figma side
-    Object.entries(item).forEach(([key, value]) => {
-      if (originalItem[key] !== value) {
-        resetValue = true;
-      }
-    });
-
+    if (deepCompare(item, originalItem)) {
+      resetValue = true;
+    }
     // tee off a full reset
     if (resetValue) {
       handleReset();
@@ -110,27 +104,29 @@
       on:saveSignal={() => handleSave()}
     />
 
-    <!--
-    <FormUnit
-      className="form-row"
-      disableCopy={true}
-      itemIsLocked={isLocked}
-      kind="inputSelect"
-      labelText="Library"
-      nameId={`item-library-${item.id}`}
-      resetValue={resetValue}
-      value="unassigned"
-    />
-    
-    <span class="form-row">
-      <FigmaSwitch
-        className="form-element element-type-switch"
-        disabled={isLocked}
-        labelText="Interactive?"
-        nameId="is-interactive"
+    {#if !$isStyles}
+      <FormUnit
+        className="form-row"
+        disableCopy={true}
+        itemIsLocked={isLocked}
+        kind="inputSelect"
+        labelText="Library"
+        nameId={`item-library-${item.id}`}
+        options={$libraryOptions}
+        resetValue={resetValue}
+        bind:value={dirtyItem.componentData.library}
       />
-    </span>
-    -->
+
+      <span class="form-row">
+        <FigmaSwitch
+          className="form-element element-type-switch"
+          disabled={isLocked}
+          labelText="Interactive?"
+          nameId="is-interactive"
+          bind:value={dirtyItem.componentData.isInteractive}
+        />
+      </span>
+    {/if}
   </span>
 
   {#if isDirty}

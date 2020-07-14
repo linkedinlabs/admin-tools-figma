@@ -17,6 +17,12 @@ type PresenterTypeGroup = {
   typeId?: string,
 };
 
+type PresenterComponentData = {
+  library: 'unassigned' | 'art-deco' | 'mercado',
+  annotationText?: string,
+  isInteractive: boolean,
+}
+
 type PresenterItem = {
   id: string,
   description: string,
@@ -27,6 +33,7 @@ type PresenterItem = {
   type: StyleType | NodeType,
   typeId: string,
   typeName: PresenterTypeName,
+  componentData?: PresenterComponentData,
 };
 
 // Vendor Declarations

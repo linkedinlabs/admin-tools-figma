@@ -286,6 +286,11 @@ export default class Presenter {
           groupId = `${typeId}-${nameGroup}`;
         }
         const typeName: PresenterTypeName = 'Component';
+        const componentData: PresenterComponentData = {
+          library: 'mercado',
+          annotationText: 'I am some Specter text',
+          isInteractive: true,
+        };
 
         extractedComponents.push(component);
 
@@ -300,6 +305,7 @@ export default class Presenter {
           type,
           typeId,
           typeName,
+          componentData,
         });
       }
     });

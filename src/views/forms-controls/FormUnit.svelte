@@ -20,6 +20,7 @@
   export let nameId = 'text-input-id';
   export let resetValue = false;
   export let value = null;
+  export let options = [];
 
   const dispatch = createEventDispatcher();
   let originalValue = value;
@@ -104,6 +105,7 @@
         disabled={isLocked || itemIsLocked}
         invertView={invertView}
         nameId={nameId}
+        options={options}
         bind:value={value}
       />
     {/if}
