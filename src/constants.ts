@@ -32,11 +32,39 @@ const PLUGIN_NAME = 'Admin Tool';
  * @type {Object}
  */
 const DATA_KEYS = {
+  bundle: `${PLUGIN_IDENTIFIER}.bundle-001`,
   options: `${PLUGIN_IDENTIFIER}.options-001`,
-  assignment: `${PLUGIN_IDENTIFIER}.assignment-001`,
-  textOriginal: `${PLUGIN_IDENTIFIER}.text-original-001`,
-  textProposed: `${PLUGIN_IDENTIFIER}.text-proposed-001`,
-  locked: `${PLUGIN_IDENTIFIER}.locked-001`,
+};
+
+/**
+ * @description An object containing the current string constants used as keys in plugin data.
+ * Changing one of these keys will break data retrieval or reset data in any
+ * `xPluginData` getters/setters and potentially elsewhere.
+ *
+ * @kind constant
+ * @name DATA_KEYS_SPECTER
+ * @type {Object}
+ */
+const DATA_KEYS_SPECTER = {
+  bundle: `${process.env.PLUGIN_IDENTIFIER_SPECTER}.bundle-001`,
+  options: `${process.env.PLUGIN_IDENTIFIER_SPECTER}.options-001`,
+};
+
+/**
+ * @description An object containing the current string constants used as keys in plugin data.
+ * Changing one of these keys will break data retrieval or reset data in any
+ * `xPluginData` getters/setters and potentially elsewhere.
+ *
+ * @kind constant
+ * @name DATA_KEYS_REALISH
+ * @type {Object}
+ */
+const DATA_KEYS_REALISH = {
+  options: `${process.env.PLUGIN_IDENTIFIER_REALISH}.options-001`,
+  assignment: `${process.env.PLUGIN_IDENTIFIER_REALISH}.assignment-001`,
+  textOriginal: `${process.env.PLUGIN_IDENTIFIER_REALISH}.text-original-001`,
+  textProposed: `${process.env.PLUGIN_IDENTIFIER_REALISH}.text-proposed-001`,
+  locked: `${process.env.PLUGIN_IDENTIFIER_REALISH}.locked-001`,
 };
 
 /**
@@ -129,6 +157,8 @@ export {
   ASSIGNMENTS,
   CONTAINER_NODE_TYPES,
   DATA_KEYS,
+  DATA_KEYS_REALISH,
+  DATA_KEYS_SPECTER,
   GUI_CONTENT,
   GUI_SETTINGS,
   PLUGIN_IDENTIFIER,

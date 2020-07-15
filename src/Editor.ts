@@ -1,4 +1,5 @@
 import Presenter from './Presenter';
+import { setPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /** WIP
@@ -142,6 +143,13 @@ export default class Editor {
 
       // grab the Figma `ComponentNode` for updating
       baseItem = figma.getNodeById(existingItem.id) as ComponentNode;
+
+      // temp meta stuff - currently just overwriting everything
+      setPeerPluginData(
+        baseItem,
+        updatedItem.componentData,
+        'specter',
+      );
     }
 
     // kick out if we can't find a match

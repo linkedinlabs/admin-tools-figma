@@ -1,3 +1,4 @@
+import { getPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /** WIP
@@ -286,11 +287,21 @@ export default class Presenter {
           groupId = `${typeId}-${nameGroup}`;
         }
         const typeName: PresenterTypeName = 'Component';
-        const componentData: PresenterComponentData = {
+
+        // temp meta stuff
+        let componentData: PresenterComponentData = {
           library: 'mercado',
           annotationText: 'I am some Specter text',
           isInteractive: true,
         };
+        const tempComponentData: PresenterComponentData = getPeerPluginData(
+          component,
+          'specter',
+        );
+
+        if (tempComponentData) {
+          componentData = tempComponentData;
+        }
 
         extractedComponents.push(component);
 

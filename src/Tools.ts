@@ -2,6 +2,8 @@ import {
   ASSIGNMENTS,
   CONTAINER_NODE_TYPES,
   DATA_KEYS,
+  DATA_KEYS_REALISH,
+  DATA_KEYS_SPECTER,
   GUI_SETTINGS,
   PLUGIN_IDENTIFIER,
 } from './constants';
@@ -577,9 +579,26 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
  *
  * @returns {string} `true` if the build is internal, `false` if it is not.
  */
-const dataNamespace = (): string => {
-  const identifier: string = PLUGIN_IDENTIFIER;
-  const key: string = process.env.SECRET_KEY ? process.env.SECRET_KEY : '1234';
+const dataNamespace = (pluginName: 'realish' | 'specter' = null): string => {
+  let identifier: string = null;
+  let key: string = null;
+
+  switch (pluginName) {
+    case 'realish':
+      identifier = process.env.PLUGIN_IDENTIFIER_REALISH
+        ? process.env.PLUGIN_IDENTIFIER_REALISH : pluginName;
+      key = process.env.SECRET_KEY_REALISH ? process.env.SECRET_KEY_REALISH : '1234';
+      break;
+    case 'specter':
+      identifier = process.env.PLUGIN_IDENTIFIER_SPECTER
+        ? process.env.PLUGIN_IDENTIFIER_SPECTER : pluginName;
+      key = process.env.SECRET_KEY_SPECTER ? process.env.SECRET_KEY_SPECTER : '1234';
+      break;
+    default:
+      identifier = PLUGIN_IDENTIFIER;
+      key = process.env.SECRET_KEY ? process.env.SECRET_KEY : '1234';
+  }
+
   let namespace: string = `${identifier.toLowerCase()}${key.toLowerCase()}`;
   namespace = namespace.replace(/[^0-9a-z]/gi, '');
   return namespace;
@@ -589,26 +608,106 @@ const dataNamespace = (): string => {
  * @description A shared helper function to retrieve type assignment data in raw form (JSON).
  *
  * @kind function
- * @name getNodeAssignmentData
+ * @name getPeerPluginData
  *
  * @param {Object} node The text node to retrieve the assignment on.
  *
  * @returns {string} The assignment is returned as an unparsed JSON string.
  */
-const getNodeAssignmentData = (node: SceneNode) => {
-  let assignmentData = node.getSharedPluginData(dataNamespace(), DATA_KEYS.assignment);
+const getPeerPluginData = (
+  node: SceneNode,
+  pluginName: 'realish' | 'specter',
+) => {
+  let dataKey: string = null;
+  let parsedData = null;
 
-  if (!assignmentData) {
+  switch (pluginName) {
+    case 'realish':
+      dataKey = DATA_KEYS_REALISH.assignment;
+      break;
+    case 'specter':
+      dataKey = DATA_KEYS_SPECTER.bundle;
+      break;
+    default:
+      dataKey = DATA_KEYS.bundle;
+  }
+
+  let pluginData = node.getSharedPluginData(
+    dataNamespace(pluginName),
+    dataKey,
+  );
+
+  if (!pluginData) {
     const topInstanceNode = findTopInstance(node);
     if (topInstanceNode) {
       const peerNode = matchMasterPeerNode(node, topInstanceNode);
       if (peerNode) {
-        assignmentData = peerNode.getSharedPluginData(dataNamespace(), DATA_KEYS.assignment);
+        pluginData = peerNode.getSharedPluginData(
+          dataNamespace(pluginName),
+          dataKey,
+        );
       }
     }
   }
 
-  return assignmentData;
+  if (pluginData) {
+    parsedData = JSON.parse(pluginData);
+  }
+
+  return parsedData;
+};
+
+/**
+ * @description A shared helper function to retrieve type assignment data in raw form (JSON).
+ *
+ * @kind function
+ * @name setPeerPluginData
+ *
+ * @param {Object} node The text node to retrieve the assignment on.
+ *
+ * @returns {string} The assignment is returned as an unparsed JSON string.
+ */
+const setPeerPluginData = (
+  node: SceneNode,
+  updatedPluginData,
+  pluginName: 'realish' | 'specter',
+) => {
+  let dataKey: string = null;
+  let nodeToUpdate: SceneNode = node;
+
+  switch (pluginName) {
+    case 'realish':
+      dataKey = DATA_KEYS_REALISH.assignment;
+      break;
+    case 'specter':
+      dataKey = DATA_KEYS_SPECTER.bundle;
+      break;
+    default:
+      dataKey = DATA_KEYS.bundle;
+  }
+
+  const pluginData = node.getSharedPluginData(
+    dataNamespace(pluginName),
+    dataKey,
+  );
+
+  if (!pluginData) {
+    const topInstanceNode = findTopInstance(node);
+    if (topInstanceNode) {
+      const peerNode = matchMasterPeerNode(node, topInstanceNode);
+      if (peerNode) {
+        nodeToUpdate = peerNode;
+      }
+    }
+  }
+
+  nodeToUpdate.setSharedPluginData(
+    dataNamespace(pluginName),
+    dataKey,
+    JSON.stringify(updatedPluginData),
+  );
+
+  return null;
 };
 
 /**
@@ -725,7 +824,7 @@ export {
   findTopComponent,
   findTopFrame,
   findTopInstance,
-  getNodeAssignmentData,
+  getPeerPluginData,
   isInternal,
   isTextNode,
   isValidAssignment,
@@ -734,5 +833,6 @@ export {
   matchMasterPeerNode,
   pollWithPromise,
   resizeGUI,
+  setPeerPluginData,
   updateArray,
 };
