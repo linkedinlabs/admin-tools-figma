@@ -1,6 +1,7 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
   import {
+    roleOptions,
     isStyles,
     libraryOptions,
     libraryStatusOptions,
@@ -188,6 +189,18 @@
           bind:value={dirtyItem.componentData.isInteractive}
         />
       </span>
+
+      <FormUnit
+        className="form-row"
+        disableCopy={true}
+        itemIsLocked={isLocked}
+        kind="inputSelect"
+        labelText="ARIA Role"
+        nameId={`item-library-${item.id}`}
+        options={$roleOptions}
+        resetValue={resetValue}
+        bind:value={dirtyItem.componentData.role}
+      />
     {/if}
   </span>
 

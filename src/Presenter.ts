@@ -294,6 +294,7 @@ export default class Presenter {
           documentationUri: null,
           isInteractive: true,
           library: 'unassigned',
+          role: 'none',
           type: 'component',
           usageStatus: 'production',
           version: '1.0',
@@ -316,6 +317,9 @@ export default class Presenter {
           }
           if (!existingComponentData.version) {
             existingComponentData.version = '1.0';
+          }
+          if (!existingComponentData.role) {
+            existingComponentData.role = 'none';
           }
 
           componentData = existingComponentData;

@@ -22,6 +22,7 @@ type PresenterComponentData = {
   documentationUri?: string,
   isInteractive: boolean,
   library: 'unassigned' | 'art-deco' | 'mercado',
+  role: 'none' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
   type: 'component' | 'foundation',
   usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
   version?: string,

@@ -55,3 +55,58 @@ const libraryStatusOptionsArray = [
   },
 ];
 export const libraryStatusOptions = readable(libraryStatusOptionsArray);
+
+// static
+const roleOptionsArray = [
+  {
+    value: 'none',
+    text: 'No role',
+    disabled: false,
+  },
+  {
+    value: 'button',
+    text: 'Button',
+    disabled: false,
+  },
+  {
+    value: 'checkbox',
+    text: 'Checkbox',
+    disabled: false,
+  },
+  {
+    value: 'link',
+    text: 'Link',
+    disabled: false,
+  },
+  {
+    value: 'option',
+    text: 'Option',
+    disabled: false,
+  },
+  {
+    value: 'radio',
+    text: 'Radio',
+    disabled: false,
+  },
+  {
+    value: 'slider',
+    text: 'Slider',
+    disabled: false,
+  },
+  {
+    value: 'switch',
+    text: 'Switch',
+    disabled: false,
+  },
+  {
+    value: 'tab',
+    text: 'Tab',
+    disabled: false,
+  },
+  {
+    value: 'other',
+    text: 'Other',
+    disabled: false,
+  },
+];
+export const roleOptions = readable(roleOptionsArray);
