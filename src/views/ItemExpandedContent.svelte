@@ -1,6 +1,10 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
-  import { isStyles, libraryOptions } from './stores';
+  import {
+    isStyles,
+    libraryOptions,
+    libraryStatusOptions,
+  } from './stores';
   import Description from './Description';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormActions from './forms-controls/FormActions';
@@ -67,7 +71,7 @@
           className="form-unit split-40"
           itemIsLocked={isLocked}
           kind="inputText"
-          labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
+          labelText="Group&nbsp;&nbsp;&nbsp;/"
           nameId={`item-group-${item.id}`}
           resetValue={resetValue}
           on:saveSignal={() => handleSave()}
@@ -106,6 +110,10 @@
     />
 
     {#if !$isStyles}
+      <span class="form-row form-header">
+        Design System
+      </span>
+
       <FormUnit
         className="form-row"
         disableCopy={true}
@@ -117,6 +125,59 @@
         resetValue={resetValue}
         bind:value={dirtyItem.componentData.library}
       />
+
+      <FormUnit
+        className="form-row"
+        itemIsLocked={isLocked}
+        kind="inputText"
+        labelText="Annotation text override"
+        nameId={`item-annotationText-${item.id}`}
+        placeholder="Add an engineering-specific annotation…"
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave()}
+        bind:value={dirtyItem.componentData.annotationText}
+      />
+
+      <span class="form-row">
+        <FormUnit
+          className="form-unit split-60"
+          disableCopy={true}
+          itemIsLocked={isLocked}
+          kind="inputSelect"
+          labelText="Library"
+          nameId={`item-usageStatus-${item.id}`}
+          options={$libraryStatusOptions}
+          resetValue={resetValue}
+          bind:value={dirtyItem.componentData.usageStatus}
+        />
+        <FormUnit
+          className="form-unit split-40"
+          itemIsLocked={isLocked}
+          kind="inputText"
+          labelText="Version"
+          nameId={`item-version-${item.id}`}
+          placeholder="1.0"
+          resetValue={resetValue}
+          on:saveSignal={() => handleSave()}
+          bind:value={dirtyItem.componentData.version}
+        />
+      </span>
+
+      <FormUnit
+        className="form-row"
+        itemIsLocked={isLocked}
+        kind="inputText"
+        labelText="Documentation link"
+        nameId={`item-documentationUri-${item.id}`}
+        placeholder="https://something… or go/something…"
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave()}
+        bind:value={dirtyItem.componentData.documentationUri}
+      />
+
+      <span class="form-row form-header">
+        Purpose & Interaction
+      </span>
 
       <span class="form-row">
         <FigmaSwitch

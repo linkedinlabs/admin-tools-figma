@@ -26,3 +26,32 @@ const libraryOptionsArray = [
   },
 ];
 export const libraryOptions = readable(libraryOptionsArray);
+
+const libraryStatusOptionsArray = [
+  {
+    value: 'alpha',
+    text: 'Alpha (pre-release)',
+    disabled: false,
+  },
+  {
+    value: 'beta',
+    text: 'Beta',
+    disabled: false,
+  },
+  {
+    value: 'production',
+    text: 'Production',
+    disabled: false,
+  },
+  {
+    value: 'planned-deprecation',
+    text: 'Deprecation Planned',
+    disabled: false,
+  },
+  {
+    value: 'deprecated',
+    text: 'Deprecated',
+    disabled: false,
+  },
+];
+export const libraryStatusOptions = readable(libraryStatusOptionsArray);

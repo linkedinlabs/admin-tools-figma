@@ -67,6 +67,10 @@ svg {
           .form-label, {
             &.split-40 {
               width: calc(40% - #{em(3)});
+
+              .split-50 {
+                width: 100%;
+              }
             }
 
             &.split-50 {
@@ -75,6 +79,10 @@ svg {
 
             &.split-60 {
               width: calc(60% - #{em(3)});
+
+              .split-50 {
+                width: 100%;
+              }
             }
 
             &.has-multiple {
@@ -94,6 +102,15 @@ svg {
                 color: rgba($wl-type-01-invert, 0.8);
               }
             }
+          }
+        }
+
+        .form-header {
+          padding: em(18) em(18) em(9) em(18);
+          @include type-01(600);
+
+          &.invert {
+            color: rgba($wl-type-01-invert, 0.8);
           }
         }
       }

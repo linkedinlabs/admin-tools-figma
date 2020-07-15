@@ -245,6 +245,12 @@
   });
 </script>
 
+<span
+  class={`form-row form-header${invertView ? ' invert' : ''}`}
+>
+  Description Metadata
+</span>
+
 {#each descriptionArray as descriptionEntry, i (descriptionEntry.key)}
   <FormUnit
     className={`form-row${isEditor && (descriptionEntry.value === null) ? ' has-multiple' : ''}`}
@@ -276,7 +282,7 @@
     disabled={isLocked}
     invertView={invertView}
     nameId={`add-new-description-key-${itemId}`}
-    placeholder="Add stuff to me…"
+    placeholder="Label (i.e. ”Token”)"
     on:saveSignal={() => addEntry(newKeyValuePair)}
     bind:value={newKeyValuePair.key}
   />
@@ -285,7 +291,7 @@
     disabled={isLocked}
     invertView={invertView}
     nameId={`add-new-description-value-${itemId}`}
-    placeholder="Add other stuff to me…"
+    placeholder="Value (i.e. primary-01”)"
     on:saveSignal={() => addEntry(newKeyValuePair)}
     bind:value={newKeyValuePair.value}
   />

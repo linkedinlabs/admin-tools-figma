@@ -290,17 +290,35 @@ export default class Presenter {
 
         // temp meta stuff
         let componentData: PresenterComponentData = {
-          library: 'mercado',
-          annotationText: 'I am some Specter text',
+          annotationText: null,
+          documentationUri: null,
           isInteractive: true,
+          library: 'unassigned',
+          type: 'component',
+          usageStatus: 'production',
+          version: '1.0',
         };
-        const tempComponentData: PresenterComponentData = getPeerPluginData(
+        const existingComponentData: PresenterComponentData = getPeerPluginData(
           component,
           'specter',
         );
 
-        if (tempComponentData) {
-          componentData = tempComponentData;
+        if (existingComponentData) {
+          // migrations for new data points
+          if (!existingComponentData.documentationUri) {
+            existingComponentData.documentationUri = null;
+          }
+          if (!existingComponentData.type) {
+            existingComponentData.type = 'component';
+          }
+          if (!existingComponentData.usageStatus) {
+            existingComponentData.usageStatus = 'production';
+          }
+          if (!existingComponentData.version) {
+            existingComponentData.version = '1.0';
+          }
+
+          componentData = existingComponentData;
         }
 
         extractedComponents.push(component);

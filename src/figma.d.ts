@@ -18,22 +18,26 @@ type PresenterTypeGroup = {
 };
 
 type PresenterComponentData = {
-  library: 'unassigned' | 'art-deco' | 'mercado',
   annotationText?: string,
+  documentationUri?: string,
   isInteractive: boolean,
+  library: 'unassigned' | 'art-deco' | 'mercado',
+  type: 'component' | 'foundation',
+  usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
+  version?: string,
 }
 
 type PresenterItem = {
-  id: string,
+  componentData?: PresenterComponentData,
   description: string,
   group: string,
   groupId: string,
+  id: string,
   kind: string,
   name: string,
   type: StyleType | NodeType,
   typeId: string,
   typeName: PresenterTypeName,
-  componentData?: PresenterComponentData,
 };
 
 // Vendor Declarations
