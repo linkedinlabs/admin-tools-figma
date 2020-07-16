@@ -1,5 +1,5 @@
 import Presenter from './Presenter';
-import { setPeerPluginData } from './Tools';
+import { getPeerPluginData, setPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /** WIP
@@ -144,7 +144,7 @@ export default class Editor {
       // grab the Figma `ComponentNode` for updating
       baseItem = figma.getNodeById(existingItem.id) as ComponentNode;
 
-      // temp meta stuff - currently just overwriting everything
+      // overwrite existing plugin data
       setPeerPluginData(
         baseItem,
         updatedItem.componentData,
@@ -328,6 +328,32 @@ export default class Editor {
 
                 const updatedDescription = compileDescription(existingDescriptionArray);
                 baseItem.description = updatedDescription;
+                break;
+              }
+              case 'componentData': {
+                const existingComponentData: PresenterComponentData = getPeerPluginData(
+                  baseItem as ComponentNode,
+                  'specter',
+                );
+
+                Object.entries(value).forEach(([innerKey, innerValue]) => {
+                  if (
+                    (!innerKey.includes('HasValues'))
+                    && (innerValue !== 'blank--multiple')
+                    && (innerValue !== null)
+                    && (existingComponentData[innerKey] !== innerValue)
+                  ) {
+                    existingComponentData[innerKey] = innerValue;
+                  }
+                });
+
+                if (existingComponentData) {
+                  setPeerPluginData(
+                    baseItem as ComponentNode,
+                    existingComponentData,
+                    'specter',
+                  );
+                }
                 break;
               }
               case 'id':

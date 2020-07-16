@@ -1,8 +1,9 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
+  import { isStyles } from './stores';
+  import ComponentData from './ComponentData';
   import Description from './Description';
   import FormActions from './forms-controls/FormActions';
-  // import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
   import { deepCopy, deepCompare } from '../Tools';
 
@@ -132,26 +133,15 @@
       on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
     />
 
-    <!--
-    <FormUnit
-      className="form-row"
-      disableCopy={true}
-      invertView={true}
-      kind="inputSelect"
-      labelText="Library"
-      nameId="editor-test-library"
-      value="component"
-    />
-
-    <span class="form-row">
-      <FigmaSwitch
-        className="form-element element-type-switch"
+    {#if !$isStyles && dirtyItem.componentData}
+      <ComponentData
         invertView={true}
-        labelText="Interactive?"
-        nameId="is-interactive"
+        isEditor={true}
+        bind:item={dirtyItem}
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
       />
-    </span>
-    -->
+    {/if}
   </span>
 
   {#if isDirty}

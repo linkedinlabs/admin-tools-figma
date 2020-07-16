@@ -288,7 +288,7 @@ export default class Presenter {
         }
         const typeName: PresenterTypeName = 'Component';
 
-        // temp meta stuff
+        // set up plugin data
         let componentData: PresenterComponentData = {
           annotationText: null,
           documentationUri: null,
@@ -342,30 +342,6 @@ export default class Presenter {
         });
       }
     });
-
-    // apply filter - tktkt
-    // if (filter) {
-    //   let filterType: StyleType = null;
-    //   switch (filter) {
-    //     case 'color-fill':
-    //       filterType = 'PAINT';
-    //       break;
-    //     case 'effects':
-    //       filterType = 'EFFECT';
-    //       break;
-    //     case 'grid':
-    //       filterType = 'GRID';
-    //       break;
-    //     case 'typography':
-    //       filterType = 'TEXT';
-    //       break;
-    //     default:
-    //   }
-
-    //   if (filterType) {
-    //     items = items.filter(item => item.type === filterType);
-    //   }
-    // }
 
     // create top-level types and groups
     const types = setTypes(items);

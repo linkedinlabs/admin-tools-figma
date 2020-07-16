@@ -372,17 +372,38 @@
 
     const itemsToCompare = setEditableItems(currentItems, lockedIdsArray).items;
     const editorItem = {
-      id: 'editor-item',
       description: null,
       descriptionHasValues: false,
       group: null,
       groupHasValues: false,
+      id: 'editor-item',
       kind: null,
       kindHasValues: false,
       name: null,
       nameHasValues: false,
       type: 'style',
     };
+
+    // const componentData = {
+    //   annotationText: null,
+    //   annotationTextHasValues: false,
+    //   documentationUri: null,
+    //   documentationUriHasValues: false,
+    //   isInteractive: false,
+    //   isInteractiveHasValues: false,
+    //   library: 'unassigned',
+    //   libraryHasValues: false,
+    //   role: 'none',
+    //   roleHasValues: false,
+    //   type: 'component',
+    //   typeHasValues: false,
+    //   usageStatus: 'production',
+    //   usageStatusHasValues: false,
+    //   version: null,
+    //   versionHasValues: false,
+    // }
+
+    const editorComponentData = {};
 
     const currentDescriptions = [];
     const currentGroups = [];
@@ -419,6 +440,22 @@
 
     if (isComponents) {
       editorItem.type = 'COMPONENT';
+
+      // set up editorComponentData
+      itemsToCompare.forEach((item) => {
+        if (item.componentData) {
+          Object.keys(item.componentData).forEach((key) => {
+            if (editorComponentData[key] === undefined) {
+              editorComponentData[key] = item.componentData[key];
+              editorComponentData[`${key}HasValues`] = item.componentData[key] !== null;
+            } else if (editorComponentData[key] !== item.componentData[key]) {
+              editorComponentData[key] = null;
+              editorComponentData[`${key}HasValues`] = true;
+            }
+          });
+        }
+      });
+      editorItem.componentData = editorComponentData;
     }
 
     return editorItem;

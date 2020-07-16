@@ -402,7 +402,9 @@ const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
         isDifferent = true;
       }
     } else if (modifiedObject[key] !== value) {
-      isDifferent = true;
+      if (modifiedObject[key] !== 'blank--multiple') {
+        isDifferent = true;
+      }
     }
   });
 

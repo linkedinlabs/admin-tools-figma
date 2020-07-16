@@ -47,7 +47,7 @@
     // update the comparison variable
     wasUnlocked = isLocked;
 
-    if (value !== originalValue) {
+    if ((value !== originalValue) && (value !== 'blank--multiple')) {
       isDirty = true;
     } else {
       isDirty = false;
@@ -103,6 +103,7 @@
       <FigmaSelectmenu
         className="form-element element-type-select split-50"
         disabled={isLocked || itemIsLocked}
+        hasMultiple={hasMultiple}
         invertView={invertView}
         nameId={nameId}
         options={options}
