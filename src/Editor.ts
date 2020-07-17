@@ -331,26 +331,38 @@ export default class Editor {
                 break;
               }
               case 'componentData': {
+                let updatedComponentData = {};
                 const existingComponentData: PresenterComponentData = getPeerPluginData(
                   baseItem as ComponentNode,
                   'specter',
                 );
+
+                if (existingComponentData) {
+                  updatedComponentData = existingComponentData;
+                }
 
                 Object.entries(value).forEach(([innerKey, innerValue]) => {
                   if (
                     (!innerKey.includes('HasValues'))
                     && (innerValue !== 'blank--multiple')
                     && (innerValue !== null)
-                    && (existingComponentData[innerKey] !== innerValue)
                   ) {
-                    existingComponentData[innerKey] = innerValue;
+                    if (
+                      (updatedComponentData[innerKey] === undefined)
+                      || (
+                        updatedComponentData[innerKey]
+                        && (updatedComponentData[innerKey] !== innerValue)
+                      )
+                    ) {
+                      updatedComponentData[innerKey] = innerValue;
+                    }
                   }
                 });
 
-                if (existingComponentData) {
+                if (updatedComponentData) {
                   setPeerPluginData(
                     baseItem as ComponentNode,
-                    existingComponentData,
+                    updatedComponentData,
                     'specter',
                   );
                 }

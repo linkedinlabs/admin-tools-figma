@@ -321,6 +321,9 @@ export default class Presenter {
           if (!existingComponentData.role) {
             existingComponentData.role = 'none';
           }
+          if (!existingComponentData.annotationText) {
+            existingComponentData.annotationText = null;
+          }
 
           componentData = existingComponentData;
         }
