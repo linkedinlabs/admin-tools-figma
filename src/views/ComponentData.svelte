@@ -14,6 +14,13 @@
   export let isLocked = false;
   export let resetValue = false;
 
+  const setClasses = (classes, hasValues) => {
+    if (hasValues) {
+      return `${classes} has-multiple`;
+    }
+    return classes;
+  };
+
   const setOptions = (options, addNull) => {
     let finalizedOptions = options;
     if (addNull) {
@@ -46,14 +53,14 @@
   kind="inputSelect"
   labelText="Library"
   nameId={`item-library-${item.id}`}
-  options={setOptions($libraryOptions, isEditor)}
+  options={setOptions($libraryOptions, isEditor && item.componentData.library === 'blank--multiple')}
   resetValue={resetValue}
   bind:value={item.componentData.library}
 />
 
 <FormUnit
-  className="form-row"
-  hasMultiple={isEditor && item.componentData.annotationText === null}
+  className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}
+  hasMultiple={isEditor && item.componentData.annotationTextHasValues}
   invertView={invertView}
   itemIsLocked={isLocked}
   kind="inputText"
@@ -75,13 +82,13 @@
     kind="inputSelect"
     labelText="Status"
     nameId={`item-usageStatus-${item.id}`}
-    options={setOptions($libraryStatusOptions, isEditor)}
+    options={setOptions($libraryStatusOptions, isEditor && item.componentData.usageStatus === 'blank--multiple')}
     resetValue={resetValue}
     bind:value={item.componentData.usageStatus}
   />
   <FormUnit
-    className="form-unit split-40"
-    hasMultiple={isEditor && item.componentData.version === null}
+    className={setClasses('form-unit split-40', isEditor && item.componentData.versionHasValues)}
+    hasMultiple={isEditor && item.componentData.versionHasValues}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputText"
@@ -95,8 +102,8 @@
 </span>
 
 <FormUnit
-  className="form-row"
-  hasMultiple={isEditor && item.componentData.documentationUri === null}
+  className={setClasses('form-row', isEditor && item.componentData.documentationUriHasValues)}
+  hasMultiple={isEditor && item.componentData.documentationUriHasValues}
   invertView={invertView}
   itemIsLocked={isLocked}
   kind="inputText"
@@ -134,7 +141,7 @@
   kind="inputSelect"
   labelText="ARIA Role"
   nameId={`item-library-${item.id}`}
-  options={setOptions($roleOptions, isEditor)}
+  options={setOptions($roleOptions, isEditor && item.componentData.role === 'blank--multiple')}
   resetValue={resetValue}
   bind:value={item.componentData.role}
 />

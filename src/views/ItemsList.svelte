@@ -384,25 +384,6 @@
       type: 'style',
     };
 
-    // const componentData = {
-    //   annotationText: null,
-    //   annotationTextHasValues: false,
-    //   documentationUri: null,
-    //   documentationUriHasValues: false,
-    //   isInteractive: false,
-    //   isInteractiveHasValues: false,
-    //   library: 'unassigned',
-    //   libraryHasValues: false,
-    //   role: 'none',
-    //   roleHasValues: false,
-    //   type: 'component',
-    //   typeHasValues: false,
-    //   usageStatus: 'production',
-    //   usageStatusHasValues: false,
-    //   version: null,
-    //   versionHasValues: false,
-    // }
-
     const editorComponentData = {};
 
     const currentDescriptions = [];
