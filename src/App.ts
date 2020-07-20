@@ -241,7 +241,6 @@ export default class App {
       }
       selected = presenter.extractStyles(filter);
     } else {
-      // selected = { items: [] };
       selected = presenter.extractComponents(null);
     }
 
@@ -255,10 +254,17 @@ export default class App {
       },
     });
 
-    // resize the UI
+    // resize the UI based on selection
     let newGUIHeight = GUI_SETTINGS.default.height;
     if (selected && selected.items && selected.items.length > 0) {
-      newGUIHeight = 1200;
+      const itemTypeHeight = 33;
+      const groupHeight = 49;
+      newGUIHeight = 80 + 31;
+      newGUIHeight += selected.items.length * itemTypeHeight;
+      if (filters.newIsStyles) {
+        newGUIHeight += selected.types.length * itemTypeHeight;
+      }
+      newGUIHeight += selected.groups.length * groupHeight;
     }
 
     figma.ui.resize(

@@ -14,7 +14,7 @@ $footer-height-px: 64px;
 body {
   margin: 0;
   padding: 0;
-  padding-bottom: em($footer-height-px);
+  // padding-bottom: em($footer-height-px);
   @include type-01;
   background: $wl-canvas;
 
@@ -39,6 +39,16 @@ svg {
       top: 0;
       left: 0;
     }
+  }
+}
+
+.options#action-options {
+  margin: 0;
+  padding: 0;
+
+  .items-list {
+    margin: 0;
+    padding: 0;
   }
 }
 
