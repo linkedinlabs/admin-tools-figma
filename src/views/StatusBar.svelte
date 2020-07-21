@@ -1,20 +1,43 @@
 <script>
-  import { isStyles } from './stores';
+  import { beforeUpdate } from 'svelte';
+  import {
+    currentFilter,
+    isSelection,
+    isStyles,
+  } from './stores';
 
   import FigmaSwitch from './forms-controls/FigmaSwitch';
 
-  export let watchSelection = true;
   export let numberSelected = 0;
 
-  if (!$isStyles && !watchSelection) {
-    watchSelection = true;
-  }
+  let wasIsSelection = $isSelection;
 
   const statusText = (isStyle, count) => {
     const labelType = isStyle ? 'style' : 'component';
     const newStatusText = count === 1 ? labelType : `${labelType}s`;
     return newStatusText;
   };
+
+  const setCurrentFilters = (newIsSelection) => {
+    parent.postMessage({
+      pluginMessage: {
+        action: 'setFilters',
+        payload: {
+          newIsSelection,
+          newIsStyles: $isStyles,
+          newFilter: $currentFilter,
+        },
+      },
+    }, '*');
+  };
+
+  beforeUpdate(() => {
+    if (wasIsSelection !== $isSelection) {
+      setCurrentFilters($isSelection);
+    }
+
+    wasIsSelection = $isSelection;
+  });
 </script>
 
 <style>
@@ -29,13 +52,12 @@
 
 <footer class="status-bar">
   <p>
-    {numberSelected} {statusText($isStyles, numberSelected)} {watchSelection ? 'selected' : ''}
+    {numberSelected} {statusText($isStyles, numberSelected)} {$isSelection ? 'selected' : ''}
   </p>
-  <!-- temp disabled for all - eventually allow Styles to pick -->
   <FigmaSwitch
-    disabled={!$isStyles || $isStyles}
+    disabled={!$isStyles}
     labelText="Watch selection"
     nameId="watch-selection"
-    bind:value={watchSelection}
+    bind:value={$isSelection}
   />
 </footer>

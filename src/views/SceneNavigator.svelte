@@ -1,6 +1,10 @@
 <script>
   import { beforeUpdate } from 'svelte';
-  import { currentFilter, isStyles } from './stores';
+  import {
+    currentFilter,
+    isSelection,
+    isStyles,
+  } from './stores';
 
   import SceneBackArrow from './forms-controls/SceneBackArrow';
 
@@ -60,7 +64,11 @@
     parent.postMessage({
       pluginMessage: {
         action: 'setFilters',
-        payload: { newIsStyles, newFilter },
+        payload: {
+          newIsSelection: $isSelection,
+          newIsStyles,
+          newFilter,
+        },
       },
     }, '*');
   };
@@ -75,7 +83,6 @@
     setCurrentFilters($isStyles, selectedId);
   };
 
-  // temp to handle style/components switch
   const handleBackClick = () => {
     const newIsStyles = !$isStyles;
 

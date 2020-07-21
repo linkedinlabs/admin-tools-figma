@@ -1,6 +1,7 @@
 import { readable, writable } from 'svelte/store';
 
 // writeable
+export const isSelection = writable(true);
 export const isStyles = writable(false);
 export const currentFilter = writable(null);
 export const openItems = writable([]);

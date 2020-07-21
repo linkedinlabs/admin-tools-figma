@@ -128,12 +128,14 @@ export default class App {
   static async setFilters(
     filters: {
       newFilter?: string,
+      newIsSelection: boolean,
       newIsStyles: boolean,
     },
     sessionKey: number,
   ) {
     // save filters into options for re-use
     const options = {
+      isSelection: filters.newIsSelection,
       isStyles: filters.newIsStyles,
       filter: filters.newFilter,
     };
@@ -232,8 +234,10 @@ export default class App {
     const filters: {
       newFilter?: string,
       newIsStyles: boolean,
+      newIsStyles: boolean,
     } = {
       newFilter: null,
+      newIsSelection: true,
       newIsStyles: true,
     };
 
@@ -243,6 +247,7 @@ export default class App {
 
     // get last-used filters from options
     const lastUsedOptions: {
+      isSelection: boolean,
       isStyles: boolean,
       filter: string,
     } = await figma.clientStorage.getAsync(DATA_KEYS.options);
