@@ -121,7 +121,7 @@ export default class App {
    * @description Triggers a UI refresh with the current selection.
    *
    * @kind function
-   * @name refreshGUI
+   * @name setFilters
    *
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
@@ -140,6 +140,28 @@ export default class App {
     await figma.clientStorage.setAsync(DATA_KEYS.options, options);
 
     App.refreshGUI(sessionKey);
+  }
+
+  /** WIP
+   * @description Triggers a UI refresh with the current selection.
+   *
+   * @kind function
+   * @name resizeGUI
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async resizeGUI(
+    payload: { bodyHeight: number },
+  ) {
+    const { bodyHeight } = payload;
+    const newGUIHeight = bodyHeight + 40; // add floating footer height
+
+    if (bodyHeight) {
+      figma.ui.resize(
+        GUI_SETTINGS.default.width,
+        newGUIHeight,
+      );
+    }
   }
 
   /**
@@ -244,16 +266,6 @@ export default class App {
       selected = presenter.extractComponents(null);
     }
 
-    // send the updates to the UI
-    figma.ui.postMessage({
-      action: 'refreshState',
-      payload: {
-        filters,
-        selected,
-        sessionKey,
-      },
-    });
-
     // resize the UI based on selection
     let newGUIHeight = GUI_SETTINGS.default.height;
     if (selected && selected.items && selected.items.length > 0) {
@@ -266,6 +278,17 @@ export default class App {
       }
       newGUIHeight += selected.groups.length * groupHeight;
     }
+
+    // send the updates to the UI
+    figma.ui.postMessage({
+      action: 'refreshState',
+      payload: {
+        filters,
+        selected,
+        sessionKey,
+        guiStartSize: newGUIHeight,
+      },
+    });
 
     figma.ui.resize(
       GUI_SETTINGS.default.width,

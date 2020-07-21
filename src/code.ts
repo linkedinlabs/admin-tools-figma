@@ -86,6 +86,9 @@ const dispatcher = async (action: {
       case 'setFilters':
         App.setFilters(payload, sessionKey);
         break;
+      case 'resize':
+        App.resizeGUI(payload);
+        break;
       case 'submit':
       case 'submit-bulk':
         app.handleUpdate(payload, sessionKey);

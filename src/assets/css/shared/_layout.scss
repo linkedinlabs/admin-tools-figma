@@ -1,6 +1,6 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++ layout
 
-$footer-height-px: 64px;
+$footer-height-px: 40px;
 
 * {
   // border box default
@@ -14,7 +14,7 @@ $footer-height-px: 64px;
 body {
   margin: 0;
   padding: 0;
-  // padding-bottom: em($footer-height-px);
+  padding-bottom: em($footer-height-px);
   @include type-01;
   background: $wl-canvas;
 

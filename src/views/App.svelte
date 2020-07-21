@@ -1,5 +1,5 @@
 <script>
-  import { beforeUpdate } from 'svelte';
+  import { afterUpdate, beforeUpdate } from 'svelte';
   import {
     currentFilter,
     isStyles,
@@ -16,6 +16,9 @@
   export let selected = null;
   export let newSessionKey = null;
 
+  let bodyHeight = 0;
+  let wasBodyHeight = 0;
+
   const setCurrentFilter = (newFilter) => {
     currentFilter.set(newFilter);
   };
@@ -25,11 +28,23 @@
     isStyles.set(newIsStyles);
   };
 
-
   beforeUpdate(() => {
     setIsStyles(inspect);
     setCurrentFilter(filter);
     sessionKey.set(newSessionKey);
+
+    if (wasBodyHeight !== bodyHeight && selected.items.length > 0) {
+      parent.postMessage({
+        pluginMessage: {
+          action: 'resize',
+          payload: { bodyHeight },
+        },
+      }, '*');
+    }
+  });
+
+  afterUpdate(() => {
+    wasBodyHeight = bodyHeight;
   });
 </script>
 
@@ -37,7 +52,7 @@
 <svelte:options accessors={true}/>
 
 <!-- core layout -->
-<div>
+<div bind:offsetHeight={bodyHeight}>
   <FontPreload/>
   <SceneNavigator />
 

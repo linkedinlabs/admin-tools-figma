@@ -470,7 +470,10 @@
   });
 </script>
 
-<section class="options" id="action-options">
+<section
+  class="options"
+  id="action-options"
+>
   <ul class="items-list">
     {#if setEditableItems(items, $lockedItems).itemIds.length > 1 || isOpenEditor}
       <li class={`bulk-editor${isOpenEditor ? ' expanded' : ''}`}>
