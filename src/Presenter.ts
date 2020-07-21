@@ -292,7 +292,7 @@ export default class Presenter {
         let componentData: PresenterComponentData = {
           annotationText: null,
           documentationUri: null,
-          isInteractive: true,
+          isInteractive: false,
           library: 'unassigned',
           role: 'none',
           type: 'component',
@@ -305,26 +305,14 @@ export default class Presenter {
         );
 
         if (existingComponentData) {
-          // migrations for new data points
-          if (!existingComponentData.documentationUri) {
-            existingComponentData.documentationUri = null;
-          }
-          if (!existingComponentData.type) {
-            existingComponentData.type = 'component';
-          }
-          if (!existingComponentData.usageStatus) {
-            existingComponentData.usageStatus = 'production';
-          }
-          if (!existingComponentData.version) {
-            existingComponentData.version = '1.0';
-          }
-          if (!existingComponentData.role) {
-            existingComponentData.role = 'none';
-          }
-          if (!existingComponentData.annotationText) {
-            existingComponentData.annotationText = null;
-          }
+          // backfill for components missing any newer data points
+          Object.keys(componentData).forEach((key) => {
+            if (existingComponentData[key] === undefined) {
+              existingComponentData[key] = componentData[key];
+            }
+          });
 
+          // set data
           componentData = existingComponentData;
         }
 
