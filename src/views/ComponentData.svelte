@@ -21,9 +21,9 @@
     return classes;
   };
 
-  const setOptions = (options, addNull) => {
+  const setOptions = (options, currentValue, addNullAllowed) => {
     let finalizedOptions = options;
-    if (addNull) {
+    if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
       const nullOption = {
         value: 'blank--multiple',
         text: 'multiple…',
@@ -53,7 +53,7 @@
   kind="inputSelect"
   labelText="Library"
   nameId={`item-library-${item.id}`}
-  options={setOptions($libraryOptions, isEditor && item.componentData.library === 'blank--multiple')}
+  options={setOptions($libraryOptions, item.componentData.library, isEditor)}
   resetValue={resetValue}
   bind:value={item.componentData.library}
 />
@@ -82,7 +82,7 @@
     kind="inputSelect"
     labelText="Status"
     nameId={`item-usageStatus-${item.id}`}
-    options={setOptions($libraryStatusOptions, isEditor && item.componentData.usageStatus === 'blank--multiple')}
+    options={setOptions($libraryStatusOptions, item.componentData.usageStatus, isEditor)}
     resetValue={resetValue}
     bind:value={item.componentData.usageStatus}
   />
@@ -141,7 +141,7 @@
   kind="inputSelect"
   labelText="ARIA Role"
   nameId={`item-library-${item.id}`}
-  options={setOptions($roleOptions, isEditor && item.componentData.role === 'blank--multiple')}
+  options={setOptions($roleOptions, item.componentData.role, isEditor)}
   resetValue={resetValue}
   bind:value={item.componentData.role}
 />
