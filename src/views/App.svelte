@@ -59,7 +59,7 @@
   {#if selected && selected.items.length > 0}
     <ItemsList selected={selected}/>
   {:else}
-    <BlankState/>
+    <BlankState isStyles={$isStyles}/>
   {/if}
 
   <StatusBar numberSelected={selected ? selected.items.length : 0}/>

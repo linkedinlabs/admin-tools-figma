@@ -1,3 +1,7 @@
+<script>
+  export let isStyles = false;
+</script>
+
 <aside class="blank-state" id="blank">
   <span class="mark">
     <svg viewBox="0 0 26 30">
@@ -18,6 +22,10 @@
     </svg>
   </span>
   <span class="text">
-    To get started, select <br />a component or layer with local styles…
+    {#if isStyles}
+      To get started, select <br />a layer that uses styles local to your file…
+    {:else}
+      To get started, select <br />a component that is local to your file…
+    {/if}
   </span>
 </aside>
