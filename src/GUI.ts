@@ -8,6 +8,7 @@ const app = new App({
     filter: 'all-styles',
     selected: null,
     newSessionKey: null,
+    useSelection: false,
   },
 });
 
@@ -49,6 +50,7 @@ const updateSelected = (
   },
   filters: {
     newFilter?: string,
+    newIsSelection?: boolean,
     newIsStyles?: boolean,
   },
   sessionKey: string,
@@ -62,9 +64,11 @@ const updateSelected = (
       app.filter = filters.newFilter;
     }
 
+    const newUseSelection = filters.newIsSelection;
     const newInspect = filters.newIsStyles ? 'styles' : 'components';
     app.inspect = newInspect;
     app.newSessionKey = sessionKey;
+    app.useSelection = newUseSelection;
   }
 };
 

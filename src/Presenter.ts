@@ -81,7 +81,10 @@ export default class Presenter {
    *
    * @returns {Object} All items (including children) individual in an updated array.
    */
-  extractStyles = (filter?: 'typography' | 'color-fill' | 'effects' | 'grid') => {
+  extractStyles = (
+    filter?: 'typography' | 'color-fill' | 'effects' | 'grid',
+    isSelection: boolean,
+  ) => {
     const { nodes } = this;
     const styleIds = [];
 
@@ -97,31 +100,42 @@ export default class Presenter {
     };
 
     let items: Array<PresenterItem> = [];
-
-    // get styles here
     const extractedStyles: Array<BaseStyle> = [];
 
-    nodes.forEach((node: SceneNode) => {
-      const {
-        effectStyleId,
-        fillStyleId,
-        gridStyleId,
-        strokeStyleId,
-        textStyleId,
-      } = node as unknown as {
-        effectStyleId: string,
-        fillStyleId: string,
-        gridStyleId: string,
-        strokeStyleId: string,
-        textStyleId: string,
-      };
+    // get styles here using either selection or all available in file
+    if (isSelection) {
+      nodes.forEach((node: SceneNode) => {
+        const {
+          effectStyleId,
+          fillStyleId,
+          gridStyleId,
+          strokeStyleId,
+          textStyleId,
+        } = node as unknown as {
+          effectStyleId: string,
+          fillStyleId: string,
+          gridStyleId: string,
+          strokeStyleId: string,
+          textStyleId: string,
+        };
 
-      if (effectStyleId) { styleIds.push(effectStyleId); }
-      if (fillStyleId) { styleIds.push(fillStyleId); }
-      if (gridStyleId) { styleIds.push(gridStyleId); }
-      if (strokeStyleId) { styleIds.push(strokeStyleId); }
-      if (textStyleId) { styleIds.push(textStyleId); }
-    });
+        if (effectStyleId) { styleIds.push(effectStyleId); }
+        if (fillStyleId) { styleIds.push(fillStyleId); }
+        if (gridStyleId) { styleIds.push(gridStyleId); }
+        if (strokeStyleId) { styleIds.push(strokeStyleId); }
+        if (textStyleId) { styleIds.push(textStyleId); }
+      });
+    } else {
+      const paintStyles: Array<PaintStyle> = figma.getLocalPaintStyles();
+      const textStyles: Array<TextStyle> = figma.getLocalTextStyles();
+      const effectStyles: Array<EffectStyle> = figma.getLocalEffectStyles();
+      const gridStyles: Array<GridStyle> = figma.getLocalGridStyles();
+
+      paintStyles.forEach((style: PaintStyle) => styleIds.push(style.id));
+      textStyles.forEach((style: TextStyle) => styleIds.push(style.id));
+      effectStyles.forEach((style: EffectStyle) => styleIds.push(style.id));
+      gridStyles.forEach((style: GridStyle) => styleIds.push(style.id));
+    }
 
     const uniqueStyleIds: Array<string> = [...new Set(styleIds)];
 

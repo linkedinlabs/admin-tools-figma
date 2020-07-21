@@ -233,7 +233,7 @@ export default class App {
     // set default filter
     const filters: {
       newFilter?: string,
-      newIsStyles: boolean,
+      newIsSelection: boolean,
       newIsStyles: boolean,
     } = {
       newFilter: null,
@@ -251,12 +251,16 @@ export default class App {
       isStyles: boolean,
       filter: string,
     } = await figma.clientStorage.getAsync(DATA_KEYS.options);
-    if (lastUsedOptions
-      && lastUsedOptions.isStyles !== undefined
-      && lastUsedOptions.filter !== undefined
-    ) {
-      filters.newFilter = lastUsedOptions.filter;
-      filters.newIsStyles = lastUsedOptions.isStyles;
+
+    if (lastUsedOptions) {
+      // update filters with existing options from storage
+      Object.keys(filters).forEach((key) => {
+        let optionKey = key.replace('new', '');
+        optionKey = `${optionKey.charAt(0).toLowerCase()}${optionKey.slice(1)}`;
+        if (lastUsedOptions[optionKey] !== undefined) {
+          filters[key] = lastUsedOptions[optionKey];
+        }
+      });
     }
 
     // set up selection based on filters
@@ -266,7 +270,7 @@ export default class App {
       if (filters.newFilter !== 'all-styles') {
         filter = filters.newFilter as 'typography' | 'color-fill' | 'effects' | 'grid';
       }
-      selected = presenter.extractStyles(filter);
+      selected = presenter.extractStyles(filter, filters.newIsSelection);
     } else {
       selected = presenter.extractComponents(null);
     }

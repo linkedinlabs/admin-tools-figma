@@ -2,6 +2,7 @@
   import { afterUpdate, beforeUpdate } from 'svelte';
   import {
     currentFilter,
+    isSelection,
     isStyles,
     sessionKey,
   } from './stores';
@@ -13,6 +14,7 @@
 
   export let filter = 'all-components';
   export let inspect = 'components';
+  export let useSelection = false;
   export let selected = null;
   export let newSessionKey = null;
 
@@ -28,8 +30,14 @@
     isStyles.set(newIsStyles);
   };
 
+  const setIsSelection = (currentlyUsingSelection) => {
+    const newIsSelection = currentlyUsingSelection;
+    isSelection.set(newIsSelection);
+  };
+
   beforeUpdate(() => {
     setIsStyles(inspect);
+    setIsSelection(useSelection);
     setCurrentFilter(filter);
     sessionKey.set(newSessionKey);
 

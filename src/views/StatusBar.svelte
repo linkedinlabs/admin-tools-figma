@@ -52,12 +52,14 @@
 
 <footer class="status-bar">
   <p>
-    {numberSelected} {statusText($isStyles, numberSelected)} {$isSelection ? 'selected' : ''}
+    {numberSelected} {statusText($isStyles, numberSelected)} {$isSelection || !$isStyles ? 'selected' : ''}
   </p>
-  <FigmaSwitch
-    disabled={!$isStyles}
-    labelText="Watch selection"
-    nameId="watch-selection"
-    bind:value={$isSelection}
-  />
+  {#if $isStyles}
+    <FigmaSwitch
+      disabled={!$isStyles}
+      labelText="Watch selection"
+      nameId="watch-selection"
+      bind:value={$isSelection}
+    />
+  {/if}
 </footer>
