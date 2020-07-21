@@ -31,12 +31,11 @@
   <p>
     {numberSelected} {statusText($isStyles, numberSelected)} {watchSelection ? 'selected' : ''}
   </p>
-  {#if $isStyles}
+  <!-- temp disabled for all - eventually allow Styles to pick -->
   <FigmaSwitch
-    bind:checked={watchSelection}
-    disabled
+    disabled={!$isStyles || $isStyles}
     labelText="Watch selection"
     nameId="watch-selection"
+    bind:value={watchSelection}
   />
-  {/if}
 </footer>
