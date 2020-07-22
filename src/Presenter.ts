@@ -83,7 +83,7 @@ export default class Presenter {
    */
   extractStyles = (
     filter?: 'typography' | 'color-fill' | 'effects' | 'grid',
-    isSelection: boolean,
+    isSelection?: boolean,
   ) => {
     const { nodes } = this;
     const styleIds = [];
