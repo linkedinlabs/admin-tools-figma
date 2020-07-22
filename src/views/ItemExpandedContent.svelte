@@ -1,11 +1,15 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
-  import { isStyles } from './stores';
+  import { currentFilter, isStyles } from './stores';
   import ComponentData from './ComponentData';
   import Description from './Description';
   import FormActions from './forms-controls/FormActions';
   import FormUnit from './forms-controls/FormUnit';
-  import { deepCopy, deepCompare } from '../Tools';
+  import {
+    checkFilterMatch,
+    deepCopy,
+    deepCompare,
+  } from '../Tools';
 
   export let isLocked = false;
   export let item = null;
@@ -61,20 +65,33 @@
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
-    {#if item.group}
-      <span class="form-row">
+    {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
+      {#if item.group}
+        <span class="form-row">
+          <FormUnit
+            className="form-unit split-40"
+            itemIsLocked={isLocked}
+            kind="inputText"
+            labelText="Group&nbsp;&nbsp;&nbsp;/"
+            nameId={`item-group-${item.id}`}
+            resetValue={resetValue}
+            on:saveSignal={() => handleSave()}
+            bind:value={dirtyItem.group}
+          />
+          <FormUnit
+            className="form-unit split-60"
+            itemIsLocked={isLocked}
+            kind="inputText"
+            labelText="Name"
+            nameId={`item-name-${item.id}`}
+            resetValue={resetValue}
+            on:saveSignal={() => handleSave()}
+            bind:value={dirtyItem.name}
+          />
+        </span>
+      {:else}
         <FormUnit
-          className="form-unit split-40"
-          itemIsLocked={isLocked}
-          kind="inputText"
-          labelText="Group&nbsp;&nbsp;&nbsp;/"
-          nameId={`item-group-${item.id}`}
-          resetValue={resetValue}
-          on:saveSignal={() => handleSave()}
-          bind:value={dirtyItem.group}
-        />
-        <FormUnit
-          className="form-unit split-60"
+          className="form-row"
           itemIsLocked={isLocked}
           kind="inputText"
           labelText="Name"
@@ -83,27 +100,16 @@
           on:saveSignal={() => handleSave()}
           bind:value={dirtyItem.name}
         />
-      </span>
-    {:else}
-      <FormUnit
-        className="form-row"
-        itemIsLocked={isLocked}
-        kind="inputText"
-        labelText="Name"
-        nameId={`item-name-${item.id}`}
+      {/if}
+
+      <Description
+        bind:description={dirtyItem.description}
+        isLocked={isLocked}
+        itemId={item.id}
         resetValue={resetValue}
         on:saveSignal={() => handleSave()}
-        bind:value={dirtyItem.name}
       />
     {/if}
-
-    <Description
-      bind:description={dirtyItem.description}
-      isLocked={isLocked}
-      itemId={item.id}
-      resetValue={resetValue}
-      on:saveSignal={() => handleSave()}
-    />
 
     {#if !$isStyles}
       <ComponentData

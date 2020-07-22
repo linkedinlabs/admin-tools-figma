@@ -13,20 +13,20 @@
   const menuItems = [
     // components menu
     {
-      text: 'All Components',
+      text: 'All',
       id: 'all-components',
       type: 'components',
     },
-    // {
-    //   text: 'Design System',
-    //   id: 'design-system',
-    //   type: 'components',
-    // },
-    // {
-    //   text: 'Interaction',
-    //   id: 'interaction',
-    //   type: 'components',
-    // },
+    {
+      text: 'Design System',
+      id: 'design-system',
+      type: 'components',
+    },
+    {
+      text: 'Interaction',
+      id: 'interaction',
+      type: 'components',
+    },
     // {
     //   text: 'Labels & Data',
     //   id: 'labels-data',

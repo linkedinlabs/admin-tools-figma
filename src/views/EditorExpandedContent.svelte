@@ -1,11 +1,15 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
-  import { isStyles } from './stores';
+  import { currentFilter, isStyles } from './stores';
   import ComponentData from './ComponentData';
   import Description from './Description';
   import FormActions from './forms-controls/FormActions';
   import FormUnit from './forms-controls/FormUnit';
-  import { deepCopy, deepCompare } from '../Tools';
+  import {
+    checkFilterMatch,
+    deepCopy,
+    deepCompare,
+  } from '../Tools';
 
   export let editorItem;
   export let editableItemIds = [];
@@ -98,40 +102,42 @@
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
-    <span class="form-row">
-      <FormUnit
-        className={setClasses('form-unit split-40', editorItem.groupHasValues)}
-        hasMultiple={editorItem.groupHasValues}
-        invertView={true}
-        kind="inputText"
-        labelText="Group&nbsp;&nbsp;&nbsp;/"
-        nameId="editor-test-group"
-        resetValue={resetValue}
-        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
-        bind:value={dirtyItem.group}
-      />
-      <FormUnit
-        className={setClasses('form-unit split-60', editorItem.nameHasValues)}
-        hasMultiple={editorItem.nameHasValues}
-        invertView={true}
-        kind="inputText"
-        labelText="Name"
-        nameId="editor-test-name"
-        resetValue={resetValue}
-        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
-        bind:value={dirtyItem.name}
-      />
-    </span>
+    {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
+      <span class="form-row">
+        <FormUnit
+          className={setClasses('form-unit split-40', editorItem.groupHasValues)}
+          hasMultiple={editorItem.groupHasValues}
+          invertView={true}
+          kind="inputText"
+          labelText="Group&nbsp;&nbsp;&nbsp;/"
+          nameId="editor-test-group"
+          resetValue={resetValue}
+          on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+          bind:value={dirtyItem.group}
+        />
+        <FormUnit
+          className={setClasses('form-unit split-60', editorItem.nameHasValues)}
+          hasMultiple={editorItem.nameHasValues}
+          invertView={true}
+          kind="inputText"
+          labelText="Name"
+          nameId="editor-test-name"
+          resetValue={resetValue}
+          on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+          bind:value={dirtyItem.name}
+        />
+      </span>
 
-    <Description
-      bind:description={dirtyItem.description}
-      invertView={true}
-      isEditor={true}
-      itemCount={itemCount}
-      itemId="editor-test"
-      resetValue={resetValue}
-      on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
-    />
+      <Description
+        bind:description={dirtyItem.description}
+        invertView={true}
+        isEditor={true}
+        itemCount={itemCount}
+        itemId="editor-test"
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+      />
+    {/if}
 
     {#if !$isStyles && dirtyItem.componentData}
       <ComponentData

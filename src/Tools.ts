@@ -813,11 +813,34 @@ const isInternal = (): boolean => {
   return buildIsInternal;
 };
 
+/** WIP
+ * @description Checks the `FEATURESET` environment variable from webpack and
+ * determines if the featureset build should be `internal` or not.
+ *
+ * @kind function
+ * @name checkFilterMatch
+ *
+ * @returns {boolean} `true` if the build is internal, `false` if it is not.
+ */
+const checkFilterMatch = (currentFilter, filterToMatch) => {
+  let isMatch = false;
+
+  if (
+    (currentFilter === filterToMatch)
+    || (currentFilter === 'all-components')
+  ) {
+    isMatch = true;
+  }
+
+  return isMatch;
+};
+
 export {
   asyncForEach,
   asyncImageRequest,
   asyncNetworkRequest,
   awaitUIReadiness,
+  checkFilterMatch,
   dataNamespace,
   deepCompare,
   deepCopy,

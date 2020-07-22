@@ -1,12 +1,13 @@
 <script>
   import {
-    roleOptions,
+    currentFilter,
     libraryOptions,
     libraryStatusOptions,
+    roleOptions,
   } from './stores';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
-  import { deepCopy } from '../Tools';
+  import { checkFilterMatch, deepCopy } from '../Tools';
 
   export let invertView = false;
   export let isEditor = false;
@@ -38,110 +39,114 @@
   };
 </script>
 
-<span
-  class={`form-row form-header${invertView ? ' invert' : ''}`}
->
-  Design System
-</span>
+{#if checkFilterMatch($currentFilter, 'design-system')}
+  <span
+    class={`form-row form-header${invertView ? ' invert' : ''}`}
+  >
+    Design System
+  </span>
 
-<FormUnit
-  className="form-row"
-  disableCopy={true}
-  hasMultiple={isEditor && item.componentData.library === 'blank--multiple'}
-  invertView={invertView}
-  itemIsLocked={isLocked}
-  kind="inputSelect"
-  labelText="Library"
-  nameId={`item-library-${item.id}`}
-  options={setOptions($libraryOptions, item.componentData.library, isEditor)}
-  resetValue={resetValue}
-  bind:value={item.componentData.library}
-/>
-
-<FormUnit
-  className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}
-  hasMultiple={isEditor && item.componentData.annotationTextHasValues}
-  invertView={invertView}
-  itemIsLocked={isLocked}
-  kind="inputText"
-  labelText="Annotation text override"
-  nameId={`item-annotationText-${item.id}`}
-  placeholder="Add an engineering-specific annotation…"
-  resetValue={resetValue}
-  on:saveSignal
-  bind:value={item.componentData.annotationText}
-/>
-
-<span class="form-row">
   <FormUnit
-    className="form-unit split-60"
+    className="form-row"
     disableCopy={true}
-    hasMultiple={isEditor && item.componentData.usageStatus === 'blank--multiple'}
+    hasMultiple={isEditor && item.componentData.library === 'blank--multiple'}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputSelect"
-    labelText="Status"
-    nameId={`item-usageStatus-${item.id}`}
-    options={setOptions($libraryStatusOptions, item.componentData.usageStatus, isEditor)}
+    labelText="Library"
+    nameId={`item-library-${item.id}`}
+    options={setOptions($libraryOptions, item.componentData.library, isEditor)}
     resetValue={resetValue}
-    bind:value={item.componentData.usageStatus}
+    bind:value={item.componentData.library}
   />
+
   <FormUnit
-    className={setClasses('form-unit split-40', isEditor && item.componentData.versionHasValues)}
-    hasMultiple={isEditor && item.componentData.versionHasValues}
+    className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}
+    hasMultiple={isEditor && item.componentData.annotationTextHasValues}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputText"
-    labelText="Version"
-    nameId={`item-version-${item.id}`}
-    placeholder="1.0"
+    labelText="Annotation text override"
+    nameId={`item-annotationText-${item.id}`}
+    placeholder="Add an engineering-specific annotation…"
     resetValue={resetValue}
     on:saveSignal
-    bind:value={item.componentData.version}
+    bind:value={item.componentData.annotationText}
   />
-</span>
 
-<FormUnit
-  className={setClasses('form-row', isEditor && item.componentData.documentationUriHasValues)}
-  hasMultiple={isEditor && item.componentData.documentationUriHasValues}
-  invertView={invertView}
-  itemIsLocked={isLocked}
-  kind="inputText"
-  labelText="Documentation link"
-  nameId={`item-documentationUri-${item.id}`}
-  placeholder="https://something… or go/something…"
-  resetValue={resetValue}
-  on:saveSignal
-  bind:value={item.componentData.documentationUri}
-/>
+  <span class="form-row">
+    <FormUnit
+      className="form-unit split-60"
+      disableCopy={true}
+      hasMultiple={isEditor && item.componentData.usageStatus === 'blank--multiple'}
+      invertView={invertView}
+      itemIsLocked={isLocked}
+      kind="inputSelect"
+      labelText="Status"
+      nameId={`item-usageStatus-${item.id}`}
+      options={setOptions($libraryStatusOptions, item.componentData.usageStatus, isEditor)}
+      resetValue={resetValue}
+      bind:value={item.componentData.usageStatus}
+    />
+    <FormUnit
+      className={setClasses('form-unit split-40', isEditor && item.componentData.versionHasValues)}
+      hasMultiple={isEditor && item.componentData.versionHasValues}
+      invertView={invertView}
+      itemIsLocked={isLocked}
+      kind="inputText"
+      labelText="Version"
+      nameId={`item-version-${item.id}`}
+      placeholder="1.0"
+      resetValue={resetValue}
+      on:saveSignal
+      bind:value={item.componentData.version}
+    />
+  </span>
 
-<span
-  class={`form-row form-header${invertView ? ' invert' : ''}`}
->
-  Purpose & Interaction
-</span>
-
-<span class="form-row">
-  <FigmaSwitch
-    className="form-element element-type-switch"
-    disabled={isLocked}
+  <FormUnit
+    className={setClasses('form-row', isEditor && item.componentData.documentationUriHasValues)}
+    hasMultiple={isEditor && item.componentData.documentationUriHasValues}
     invertView={invertView}
-    labelText="Interactive?"
-    nameId="is-interactive"
-    bind:value={item.componentData.isInteractive}
+    itemIsLocked={isLocked}
+    kind="inputText"
+    labelText="Documentation link"
+    nameId={`item-documentationUri-${item.id}`}
+    placeholder="https://something… or go/something…"
+    resetValue={resetValue}
+    on:saveSignal
+    bind:value={item.componentData.documentationUri}
   />
-</span>
+{/if}
 
-<FormUnit
-  className="form-row"
-  disableCopy={true}
-  hasMultiple={isEditor && item.componentData.role === 'blank--multiple'}
-  invertView={invertView}
-  itemIsLocked={isLocked}
-  kind="inputSelect"
-  labelText="ARIA Role"
-  nameId={`item-library-${item.id}`}
-  options={setOptions($roleOptions, item.componentData.role, isEditor)}
-  resetValue={resetValue}
-  bind:value={item.componentData.role}
-/>
+{#if checkFilterMatch($currentFilter, 'interaction')}
+  <span
+    class={`form-row form-header${invertView ? ' invert' : ''}`}
+  >
+    Purpose & Interaction
+  </span>
+
+  <span class="form-row">
+    <FigmaSwitch
+      className="form-element element-type-switch"
+      disabled={isLocked}
+      invertView={invertView}
+      labelText="Interactive?"
+      nameId="is-interactive"
+      bind:value={item.componentData.isInteractive}
+    />
+  </span>
+
+  <FormUnit
+    className="form-row"
+    disableCopy={true}
+    hasMultiple={isEditor && item.componentData.role === 'blank--multiple'}
+    invertView={invertView}
+    itemIsLocked={isLocked}
+    kind="inputSelect"
+    labelText="ARIA Role"
+    nameId={`item-library-${item.id}`}
+    options={setOptions($roleOptions, item.componentData.role, isEditor)}
+    resetValue={resetValue}
+    bind:value={item.componentData.role}
+  />
+{/if}
