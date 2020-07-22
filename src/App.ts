@@ -117,55 +117,6 @@ export default class App {
     return null;
   }
 
-  /** WIP
-   * @description Triggers a UI refresh with the current selection.
-   *
-   * @kind function
-   * @name setFilters
-   *
-   * @param {string} sessionKey A rotating key used during the single run of the plugin.
-   */
-  static async setFilters(
-    filters: {
-      newFilter?: string,
-      newIsSelection: boolean,
-      newIsStyles: boolean,
-    },
-    sessionKey: number,
-  ) {
-    // save filters into options for re-use
-    const options = {
-      isSelection: filters.newIsSelection,
-      isStyles: filters.newIsStyles,
-      filter: filters.newFilter,
-    };
-    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
-
-    App.refreshGUI(sessionKey);
-  }
-
-  /** WIP
-   * @description Triggers a UI refresh with the current selection.
-   *
-   * @kind function
-   * @name resizeGUI
-   *
-   * @param {string} sessionKey A rotating key used during the single run of the plugin.
-   */
-  static async resizeGUI(
-    payload: { bodyHeight: number },
-  ) {
-    const { bodyHeight } = payload;
-    const newGUIHeight = bodyHeight + 40; // add floating footer height
-
-    if (bodyHeight) {
-      figma.ui.resize(
-        GUI_SETTINGS.default.width,
-        newGUIHeight,
-      );
-    }
-  }
-
   /**
    * @description Resets the plugin GUI back to the original state or closes it entirely,
    * terminating the plugin.
@@ -202,21 +153,6 @@ export default class App {
       App.refreshGUI(sessionKey);
     }
     return this.closeOrReset();
-  }
-
-  /**
-   * @description Triggers a UI refresh and then displays the plugin UI.
-   *
-   * @kind function
-   * @name showToolbar
-   *
-   * @param {string} sessionKey A rotating key used during the single run of the plugin.
-   */
-  static async showToolbar(sessionKey: number) {
-    const { messenger } = assemble(figma);
-
-    await App.refreshGUI(sessionKey);
-    App.showGUI({ messenger });
   }
 
   /**
@@ -305,6 +241,70 @@ export default class App {
     );
 
     messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
+  }
+
+  /** WIP
+   * @description Triggers a UI refresh with the current selection.
+   *
+   * @kind function
+   * @name resizeGUI
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async resizeGUI(
+    payload: { bodyHeight: number },
+  ) {
+    const { bodyHeight } = payload;
+    const newGUIHeight = bodyHeight + 40; // add floating footer height
+
+    if (bodyHeight) {
+      figma.ui.resize(
+        GUI_SETTINGS.default.width,
+        newGUIHeight,
+      );
+    }
+  }
+
+  /** WIP
+   * @description Triggers a UI refresh with the current selection.
+   *
+   * @kind function
+   * @name setFilters
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async setFilters(
+    filters: {
+      newFilter?: string,
+      newIsSelection: boolean,
+      newIsStyles: boolean,
+    },
+    sessionKey: number,
+  ) {
+    // save filters into options for re-use
+    const options = {
+      isSelection: filters.newIsSelection,
+      isStyles: filters.newIsStyles,
+      filter: filters.newFilter,
+    };
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    App.refreshGUI(sessionKey);
+  }
+
+  /**
+   * @description Triggers a UI refresh and then displays the plugin UI.
+   *
+   * @kind function
+   * @name showToolbar
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async showToolbar(sessionKey: number) {
+    const { messenger } = assemble(figma);
+
+    await App.refreshGUI(sessionKey);
+    App.showGUI({ messenger });
   }
 
   /**
