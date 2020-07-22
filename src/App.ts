@@ -117,7 +117,46 @@ export default class App {
     return null;
   }
 
-  /**
+  /** WIP
+   * @description Resets the plugin GUI back to the original state or closes it entirely,
+   * terminating the plugin.
+   *
+   * @kind function
+   * @name detachInstances
+   *
+   * @returns {null}
+   */
+  detachInstances() {
+    const { messenger, selection } = assemble(figma);
+    console.log('detach all of me')
+
+    if (this.shouldTerminate) {
+      return this.terminatePlugin();
+    }
+
+
+    // // set up the Editor class to manipulate the selection
+    // const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
+    // const editor = new Editor({ for: nodes, sessionKey });
+
+    // // commit the updates
+    // let updateResult = null;
+    // if (itemIds) {
+    //   updateResult = editor.updateBulk(updatedItem, itemIds);
+    // } else {
+    //   updateResult = editor.update(updatedItem);
+    // }
+
+    // // display the message and terminate the plugin
+    // messenger.handleResult(updateResult);
+
+    // if (updateResult.status === 'success') {
+    //   App.refreshGUI(sessionKey);
+    // }
+    return this.closeOrReset();
+  }
+
+  /** WIP
    * @description Resets the plugin GUI back to the original state or closes it entirely,
    * terminating the plugin.
    *

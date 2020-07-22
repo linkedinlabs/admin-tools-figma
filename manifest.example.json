@@ -8,6 +8,13 @@
     {
       "name": "Show Admin Tool",
       "command": "tools"
+    },
+    {
+      "separator": true
+    },
+    {
+      "name": "Detach All Instances",
+      "command": "detach-instances"
     }
   ]
 }

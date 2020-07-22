@@ -83,11 +83,14 @@ const dispatcher = async (action: {
     // };
 
     switch (type) {
-      case 'setFilters':
-        App.setFilters(payload, sessionKey);
+      case 'detach-instances':
+        app.detachInstances();
         break;
       case 'resize':
         App.resizeGUI(payload);
+        break;
+      case 'setFilters':
+        App.setFilters(payload, sessionKey);
         break;
       case 'submit':
       case 'submit-bulk':
