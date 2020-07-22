@@ -18,6 +18,7 @@
   let originalItem = deepCopy(item);
   let isDirty = false;
   let resetValue = false;
+  let wasCurrentFilter = $currentFilter;
   let wasResetValue = false;
 
   const handleReset = () => {
@@ -45,12 +46,18 @@
       resetValue = true;
     }
 
+    // check if filter has changed (components only)
+    if (!$isStyles && (wasCurrentFilter !== $currentFilter)) {
+      resetValue = true;
+    }
+
     // tee off a full reset
     if (resetValue) {
       handleReset();
     }
 
-    // set tracker
+    // set trackers
+    wasCurrentFilter = $currentFilter;
     wasResetValue = resetValue;
   });
 

@@ -20,6 +20,7 @@
   let isDirty = false;
   let itemCount = originalEditableItemIds.length;
   let resetValue = false;
+  let wasCurrentFilter = $currentFilter;
   let wasResetValue = false;
 
   const handleReset = () => {
@@ -75,6 +76,11 @@
       resetValue = true;
     }
 
+    // check if filter has changed (components only)
+    if (!$isStyles && (wasCurrentFilter !== $currentFilter)) {
+      resetValue = true;
+    }
+
     // check selected item ids against original to see if items were locked/unlocked
     if (!compareEditableIds(editableItemIds, originalEditableItemIds)) {
       originalEditableItemIds = editableItemIds;
@@ -87,7 +93,8 @@
       handleReset();
     }
 
-    // set tracker
+    // set trackers
+    wasCurrentFilter = $currentFilter;
     wasResetValue = resetValue;
   });
 
