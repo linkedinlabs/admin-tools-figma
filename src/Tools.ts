@@ -398,7 +398,10 @@ const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
   Object.entries(unmodifiedObject).forEach(([key, value]) => {
     // check for inner object first
     if ((typeof value === 'object') && (value !== null)) {
-      if (deepCompare(value, modifiedObject[key])) {
+      if (
+        modifiedObject[key] === undefined
+        || deepCompare(value, modifiedObject[key])
+      ) {
         isDifferent = true;
       }
     } else if (modifiedObject[key] !== value) {
