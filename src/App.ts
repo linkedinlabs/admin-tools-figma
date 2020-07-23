@@ -108,13 +108,6 @@ export default class App {
       return this.terminatePlugin();
     }
 
-    // reset the working state - disable temp
-    // const message: {
-    //   action: string,
-    // } = {
-    //   action: 'resetState',
-    // };
-    // figma.ui.postMessage(message);
     return null;
   }
 
