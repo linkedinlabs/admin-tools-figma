@@ -112,27 +112,55 @@ export default class App {
   }
 
   /** WIP
-   * @description Resets the plugin GUI back to the original state or closes it entirely,
-   * terminating the plugin.
+   * @description Takes a selection and invokes Painter’s `detachInstanceRecursive` to
+   * detach the top-level component instance and any child instances from their main components.
    *
    * @kind function
    * @name detachInstances
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
    *
    * @returns {null}
    */
   detachInstances(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
     const nodes: Array<SceneNode> = selection;
+    const resultsArray = [];
 
+    // handle empty selections
+    if (selection.length === 0) {
+      messenger.toast('🤔 An instance of a component must be selected');
+      return this.closeOrReset();
+    }
+
+    // iterate selected nodes and detach found instances
     nodes.forEach((node) => {
       const painter = new Painter({ node, sessionKey });
-      const detachResult = painter.detachInstance();
+      const detachResult = painter.detachInstanceRecursive();
 
       messenger.handleResult(detachResult);
+      resultsArray.push(detachResult.status);
     });
 
-    messenger.toast('All instances were detached! 🥳');
+    // provide toast feedback based on results
+    let toastMsg = null;
+    if (!resultsArray.includes('error')) {
+      toastMsg = 'All instances were detached! 🥳';
+    }
 
+    if (!toastMsg && (selection.length === 1)) {
+      toastMsg = '🤔 The selected layer needs to be an instance of a component';
+    }
+
+    if (!toastMsg && resultsArray.includes('success')) {
+      toastMsg = 'Instances were detached! 🥳';
+    }
+
+    if (!toastMsg) {
+      toastMsg = 'Something went wrong… 😢';
+    }
+
+    messenger.toast(toastMsg);
     return this.closeOrReset();
   }
 

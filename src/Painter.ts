@@ -18,15 +18,16 @@ export default class Painter {
   }
 
   /**
-   * @description Locates proposed text in a text node’s Settings object and updates
-   * the node’s characters.
+   * @description Takes an InstanceComponent and detaches it (and ALL children) from any linked
+   * main components. The high-level instance is recreated as a frame, and then all children
+   * get cloned and inserted into the instance.
    *
    * @kind function
-   * @name detachInstance
+   * @name detachInstanceRecursive
    *
    * @returns {Object} A result object container success/error status and log/toast messages.
    */
-  detachInstance() {
+  detachInstanceRecursive() {
     const result: {
       status: 'error' | 'success',
       messages: {
