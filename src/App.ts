@@ -202,6 +202,59 @@ export default class App {
     return this.closeOrReset();
   }
 
+  /** WIP
+   * @description Takes a selection and invokes Painter’s `detachInstanceRecursive` to
+   * detach the top-level component instance and any child instances from their main components.
+   *
+   * @kind function
+   * @name inheritDescription
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   *
+   * @returns {null}
+   */
+  inheritDescription(sessionKey: number) {
+    const { messenger, selection } = assemble(figma);
+    const nodes: Array<SceneNode> = selection;
+    const resultsArray = [];
+
+    // handle empty selections
+    if (selection.length === 0) {
+      messenger.toast('🤔 A main component must be selected');
+      return this.closeOrReset();
+    }
+
+    // iterate selected nodes and inherit parent descriptions
+    nodes.forEach((node) => {
+      const painter = new Painter({ node, sessionKey });
+      const inheritDescriptionResult = painter.inheritParentDescription();
+
+      messenger.handleResult(inheritDescriptionResult);
+      resultsArray.push(inheritDescriptionResult.status);
+    });
+
+    // provide toast feedback based on results
+    let toastMsg = null;
+    if (!resultsArray.includes('error')) {
+      toastMsg = 'All descriptions were inherited! 🥳';
+    }
+
+    if (!toastMsg && (selection.length === 1)) {
+      toastMsg = '🤔 The selected layer needs to be a component';
+    }
+
+    if (!toastMsg && resultsArray.includes('success')) {
+      toastMsg = 'Descriptions were inherited! 🥳';
+    }
+
+    if (!toastMsg) {
+      toastMsg = 'Something went wrong… 😢';
+    }
+
+    messenger.toast(toastMsg);
+    return this.closeOrReset();
+  }
+
   /**
    * @description Triggers a UI refresh with the current selection.
    *
