@@ -84,7 +84,7 @@ const dispatcher = async (action: {
 
     switch (type) {
       case 'detach-instances':
-        app.detachInstances();
+        app.detachInstances(sessionKey);
         break;
       case 'resize':
         App.resizeGUI(payload);

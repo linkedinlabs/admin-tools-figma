@@ -1,5 +1,6 @@
 import Crawler from './Crawler';
 import Editor from './Editor';
+import Painter from './Painter';
 import Presenter from './Presenter';
 import Messenger from './Messenger';
 import { resizeGUI } from './Tools';
@@ -126,15 +127,17 @@ export default class App {
    *
    * @returns {null}
    */
-  detachInstances() {
+  detachInstances(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
+    // const nodes: Array<SceneNode> = filterTextNodes(selection);
+    const nodes: Array<SceneNode> = selection;
     console.log('detach all of me')
 
-    if (this.shouldTerminate) {
-      return this.terminatePlugin();
-    }
+    nodes.forEach((node) => {
+      const painter = new Painter({ node, sessionKey });
+      painter.detachInstance();
 
-
+    })
     // // set up the Editor class to manipulate the selection
     // const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
     // const editor = new Editor({ for: nodes, sessionKey });
