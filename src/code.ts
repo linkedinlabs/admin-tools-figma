@@ -86,6 +86,9 @@ const dispatcher = async (action: {
       case 'detach-instances':
         app.detachInstances(sessionKey);
         break;
+      case 'inherit-description':
+        app.inheritDescription(sessionKey);
+        break;
       case 'resize':
         App.resizeGUI(payload);
         break;
