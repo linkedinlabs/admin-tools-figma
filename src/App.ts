@@ -129,33 +129,17 @@ export default class App {
    */
   detachInstances(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
-    // const nodes: Array<SceneNode> = filterTextNodes(selection);
     const nodes: Array<SceneNode> = selection;
-    console.log('detach all of me')
 
     nodes.forEach((node) => {
       const painter = new Painter({ node, sessionKey });
-      painter.detachInstance();
+      const detachResult = painter.detachInstance();
 
-    })
-    // // set up the Editor class to manipulate the selection
-    // const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
-    // const editor = new Editor({ for: nodes, sessionKey });
+      messenger.handleResult(detachResult);
+    });
 
-    // // commit the updates
-    // let updateResult = null;
-    // if (itemIds) {
-    //   updateResult = editor.updateBulk(updatedItem, itemIds);
-    // } else {
-    //   updateResult = editor.update(updatedItem);
-    // }
+    messenger.toast('All instances were detached! 🥳');
 
-    // // display the message and terminate the plugin
-    // messenger.handleResult(updateResult);
-
-    // if (updateResult.status === 'success') {
-    //   App.refreshGUI(sessionKey);
-    // }
     return this.closeOrReset();
   }
 

@@ -1,6 +1,3 @@
-// import { dataNamespace, isTextNode } from './Tools';
-import { DATA_KEYS } from './constants';
-
 /**
  * @description A class to add elements directly onto Figma file frames.
  *
@@ -44,6 +41,57 @@ export default class Painter {
       },
     };
 
+    const cloneInstanceIntoFrame = (
+      newNode: FrameNode,
+      sourceNode: any, // type to `any` for more flexibility while cloning
+    ) => {
+      // iterate over the full object and set writeable values
+      const protoObject = Object.getPrototypeOf(sourceNode);
+      Object.keys(protoObject).forEach((key: string) => {
+        switch (key) {
+          case 'id':
+          case 'parent':
+          case 'removed':
+          case 'absoluteTransform':
+          case 'width':
+          case 'height':
+          case 'children':
+          case 'overlayPositionType':
+          case 'overlayBackground':
+          case 'overlayBackgroundInteraction':
+          case 'mainComponent':
+          case 'masterComponent':
+          case 'scaleFactor':
+          case 'reactions':
+          case 'type':
+            // not writeable; do nothing
+            break;
+          default: {
+            const value: any = sourceNode[key];
+            newNode[key] = value; // eslint-disable-line no-param-reassign
+          }
+        }
+      });
+
+      // set things that cannot be directly copied
+      newNode.resizeWithoutConstraints(sourceNode.width, sourceNode.height);
+
+      // insert new frame at the correct index
+      const sourceIndex = sourceNode.parent.children.indexOf(sourceNode);
+      sourceNode.parent.insertChild((sourceIndex + 1), newNode);
+
+      // re-add children
+      // mysteriously, this actually detaches any childen instances, eliminating the
+      // need for a recursive function
+      sourceNode.children.forEach((childNode) => {
+        const clonedNode: SceneNode = childNode.clone();
+        newNode.appendChild(clonedNode);
+      });
+
+      return newNode;
+    };
+
+    // set node as instance
     const instanceNode: InstanceNode = this.node as InstanceNode;
 
     // if the node is not an instance, return with error
@@ -54,12 +102,22 @@ export default class Painter {
     }
 
     // “detach” the node by cloning and re-framing
-    
-    console.log(`detach ${instanceNode.id}: ${instanceNode.name} from ${instanceNode.masterComponent.name}`);
+    let newFrame: FrameNode = figma.createFrame();
 
-    // return a successful result
-    result.status = 'success';
-    result.messages.log = `Layer ${this.node.id} detached from all components`;
+    // clone the instance
+    newFrame = cloneInstanceIntoFrame(newFrame, instanceNode);
+
+    if (newFrame) {
+      instanceNode.remove();
+
+      // return a successful result
+      result.status = 'success';
+      result.messages.log = `Layer ${this.node.id} detached from all components and cloned as ${newFrame.id}`;
+      return result;
+    }
+
+    result.status = 'error';
+    result.messages.log = `Layer ${this.node.id} was not detached`;
     return result;
   }
 }
