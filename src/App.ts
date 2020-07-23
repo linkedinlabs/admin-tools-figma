@@ -111,7 +111,7 @@ export default class App {
     return null;
   }
 
-  /** WIP
+  /**
    * @description Takes a selection and invokes Painter’s `detachInstanceRecursive` to
    * detach the top-level component instance and any child instances from their main components.
    *
