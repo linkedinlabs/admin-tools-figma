@@ -202,9 +202,11 @@ export default class App {
     return this.closeOrReset();
   }
 
-  /** WIP
-   * @description Takes a selection and invokes Painter’s `detachInstanceRecursive` to
-   * detach the top-level component instance and any child instances from their main components.
+  /**
+   * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
+   * components (a frame wrapped around an `InstanceNode`) pulls the description from
+   * the lower-level instance and applies it to the top-level component. Any status
+   * messages are logged and displayed with toast messages in the Figma UI.
    *
    * @kind function
    * @name inheritDescription

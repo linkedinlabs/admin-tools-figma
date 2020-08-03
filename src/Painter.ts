@@ -123,7 +123,7 @@ export default class Painter {
   }
 
   /**
-   * @description Takes a wrapped Component (component wrapped around an instance of another
+   * @description Takes a wrapped `ComponentNode` (component wrapped around an instance of another
    * component) reads the description from the main component of the wrapped instance and applies
    * it to the outer component.
    *
