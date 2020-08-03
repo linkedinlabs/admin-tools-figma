@@ -124,15 +124,15 @@ export default class Painter {
 
   /**
    * @description Takes a wrapped `ComponentNode` (component wrapped around an instance of another
-   * component) reads the description from the main component of the wrapped instance and applies
-   * it to the outer component.
+   * component) reads the key (`name` or `description`) from the main component of the wrapped
+   * instance and applies it to the outer component.
    *
    * @kind function
-   * @name inheritParentDescription
+   * @name inheritParentItem
    *
    * @returns {Object} A result object container success/error status and log/toast messages.
    */
-  inheritParentDescription() {
+  inheritParentItem(key: 'description' | 'name' = 'description') {
     const result: {
       status: 'error' | 'success',
       messages: {
@@ -172,18 +172,18 @@ export default class Painter {
 
     if (childInstanceNode) {
       const mainComponent: ComponentNode = childInstanceNode.masterComponent;
-      const { description }: { description: string } = mainComponent;
+      const itemToInherit: string = mainComponent[key];
 
-      componentNode.description = description; // eslint-disable-line no-param-reassign
+      componentNode[key] = itemToInherit; // eslint-disable-line no-param-reassign
 
       // return a successful result
       result.status = 'success';
-      result.messages.log = `Layer ${this.node.id} description inherited from ${childInstanceNode.masterComponent.id}`;
+      result.messages.log = `Layer ${this.node.id} ${key} inherited from ${childInstanceNode.masterComponent.id}`;
       return result;
     }
 
     result.status = 'error';
-    result.messages.log = `Layer ${this.node.id} could not inherit a description`;
+    result.messages.log = `Layer ${this.node.id} could not inherit a ${key}`;
     return result;
   }
 }

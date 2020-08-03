@@ -19,6 +19,10 @@
     {
       "name": "Inherit Description",
       "command": "inherit-description"
+    },
+    {
+      "name": "Inherit Name",
+      "command": "inherit-name"
     }
   ]
 }

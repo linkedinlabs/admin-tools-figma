@@ -204,7 +204,7 @@ export default class App {
 
   /**
    * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
-   * components (a frame wrapped around an `InstanceNode`) pulls the description from
+   * components (a frame wrapped around an `InstanceNode`), pulls the description from
    * the lower-level instance and applies it to the top-level component. Any status
    * messages are logged and displayed with toast messages in the Figma UI.
    *
@@ -229,7 +229,7 @@ export default class App {
     // iterate selected nodes and inherit parent descriptions
     nodes.forEach((node) => {
       const painter = new Painter({ node, sessionKey });
-      const inheritDescriptionResult = painter.inheritParentDescription();
+      const inheritDescriptionResult = painter.inheritParentItem('description');
 
       messenger.handleResult(inheritDescriptionResult);
       resultsArray.push(inheritDescriptionResult.status);
@@ -247,6 +247,61 @@ export default class App {
 
     if (!toastMsg && resultsArray.includes('success')) {
       toastMsg = 'Descriptions were inherited! 🥳';
+    }
+
+    if (!toastMsg) {
+      toastMsg = 'Something went wrong… 😢';
+    }
+
+    messenger.toast(toastMsg);
+    return this.closeOrReset();
+  }
+
+  /**
+   * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
+   * components (a frame wrapped around an `InstanceNode`), pulls the name from
+   * the lower-level instance and applies it to the top-level component. Any status
+   * messages are logged and displayed with toast messages in the Figma UI.
+   *
+   * @kind function
+   * @name inheritName
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   *
+   * @returns {null}
+   */
+  inheritName(sessionKey: number) {
+    const { messenger, selection } = assemble(figma);
+    const nodes: Array<SceneNode> = selection;
+    const resultsArray = [];
+
+    // handle empty selections
+    if (selection.length === 0) {
+      messenger.toast('🤔 A main component must be selected');
+      return this.closeOrReset();
+    }
+
+    // iterate selected nodes and inherit parent names
+    nodes.forEach((node) => {
+      const painter = new Painter({ node, sessionKey });
+      const inheritNameResult = painter.inheritParentItem('name');
+
+      messenger.handleResult(inheritNameResult);
+      resultsArray.push(inheritNameResult.status);
+    });
+
+    // provide toast feedback based on results
+    let toastMsg = null;
+    if (!resultsArray.includes('error')) {
+      toastMsg = 'All names were inherited! 🥳';
+    }
+
+    if (!toastMsg && (selection.length === 1)) {
+      toastMsg = '🤔 The selected layer needs to be a component';
+    }
+
+    if (!toastMsg && resultsArray.includes('success')) {
+      toastMsg = 'Names were inherited! 🥳';
     }
 
     if (!toastMsg) {
