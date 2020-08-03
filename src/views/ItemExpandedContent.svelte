@@ -118,7 +118,7 @@
       />
     {/if}
 
-    {#if !$isStyles}
+    {#if !$isStyles && dirtyItem.componentData}
       <ComponentData
         bind:item={dirtyItem}
         isLocked={isLocked}
