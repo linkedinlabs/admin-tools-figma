@@ -18,9 +18,9 @@ export default class Painter {
   }
 
   /**
-   * @description Takes an InstanceComponent and detaches it (and ALL children) from any linked
-   * main components. The high-level instance is recreated as a frame, and then all children
-   * get cloned and inserted into the instance.
+   * @description Takes an `InstanceNode` and detaches it (and ALL children) from any linked
+   * main components (`ComponentNode`. The high-level instance is recreated as a frame, and
+   * then all children get cloned and inserted into the instance.
    *
    * @kind function
    * @name detachInstanceRecursive
