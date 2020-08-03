@@ -229,7 +229,7 @@ export default class App {
     // iterate selected nodes and inherit parent descriptions
     nodes.forEach((node) => {
       const painter = new Painter({ node, sessionKey });
-      const inheritDescriptionResult = painter.inheritParentDescription();
+      const inheritDescriptionResult = painter.inheritParentItem('description');
 
       messenger.handleResult(inheritDescriptionResult);
       resultsArray.push(inheritDescriptionResult.status);
@@ -284,7 +284,7 @@ export default class App {
     // iterate selected nodes and inherit parent names
     nodes.forEach((node) => {
       const painter = new Painter({ node, sessionKey });
-      const inheritNameResult = painter.inheritParentName();
+      const inheritNameResult = painter.inheritParentItem('name');
 
       messenger.handleResult(inheritNameResult);
       resultsArray.push(inheritNameResult.status);
