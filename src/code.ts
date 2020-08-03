@@ -89,6 +89,9 @@ const dispatcher = async (action: {
       case 'inherit-description':
         app.inheritDescription(sessionKey);
         break;
+      case 'inherit-name':
+        app.inheritName(sessionKey);
+        break;
       case 'resize':
         App.resizeGUI(payload);
         break;
