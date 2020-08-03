@@ -204,7 +204,7 @@ export default class App {
 
   /**
    * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
-   * components (a frame wrapped around an `InstanceNode`) pulls the description from
+   * components (a frame wrapped around an `InstanceNode`), pulls the description from
    * the lower-level instance and applies it to the top-level component. Any status
    * messages are logged and displayed with toast messages in the Figma UI.
    *
@@ -259,7 +259,7 @@ export default class App {
 
   /**
    * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
-   * components (a frame wrapped around an `InstanceNode`) pulls the name from
+   * components (a frame wrapped around an `InstanceNode`), pulls the name from
    * the lower-level instance and applies it to the top-level component. Any status
    * messages are logged and displayed with toast messages in the Figma UI.
    *
