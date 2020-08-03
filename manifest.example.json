@@ -8,6 +8,17 @@
     {
       "name": "Show Admin Tool",
       "command": "tools"
+    },
+    {
+      "separator": true
+    },
+    {
+      "name": "Detach All Instances",
+      "command": "detach-instances"
+    },
+    {
+      "name": "Inherit Description",
+      "command": "inherit-description"
     }
   ]
 }
