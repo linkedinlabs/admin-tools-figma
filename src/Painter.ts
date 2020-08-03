@@ -121,4 +121,69 @@ export default class Painter {
     result.messages.log = `Layer ${this.node.id} was not detached`;
     return result;
   }
+
+  /**
+   * @description Takes a wrapped `ComponentNode` (component wrapped around an instance of another
+   * component) reads the description from the main component of the wrapped instance and applies
+   * it to the outer component.
+   *
+   * @kind function
+   * @name inheritParentDescription
+   *
+   * @returns {Object} A result object container success/error status and log/toast messages.
+   */
+  inheritParentDescription() {
+    const result: {
+      status: 'error' | 'success',
+      messages: {
+        toast: string,
+        log: string,
+      },
+    } = {
+      status: null,
+      messages: {
+        toast: null,
+        log: null,
+      },
+    };
+
+    // set node as component
+    const componentNode: ComponentNode = this.node as ComponentNode;
+
+    // if the node is not an instance, return with error
+    if (componentNode.type !== 'COMPONENT') {
+      result.status = 'error';
+      result.messages.log = `Layer ${this.node.id} is not a component`;
+      return result;
+    }
+
+    const firstChildNodeIndex = 0;
+    const childInstanceNode: InstanceNode = componentNode.children[
+      firstChildNodeIndex] as InstanceNode;
+
+    if (
+      childInstanceNode.type !== 'INSTANCE'
+      || !childInstanceNode.masterComponent
+    ) {
+      result.status = 'error';
+      result.messages.log = `Layer ${this.node.id} is not a wrapped component`;
+      return result;
+    }
+
+    if (childInstanceNode) {
+      const mainComponent: ComponentNode = childInstanceNode.masterComponent;
+      const { description }: { description: string } = mainComponent;
+
+      componentNode.description = description; // eslint-disable-line no-param-reassign
+
+      // return a successful result
+      result.status = 'success';
+      result.messages.log = `Layer ${this.node.id} description inherited from ${childInstanceNode.masterComponent.id}`;
+      return result;
+    }
+
+    result.status = 'error';
+    result.messages.log = `Layer ${this.node.id} could not inherit a description`;
+    return result;
+  }
 }
