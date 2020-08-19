@@ -1,12 +1,12 @@
 {
-  "name": "Admin Tool",
+  "name": "Stapler",
   "id": "PLUGIN_ID",
   "api": "1.0.0",
   "main": "dist/main.js",
   "ui": "dist/webview.html",
   "menu": [
     {
-      "name": "Show Admin Tool",
+      "name": "Show Stapler",
       "command": "tools"
     },
     {

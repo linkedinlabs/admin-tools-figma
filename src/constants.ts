@@ -20,7 +20,7 @@ const PLUGIN_IDENTIFIER = 'com.linkedin.figma.admin-tool-plugin';
  * @name PLUGIN_NAME
  * @type {string}
  */
-const PLUGIN_NAME = 'Admin Tool';
+const PLUGIN_NAME = 'Stapler';
 
 /**
  * @description An object containing the current string constants used as keys in plugin data.
