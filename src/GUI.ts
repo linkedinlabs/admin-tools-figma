@@ -72,7 +72,7 @@ const updateSelected = (
   }
 };
 
-/** WIP
+/**
  * @description Watches for incoming messages from the plugin’s main thread and dispatches
  * them to the appropriate GUI actions.
  *
@@ -110,7 +110,6 @@ const watchIncomingMessages = (): void => {
 
 // init GUI
 window.app = app; // eslint-disable-line no-undef
-// watchActions();
 watchIncomingMessages();
 sendLoadedMsg();
 
