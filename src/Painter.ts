@@ -61,7 +61,6 @@ export default class Painter {
           case 'overlayBackground':
           case 'overlayBackgroundInteraction':
           case 'mainComponent':
-          case 'masterComponent':
           case 'scaleFactor':
           case 'reactions':
           case 'type':
@@ -96,7 +95,7 @@ export default class Painter {
     const instanceNode: InstanceNode = this.node as InstanceNode;
 
     // if the node is not an instance, return with error
-    if (!instanceNode.masterComponent) {
+    if (!instanceNode.mainComponent) {
       result.status = 'error';
       result.messages.log = `Layer ${this.node.id} is not an instance`;
       return result;
@@ -163,7 +162,7 @@ export default class Painter {
 
     if (
       childInstanceNode.type !== 'INSTANCE'
-      || !childInstanceNode.masterComponent
+      || !childInstanceNode.mainComponent
     ) {
       result.status = 'error';
       result.messages.log = `Layer ${this.node.id} is not a wrapped component`;
@@ -171,14 +170,14 @@ export default class Painter {
     }
 
     if (childInstanceNode) {
-      const mainComponent: ComponentNode = childInstanceNode.masterComponent;
+      const { mainComponent }: { mainComponent: ComponentNode } = childInstanceNode;
       const itemToInherit: string = mainComponent[key];
 
       componentNode[key] = itemToInherit; // eslint-disable-line no-param-reassign
 
       // return a successful result
       result.status = 'success';
-      result.messages.log = `Layer ${this.node.id} ${key} inherited from ${childInstanceNode.masterComponent.id}`;
+      result.messages.log = `Layer ${this.node.id} ${key} inherited from ${childInstanceNode.mainComponent.id}`;
       return result;
     }
 

@@ -268,7 +268,7 @@ export default class Presenter {
       ) {
         if (node.type === CONTAINER_NODE_TYPES.instance) {
           const instanceNode = node as InstanceNode;
-          componentIds.push(instanceNode.masterComponent.id);
+          componentIds.push(instanceNode.mainComponent.id);
         } else {
           componentIds.push(node.id);
         }

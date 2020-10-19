@@ -463,7 +463,7 @@ const findTopInstance = (node: any) => {
     while (parent && parent.type !== 'PAGE') {
       currentNode = parent;
       if (currentNode.type === CONTAINER_NODE_TYPES.instance) {
-        // update the top-most master component with the current one
+        // update the top-most main component with the current one
         currentTopInstance = currentNode;
       }
       parent = parent.parent;
@@ -503,7 +503,7 @@ const findTopComponent = (node: any) => {
     while (parent && parent.type !== 'PAGE' && componentNode === null) {
       currentNode = parent;
       if (currentNode.type === CONTAINER_NODE_TYPES.component) {
-        // update the top-most master component with the current one
+        // update the top-most main component with the current one
         componentNode = currentNode;
       }
       parent = parent.parent;
@@ -526,7 +526,7 @@ const findTopComponent = (node: any) => {
  * @param {Object} node A Figma node object (`SceneNode`).
  * @param {Object} topNode A Figma instance node object (`InstanceNode`).
  *
- * @returns {Object} Returns the master component or `null`.
+ * @returns {Object} Returns the main component or `null`.
  */
 const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
   // finds the `index` of self in the parent’s children list
@@ -537,8 +537,8 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
   // set some defaults
   let { parent } = node;
   const childIndices = [];
-  const masterComponentNode = topNode.masterComponent;
-  let masterPeerNode = null;
+  const mainComponentNode = topNode.mainComponent;
+  let mainPeerNode = null;
   let currentNode = node;
 
   // iterate up the chain, collecting indices in each child list
@@ -551,11 +551,11 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
     }
   }
 
-  // navigate down the chain of the corresponding master component using the
+  // navigate down the chain of the corresponding main component using the
   // collected child indices to locate the peer node
-  if (childIndices.length > 0 && masterComponentNode) {
+  if (childIndices.length > 0 && mainComponentNode) {
     const childIndicesReversed = childIndices.reverse();
-    let { children } = masterComponentNode;
+    let { children } = mainComponentNode;
     let selectedChild = null;
 
     childIndicesReversed.forEach((childIndex, index) => {
@@ -567,11 +567,11 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
 
     // the last selected child should be the peer node
     if (selectedChild) {
-      masterPeerNode = selectedChild;
+      mainPeerNode = selectedChild;
     }
   }
 
-  return masterPeerNode;
+  return mainPeerNode;
 };
 
 /**

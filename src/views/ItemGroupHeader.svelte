@@ -10,7 +10,7 @@
   export let isTypeContainer = false;
   export let labelGroupText = null;
   export let labelText = 'Item name here';
-  export let type = 'master-item';
+  export let type = 'main-item';
 
   const dispatch = createEventDispatcher();
 

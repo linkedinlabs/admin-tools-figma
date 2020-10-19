@@ -521,7 +521,7 @@
 
           {#if checkIsOpen(group.id)}
             {#each filterByKeys(items, 'groupId', group.id, 'typeId', type.id) as item (item.id)}
-              <li class={`master-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
+              <li class={`main-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, items, 'partialUnlock')}
                   on:handleUpdate={customEvent => updateItemState(item.id, customEvent.detail)}
@@ -529,7 +529,7 @@
                   isOpen={checkIsOpen(item.id)}
                   labelGroupText={item.group}
                   labelText={item.name}
-                  type="master-item"
+                  type="main-item"
                 />
                 {#if checkIsOpen(item.id)}
                   <ItemExpandedContent
