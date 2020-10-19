@@ -164,12 +164,16 @@ export default class App {
     return this.closeOrReset();
   }
 
-  /** WIP
-   * @description Resets the plugin GUI back to the original state or closes it entirely,
-   * terminating the plugin.
+  /**
+   * @description Takes a payload with `updatedItem` (edited item params) and `itemIds` (the
+   * IDs of items to edit) and passes the params into the Editor class.
    *
    * @kind function
    * @name handleUpdate
+   *
+   * @param {Object} payload An object containing `updatedItem` (edited item params) and
+   * `itemIds` (the IDs of items to edit.
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
    *
    * @returns {null}
    */
@@ -400,13 +404,17 @@ export default class App {
     messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
   }
 
-  /** WIP
-   * @description Triggers a UI refresh with the current selection.
+  /**
+   * @description Resizes the plugin UI based on either a default, or a provided
+   * `bodyHeight` in the `payload` object. The object is sent from the UI thread.
    *
    * @kind function
    * @name resizeGUI
    *
-   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   * @param {Object} payload Should contain `bodyHeight` as the height of the current
+   * contents calculated in the UI.
+   *
+   * @returns {Promise} Returns a promise for resolution.
    */
   static async resizeGUI(
     payload: { bodyHeight: number },
@@ -422,12 +430,17 @@ export default class App {
     }
   }
 
-  /** WIP
-   * @description Triggers a UI refresh with the current selection.
+  /**
+   * @description Sets new filter options to `clientStorage` and then triggers a UI refresh.
+   * The saved options are used in the refresh to filter content.
    *
    * @kind function
    * @name setFilters
    *
+   * @param {Object} filters An object with filters to show/hide elements in the UI. Options
+   * include `newIsStyles` (whether or not the UI should be editing styles or components),
+   * `newIsSelection` (whether or not the UI is watching a selection or loading all available)
+   * styles, and `newFilter` (and optional filter to set).
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
   static async setFilters(

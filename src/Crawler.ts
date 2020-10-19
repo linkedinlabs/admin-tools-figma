@@ -188,7 +188,7 @@ export default class Crawler {
    *
    * @kind function
    * @name filterByTypes
-   * @param {Array} filterTypes Array of type constants to filter for (inclusive).
+   * @param {Array} filterTypes Array of type constants to filter for (inclusive)
    * in the selection.
    *
    * @returns {Array} All TextNode items in an array.

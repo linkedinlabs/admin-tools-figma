@@ -30,15 +30,17 @@ const sendLoadedMsg = (): void => {
 
 /* process Messages from the plugin */
 
-/** WIP
- * @description Clones a template html element and then updates the clone’s contents to match
- * the supplied options for each layer in the supplied array.
+/**
+ * @description Receives objects with the currently selected items/groups/types and
+ * any filters, and passes them along to the Svelte UI class.
  *
  * @kind function
  * @name updateSelected
  *
- * @param {Array} items An array of items to clone. Each entry should include an `id`,
- * an `assignment`, `originalText`, `proposedText`, and a `locked` boolean.
+ * @param {Object} selected An object containing `items`, `groups`, and `types` arrays
+ * formatted for presentation in the UI.
+ * @param {Object} filters An object with filters to show/hide elements in the UI.
+ * @param {string} sessionKey A rotating key used during the single run of the plugin.
  *
  * @returns {null}
  */
@@ -70,6 +72,8 @@ const updateSelected = (
     app.newSessionKey = sessionKey;
     app.useSelection = newUseSelection;
   }
+
+  return null;
 };
 
 /**

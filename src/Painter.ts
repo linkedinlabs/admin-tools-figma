@@ -129,6 +129,9 @@ export default class Painter {
    * @kind function
    * @name inheritParentItem
    *
+   @param {string} key The key to read from the inner component node. Either
+   * `description` or `name`.
+   *
    * @returns {Object} A result object container success/error status and log/toast messages.
    */
   inheritParentItem(key: 'description' | 'name' = 'description') {
