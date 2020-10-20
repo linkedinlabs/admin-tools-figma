@@ -1,7 +1,11 @@
 <script>
   // this component is a svelte rebuild of the vendor/figma-select-menu.js script
   // used in other LinkedIn Figma plugins
-  import { afterUpdate, onMount } from 'svelte';
+  import {
+    afterUpdate,
+    beforeUpdate,
+    createEventDispatcher,
+  } from 'svelte';
 
   export let className = null;
   export let disabled = false;
@@ -9,6 +13,7 @@
   export let invertView = false;
   export let nameId = null;
   export let value = null;
+  export let watchChange = false;
   export let options = [
     {
       value: 'unassigned',
@@ -23,6 +28,8 @@
     value,
     text: null,
   };
+
+  const dispatch = createEventDispatcher();
 
   // ui
   let fauxSelectorElement = null;
@@ -68,6 +75,11 @@
 
     // update for real select + return binding
     value = selected.value;
+
+    // send save signal if watching
+    if (watchChange) {
+      dispatch('saveSignal');
+    }
     return selected;
   };
 
@@ -116,31 +128,31 @@
         const dropdown = currentlySelectedItem.parentNode;
 
         // default is `down`, grab the next sibling
-        let nextSelectedItem = currentlySelectedItem.nextSibling;
+        let nextSelectedItem = currentlySelectedItem.nextElementSibling;
         if (direction === 'up') {
           // grab the previous sibling
-          nextSelectedItem = currentlySelectedItem.previousSibling;
+          nextSelectedItem = currentlySelectedItem.previousElementSibling;
 
           // skip over separators
           if (nextSelectedItem && nextSelectedItem.tagName !== 'LI') {
-            nextSelectedItem = nextSelectedItem.previousSibling;
+            nextSelectedItem = nextSelectedItem.previousElementSibling;
           }
 
           // if the previous sibling is missing, must be at the top
           // grab the last element in the list
           if (!nextSelectedItem) {
-            nextSelectedItem = currentlySelectedItem.parentNode.lastChild;
+            nextSelectedItem = currentlySelectedItem.parentNode.lastElementChild;
           }
         } else {
           // skip over separators
           if (nextSelectedItem && nextSelectedItem.tagName !== 'LI') {
-            nextSelectedItem = nextSelectedItem.nextSibling;
+            nextSelectedItem = nextSelectedItem.nextElementSibling;
           }
 
           // if the next sibling is missing, must be at the bottom
           // grab the first element in the list
           if (!nextSelectedItem) {
-            nextSelectedItem = currentlySelectedItem.parentNode.firstChild;
+            nextSelectedItem = currentlySelectedItem.parentNode.firstElementChild;
           }
         }
 
@@ -235,15 +247,13 @@
     menuListElement.style.top = `${menuPosition}px`;
   };
 
-  onMount(async () => {
+  beforeUpdate(async () => {
     setSelected();
   });
 
   afterUpdate(() => {
     if (isMenuOpen) {
       setMenuPosition();
-    } else {
-      setSelected();
     }
   });
 </script>
@@ -295,14 +305,15 @@
           </div>
         {/if}
       {/each}
+
     </ul>
   </div>
   <select
-    bind:value={value}
     class="styled-select select-menu"
     disabled={disabled}
     id={nameId}
     style="display:none"
+    bind:value={value}
   >
     {#each options as option (option.value)}
       <option
