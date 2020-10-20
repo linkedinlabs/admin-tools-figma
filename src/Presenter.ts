@@ -306,7 +306,7 @@ export default class Presenter {
         let componentData: PresenterComponentData = {
           annotationText: null,
           documentationUri: null,
-          isInteractive: false,
+          hasKeystop: false,
           library: 'unassigned',
           role: 'none',
           type: 'component',

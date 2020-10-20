@@ -17,7 +17,7 @@ declare global {
   type PresenterComponentData = {
     annotationText?: string,
     documentationUri?: string,
-    isInteractive: boolean,
+    hasKeystop: boolean,
     library: 'unassigned' | 'art-deco' | 'mercado',
     role: 'none' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
     type: 'component' | 'foundation',

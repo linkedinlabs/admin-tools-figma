@@ -130,9 +130,9 @@
       className="form-element element-type-switch"
       disabled={isLocked}
       invertView={invertView}
-      labelText="Interactive?"
-      nameId="is-interactive"
-      bind:value={item.componentData.isInteractive}
+      labelText="Has a focus stop?"
+      nameId="has-keystop"
+      bind:value={item.componentData.hasKeystop}
     />
   </span>
 
