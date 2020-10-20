@@ -2,12 +2,14 @@
   import {
     currentFilter,
     keystopKeysOptions,
+    keystopKeysInitOptions,
     libraryOptions,
     libraryStatusOptions,
     roleOptions,
   } from './stores';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
+  import KeystopKeys from './KeystopKeys';
   import { checkFilterMatch, deepCopy } from '../Tools';
 
   export let invertView = false;
@@ -138,19 +140,14 @@
   </span>
 
   {#if item.componentData.hasKeystop}
-    <FormUnit
-      className="form-row indent"
-      disableActions={true}
-      hasMultiple={isEditor && item.componentData.hasKeystop === 'blank--multiple'}
-      hideLabel={true}
-      invertView={invertView}
-      itemIsLocked={isLocked}
-      kind="inputSelect"
-      labelText="Add focus stop keys"
-      nameId={`item-keystop-key-${item.id}`}
-      options={setOptions($keystopKeysOptions, 'no-key', isEditor)}
+    <KeystopKeys
+      isEditor={isEditor}
+      itemId={item.id}
+      keys={['space']}
+      options={$keystopKeysOptions}
+      optionsInit={$keystopKeysInitOptions}
       resetValue={resetValue}
-      value={'no-key'}
+      setOptions={setOptions}
     />
   {/if}
 

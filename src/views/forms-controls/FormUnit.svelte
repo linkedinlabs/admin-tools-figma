@@ -20,6 +20,7 @@
   export let placeholder = null;
   export let nameId = 'text-input-id';
   export let resetValue = false;
+  export let selectWatchChange = false;
   export let value = null;
   export let options = [];
 
@@ -109,7 +110,9 @@
         invertView={invertView}
         nameId={nameId}
         options={options}
+        on:changeSignal
         bind:value={value}
+        watchChange={selectWatchChange}
       />
     {/if}
 

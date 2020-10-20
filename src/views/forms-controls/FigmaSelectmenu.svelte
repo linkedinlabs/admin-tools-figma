@@ -66,6 +66,12 @@
       valueToCompare = 'blank--multiple';
     }
 
+    // send save signal if watching
+    if ((value !== valueToCompare) && watchChange) {
+      console.log(`valueToCompare ${valueToCompare}`)
+      dispatch('changeSignal');
+    }
+
     // update for faux select
     if (valueToCompare) {
       selected = options.filter(option => option.value === valueToCompare)[index];
@@ -76,10 +82,6 @@
     // update for real select + return binding
     value = selected.value;
 
-    // send save signal if watching
-    if (watchChange) {
-      dispatch('saveSignal');
-    }
     return selected;
   };
 
