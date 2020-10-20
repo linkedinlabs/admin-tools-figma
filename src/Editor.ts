@@ -2,14 +2,18 @@ import Presenter from './Presenter';
 import { getPeerPluginData, setPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
-/** WIP
- * @description Looks into the selection array for any groups and pulls out individual nodes,
- * effectively flattening the selection.
+/**
+ * @description Takes a `currentDescription` string and parses it: splitting each
+ * line into an array, and further splitting each line into a key/value pair using the
+ * `:` as the signifier for the end of the key.
  *
  * @kind function
  * @name parseDescription
  *
- * @returns {Object} All items (including children) individual in an updated array.
+ * @param {string} currentDescription A string representing the node/style description
+ * to be parsed.
+ *
+ * @returns {Array} The parsed description as an array of key/value pairs.
  */
 const parseDescription = (currentDescription) => {
   const currentDescriptionArray = [];
@@ -62,17 +66,17 @@ const compileDescription = (currentDescriptionArray) => {
   return string;
 };
 
-/** WIP
- * @description A class to handle traversing an array of selected items and return useful items
- * (child nodes, first in selection, node position, dimensions and position of node gaps
- * and overlapping node negative space).
+/**
+ * @description A class to handle applying changes made in the UI editors to the proper Figma
+ * node/style parameters or, in the case of nodes, additionally the internal data.
  *
  * @class
  * @name Editor
  *
  * @constructor
  *
- * @property selectionArray The item of selected items.
+ * @property array The item of selected items (either `BaseNode` or `BaseStyle`).
+ * @property sessionKey A rotating key used during the single run of the plugin.
  */
 export default class Editor {
   array: Array<BaseNode | BaseStyle>;
@@ -83,12 +87,14 @@ export default class Editor {
     this.sessionKey = sessionKey;
   }
 
-  /** WIP
-   * @description Looks into the selection array for any groups and pulls out individual nodes,
-   * effectively flattening the selection.
+  /**
+   * @description Applies changes from in the `updatedItem` to the first available node/style
+   * in the currentSelection.
    *
    * @kind function
    * @name update
+   *
+   * @param {Object} updatedItem The object containing changes from the UI editor.
    *
    * @returns {Object} All items (including children) individual in an updated array.
    */
@@ -190,12 +196,14 @@ export default class Editor {
     return result;
   }
 
-  /** WIP
-   * @description Looks into the selection array for any groups and pulls out individual nodes,
-   * effectively flattening the selection.
+  /**
+   * @description Applies changes from in the `updatedItem` to the nodes/styles matching `itemIds`.
    *
    * @kind function
    * @name updateBulk
+   *
+   * @param {Object} updatedItem The object containing changes from the UI bulk editor.
+   * @param {Array} itemIds An array of node or style IDs to apply changes to.
    *
    * @returns {Object} All items (including children) individual in an updated array.
    */
