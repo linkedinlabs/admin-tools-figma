@@ -58,6 +58,55 @@ const libraryStatusOptionsArray = [
 export const libraryStatusOptions = readable(libraryStatusOptionsArray);
 
 // static
+const keystopKeysOptionsArray = [
+  {
+    value: 'no-key',
+    text: 'Add key…',
+    disabled: true,
+  },
+  {
+    value: 'divider--01',
+    text: null,
+    disabled: true,
+  },
+  {
+    value: 'arrows-left-right',
+    text: 'Arrow keys (left/right)',
+    disabled: false,
+  },
+  {
+    value: 'arrows-up-down',
+    text: 'Arrow keys (up/down)',
+    disabled: false,
+  },
+  {
+    value: 'enter',
+    text: 'Enter',
+    disabled: false,
+  },
+  {
+    value: 'divider--02',
+    text: null,
+    disabled: true,
+  },
+  {
+    value: 'space',
+    text: 'Space',
+    disabled: false,
+  },
+  {
+    value: 'divider--03',
+    text: null,
+    disabled: true,
+  },
+  {
+    value: 'escape',
+    text: 'Escape',
+    disabled: false,
+  },
+];
+export const keystopKeysOptions = readable(keystopKeysOptionsArray);
+
 const roleOptionsArray = [
   {
     value: 'none',

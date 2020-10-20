@@ -10,6 +10,7 @@
   export let disableActions = false;
   export let disableCopy = false;
   export let hasMultiple = false;
+  export let hideLabel = false;
   export let invertView = false;
   export let isDeletable = false;
   export let isDirty = false;
@@ -66,10 +67,11 @@
     on:handleRestore={() => restoreValue()}
     disableActions={disableActions}
     disableCopy={disableCopy}
-    labelText={labelText}
+    hide={hideLabel}
     invertView={invertView}
     isDirty={isDirty}
     bind:isLocked={isLocked}
+    labelText={labelText}
     nameId={nameId}
     parentIsLocked={itemIsLocked}
     value={value}
@@ -101,7 +103,7 @@
 
     {#if kind === 'inputSelect'}
       <FigmaSelectmenu
-        className="form-element element-type-select split-50"
+        className="form-element element-type-select"
         disabled={isLocked || itemIsLocked}
         hasMultiple={hasMultiple}
         invertView={invertView}

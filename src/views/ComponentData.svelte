@@ -1,6 +1,7 @@
 <script>
   import {
     currentFilter,
+    keystopKeysOptions,
     libraryOptions,
     libraryStatusOptions,
     roleOptions,
@@ -47,7 +48,7 @@
   </span>
 
   <FormUnit
-    className="form-row"
+    className="form-row form-unit split-50"
     disableCopy={true}
     hasMultiple={isEditor && item.componentData.library === 'blank--multiple'}
     invertView={invertView}
@@ -136,15 +137,32 @@
     />
   </span>
 
+  {#if item.componentData.hasKeystop}
+    <FormUnit
+      className="form-row indent"
+      disableActions={true}
+      hasMultiple={isEditor && item.componentData.hasKeystop === 'blank--multiple'}
+      hideLabel={true}
+      invertView={invertView}
+      itemIsLocked={isLocked}
+      kind="inputSelect"
+      labelText="Add focus stop keys"
+      nameId={`item-keystop-key-${item.id}`}
+      options={setOptions($keystopKeysOptions, 'no-key', isEditor)}
+      resetValue={resetValue}
+      value={'no-key'}
+    />
+  {/if}
+
   <FormUnit
-    className="form-row"
+    className="form-row form-unit split-50"
     disableCopy={true}
     hasMultiple={isEditor && item.componentData.role === 'blank--multiple'}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputSelect"
     labelText="ARIA Role"
-    nameId={`item-library-${item.id}`}
+    nameId={`item-aria-role-${item.id}`}
     options={setOptions($roleOptions, item.componentData.role, isEditor)}
     resetValue={resetValue}
     bind:value={item.componentData.role}

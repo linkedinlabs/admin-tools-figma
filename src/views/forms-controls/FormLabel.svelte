@@ -5,10 +5,11 @@
 
   export let disableActions = false;
   export let disableCopy = false;
-  export let labelText = null;
+  export let hide = false;
   export let invertView = false;
   export let isDirty = false;
   export let isLocked = false;
+  export let labelText = null;
   export let nameId = null;
   export let parentIsLocked = false;
   export let value = null;
@@ -23,7 +24,10 @@
   /* components/form-elements > @form-label */
 </style>
 
-<span class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}>
+<span
+  class:hidden={hide}
+  class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
+>
   <span class="text">
     <label for={nameId}>{@html labelText}</label>
   </span>

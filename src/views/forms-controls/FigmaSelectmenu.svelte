@@ -278,18 +278,23 @@
       style="top: 0px"
     >
       {#each options as option (option.value)}
-        <li
-          class={`styled-select__list-item${isSelected(option.value, selected, value) ? ' styled-select__list-item--active' : ''}`}
-          data-value={option.value}
-          on:click={() => handleItemClick(option.value)}
-        >
-          <span class="styled-select__list-item-icon"></span>
-          <span class={`styled-select__list-item-text${option.value === 'blank--multiple' ? ' has-multiple' : ''}`}>
-            {option.text}
-          </span>
-        </li>
+        {#if (option.value && !option.value.includes('divider--'))}
+          <li
+            class={`styled-select__list-item${isSelected(option.value, selected, value) ? ' styled-select__list-item--active' : ''}${option.disabled ? ' styled-select__list-item--disabled' : ''}`}
+            data-value={option.value}
+            on:click={() => handleItemClick(option.value)}
+          >
+            <span class="styled-select__list-item-icon"></span>
+            <span class={`styled-select__list-item-text${option.value === 'blank--value' ? ' is-blank' : ''}${option.disabled ? ' styled-select__list-item-text--disabled' : ''}`}>
+              {option.text}
+            </span>
+          </li>
+        {:else if option.value.includes('divider--')}
+          <div class="styled-select__divider">
+            <span class="styled-select__divider-line"></span>
+          </div>
+        {/if}
       {/each}
-
     </ul>
   </div>
   <select
