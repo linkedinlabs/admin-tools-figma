@@ -304,6 +304,7 @@ export default class Presenter {
 
         // set up plugin data
         let componentData: PresenterComponentData = {
+          allowKeystopPassthrough: false,
           annotationText: null,
           documentationUri: null,
           hasKeystop: false,

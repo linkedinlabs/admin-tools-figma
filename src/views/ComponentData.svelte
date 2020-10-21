@@ -149,6 +149,16 @@
       resetValue={resetValue}
       setOptions={setOptions}
     />
+    <span class="form-row indent">
+      <FigmaSwitch
+        className="form-element element-type-switch"
+        disabled={isLocked}
+        invertView={invertView}
+        labelText="Allow pass-through focus?"
+        nameId="allow-keystop-passthrough"
+        bind:value={item.componentData.allowKeystopPassthrough}
+      />
+    </span>
   {/if}
 
   <FormUnit

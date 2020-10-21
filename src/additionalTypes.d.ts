@@ -15,6 +15,7 @@ declare global {
   };
 
   type PresenterComponentData = {
+    allowKeystopPassthrough: boolean,
     annotationText?: string,
     documentationUri?: string,
     hasKeystop: boolean,
