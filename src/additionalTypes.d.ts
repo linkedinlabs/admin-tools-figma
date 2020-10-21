@@ -18,6 +18,7 @@ declare global {
     annotationText?: string,
     documentationUri?: string,
     hasKeystop: boolean,
+    keys: Array<'arrows-left-right' | 'arrows-up-down' | 'enter' | 'escape' | 'space'>,
     library: 'unassigned' | 'art-deco' | 'mercado',
     role: 'none' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
     type: 'component' | 'foundation',

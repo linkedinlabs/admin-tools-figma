@@ -351,6 +351,65 @@ const updateArray = (
  * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
  *
  * @kind function
+ * @name compareArrays
+ *
+ * @param {Array} array1 A Figma node object.
+ * @param {Array} array2 A Figma node object.
+ *
+ * @returns {Object} The top-level `CONTAINER_NODE_TYPES.frame` node.
+ */
+const compareArrays = (array1, array2) => {
+  let isDifferent = false;
+
+  if (!array1 && !array2) {
+    return isDifferent;
+  }
+
+  if (
+    (!array1 && array2)
+    || (!array2 && array1)
+  ) {
+    isDifferent = true;
+    return isDifferent;
+  }
+
+  if (array1.length !== array2.length) {
+    isDifferent = true;
+    return isDifferent;
+  }
+
+  array1.forEach((value) => {
+    const itemIndex = array2.findIndex(
+      foundValue => (foundValue === value),
+    );
+
+    if (itemIndex < 0) {
+      isDifferent = true;
+    }
+  });
+
+  if (isDifferent) {
+    return isDifferent;
+  }
+
+  array2.forEach((value) => {
+    const itemIndex = array1.findIndex(
+      foundValue => (foundValue === value),
+    );
+
+    if (itemIndex < 0) {
+      isDifferent = true;
+    }
+  });
+
+  return isDifferent;
+};
+
+/** WIP
+ * @description Takes a node object and traverses parent relationships until the top-level
+ * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
+ *
+ * @kind function
  * @name deepCopy
  * @param {Object} node A Figma node object.
  *
@@ -401,6 +460,12 @@ const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
         || deepCompare(value, modifiedObject[key])
       ) {
         isDifferent = true;
+      }
+
+      if (value.constructor === Array) {
+        if (compareArrays(value, modifiedObject[key])) {
+          isDifferent = true;
+        }
       }
     } else if (modifiedObject[key] !== value) {
       if (modifiedObject[key] !== 'blank--multiple') {
