@@ -308,7 +308,7 @@ export default class Presenter {
           annotationText: null,
           documentationUri: null,
           hasKeystop: false,
-          keys: null,
+          keys: [],
           library: 'unassigned',
           role: 'none',
           type: 'component',
