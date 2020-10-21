@@ -141,6 +141,7 @@
 
   {#if item.componentData.hasKeystop}
     <KeystopKeys
+      invertView={invertView}
       isEditor={isEditor}
       itemId={item.id}
       bind:keys={item.componentData.keys}

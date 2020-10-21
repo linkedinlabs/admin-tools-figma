@@ -172,6 +172,7 @@
 
     &.element-type-switch {
       @include figma-switch-base;
+      position: relative;
       padding-left: em(6);
 
       .switch__toggle {
