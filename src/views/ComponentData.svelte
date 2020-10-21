@@ -18,6 +18,9 @@
   export let isLocked = false;
   export let resetValue = false;
 
+  // tktk
+  let keys = ['space'];
+  
   const setClasses = (classes, hasValues) => {
     if (hasValues) {
       return `${classes} has-multiple`;
@@ -143,7 +146,7 @@
     <KeystopKeys
       isEditor={isEditor}
       itemId={item.id}
-      keys={['space']}
+      bind:keys={keys}
       options={$keystopKeysOptions}
       optionsInit={$keystopKeysInitOptions}
       resetValue={resetValue}

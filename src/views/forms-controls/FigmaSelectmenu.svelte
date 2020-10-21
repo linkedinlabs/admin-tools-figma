@@ -60,6 +60,7 @@
   const setSelected = (optionValue = value) => {
     const index = 0;
     let valueToCompare = optionValue;
+    let newValue = false;
 
     // set a string for blanks in select
     if (valueToCompare === null) {
@@ -68,8 +69,7 @@
 
     // send save signal if watching
     if ((value !== valueToCompare) && watchChange) {
-      console.log(`valueToCompare ${valueToCompare}`)
-      dispatch('changeSignal');
+      newValue = true;
     }
 
     // update for faux select
@@ -81,6 +81,11 @@
 
     // update for real select + return binding
     value = selected.value;
+
+    // send change signal if watching and if values are different
+    if (newValue && watchChange) {
+      dispatch('changeSignal');
+    }
 
     return selected;
   };
