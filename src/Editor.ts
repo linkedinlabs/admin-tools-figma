@@ -358,7 +358,7 @@ export default class Editor {
                     if (
                       (updatedComponentData[innerKey] === undefined)
                       || (
-                        updatedComponentData[innerKey]
+                        updatedComponentData[innerKey] !== undefined
                         && (updatedComponentData[innerKey] !== innerValue)
                       )
                     ) {
