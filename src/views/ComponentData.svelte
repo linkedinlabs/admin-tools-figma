@@ -155,6 +155,7 @@
       <FigmaSwitch
         className="form-element element-type-switch"
         disabled={isLocked}
+        hasMultiple={isEditor && item.componentData.allowKeystopPassthroughHasValues}
         invertView={invertView}
         labelText="Allow pass-through focus?"
         nameId={`allow-keystop-passthrough-${item.id}`}
