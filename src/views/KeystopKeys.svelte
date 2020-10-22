@@ -1,8 +1,9 @@
 <script>
   import { afterUpdate, beforeUpdate } from 'svelte';
   import FormUnit from './forms-controls/FormUnit';
-  import { updateArray } from '../Tools';
+  import { compareArrays, updateArray } from '../Tools';
 
+  export let hasMultiple = false;
   export let invertView = false;
   export let isEditor = false;
   export let itemId = null;
@@ -15,8 +16,6 @@
   let newKeyValue = 'no-key';
   let dirtyKeys = keys ? [...keys] : [];
   let originalKeys = keys ? [...keys] : [];
-  // tktk
-  const hasMultiple = false;
 
   const addKey = (keyToAdd) => {
     // check for existing and add if it does not exist
@@ -46,53 +45,6 @@
         addKey(keyToUpdate);
       }
     }
-  };
-
-  const compareArrays = (array1, array2) => {
-    let isDifferent = false;
-
-    if (!array1 && !array2) {
-      return isDifferent;
-    }
-
-    if (
-      (!array1 && array2)
-      || (!array2 && array1)
-    ) {
-      isDifferent = true;
-      return isDifferent;
-    }
-
-    if (array1.length !== array2.length) {
-      isDifferent = true;
-      return isDifferent;
-    }
-
-    array1.forEach((value) => {
-      const itemIndex = array2.findIndex(
-        foundValue => (foundValue === value),
-      );
-
-      if (itemIndex < 0) {
-        isDifferent = true;
-      }
-    });
-
-    if (isDifferent) {
-      return isDifferent;
-    }
-
-    array2.forEach((value) => {
-      const itemIndex = array1.findIndex(
-        foundValue => (foundValue === value),
-      );
-
-      if (itemIndex < 0) {
-        isDifferent = true;
-      }
-    });
-
-    return isDifferent;
   };
 
   const updateSelect = (params) => {
@@ -180,12 +132,18 @@
   });
 </script>
 
+{#if isEditor && hasMultiple}
+  <span class="form-row indent text-buffer has-multiple">
+    Multiple key assignments applied…<br />
+    Changes here will override all values on the selected components.
+  </span>
+{/if}
+
 {#each dirtyKeys as dirtyKey, i (dirtyKey)}
   <FormUnit
     className="form-row indent"
     on:deleteSignal={() => removeKey(dirtyKey)}
     disableActions={true}
-    hasMultiple={isEditor && hasMultiple}
     hideLabel={true}
     isDeletable={true}
     invertView={invertView}
@@ -203,7 +161,6 @@
 <FormUnit
   className="form-row indent"
   disableActions={true}
-  hasMultiple={isEditor && hasMultiple}
   hideLabel={true}
   invertView={invertView}
   itemIsLocked={false}

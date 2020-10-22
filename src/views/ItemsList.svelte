@@ -438,8 +438,10 @@
               && (editorComponentData[key].constructor === Array)
             ) {
               if (compareArrays(item.componentData[key], editorComponentData[key])) {
-                editorComponentData[key] = null;
+                editorComponentData[key] = [];
                 editorComponentData[`${key}HasValues`] = true;
+              } else {
+                editorComponentData[`${key}HasValues`] = false;
               }
             } else if (editorComponentData[key] !== item.componentData[key]) {
               editorComponentData[key] = null;

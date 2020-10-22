@@ -907,6 +907,7 @@ export {
   asyncNetworkRequest,
   awaitUIReadiness,
   checkFilterMatch,
+  compareArrays,
   dataNamespace,
   deepCompare,
   deepCopy,

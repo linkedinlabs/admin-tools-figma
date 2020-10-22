@@ -65,7 +65,7 @@
 
   <FormUnit
     className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}
-    hasMultiple={isEditor && item.componentData.annotationTextHasValues}
+    hasMultiple={isEditor && item.componentData.annotationTextHasValues && item.componentData.keys.length === 0}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputText"
@@ -143,6 +143,7 @@
   {#if item.componentData.hasKeystop}
     <KeystopKeys
       invertView={invertView}
+      hasMultiple={isEditor && item.componentData.keysHasValues}
       isEditor={isEditor}
       itemId={item.id}
       bind:keys={item.componentData.keys}
