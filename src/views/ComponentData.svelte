@@ -132,9 +132,10 @@
     <FigmaSwitch
       className="form-element element-type-switch"
       disabled={isLocked}
+      hasMultiple={isEditor && item.componentData.hasKeystopHasValues}
       invertView={invertView}
       labelText="Has a focus stop?"
-      nameId="has-keystop"
+      nameId={`has-keystop-${item.id}`}
       bind:value={item.componentData.hasKeystop}
     />
   </span>
@@ -156,7 +157,7 @@
         disabled={isLocked}
         invertView={invertView}
         labelText="Allow pass-through focus?"
-        nameId="allow-keystop-passthrough"
+        nameId={`allow-keystop-passthrough-${item.id}`}
         bind:value={item.componentData.allowKeystopPassthrough}
       />
     </span>

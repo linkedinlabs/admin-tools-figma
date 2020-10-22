@@ -20,13 +20,20 @@
   overflow: hidden;
   opacity: 0;
 
-  &:checked + label {
+  &:checked + label,
+  &:checked.has-multiple + label {
     &:before {
       background-color: $wl-ctrl-primary;
     }
 
     &:after {
       transform: translateX(14px);
+    }
+  }
+
+  &.has-multiple + label {
+    &:after {
+      transform: translateX(7px);
     }
   }
 

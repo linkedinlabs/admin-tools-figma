@@ -1,6 +1,7 @@
 <script>
   export let className = 'switch';
   export let disabled = false;
+  export let hasMultiple = false;
   export let invertView = false;
   export let labelText = null;
   export let nameId = null;
@@ -18,7 +19,7 @@
 <span class={className}>
   <input
     bind:checked={value}
-    class="switch__toggle"
+    class={`switch__toggle${hasMultiple && value === null ? ' has-multiple' : ''}`}
     disabled={disabled}
     id={nameId}
     name={nameId}
@@ -28,6 +29,6 @@
     class="switch__label"
     for={nameId}
   >
-    {#if labelText}{labelText}{/if}
+    {#if labelText}{labelText}{/if} {#if hasMultiple && value === null}&nbsp;<i>multiple…</i>{/if}
   </label>
 </span>
