@@ -4,6 +4,7 @@
   import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
+  import { compareArrays } from '../Tools';
 
   // props
   export let selected = null;
@@ -422,13 +423,24 @@
     if (isComponents) {
       editorItem.type = 'COMPONENT';
 
-      // set up editorComponentData
+      // set up editorComponentData ------------
+      // compare each successive value; if they do not match, set to `null`
+      // and set `HasValues` to `true`.
       itemsToCompare.forEach((item) => {
         if (item.componentData) {
           Object.keys(item.componentData).forEach((key) => {
             if (editorComponentData[key] === undefined) {
               editorComponentData[key] = item.componentData[key];
               editorComponentData[`${key}HasValues`] = item.componentData[key] !== null;
+            } else if (
+              (editorComponentData[key] !== undefined)
+              && (editorComponentData[key] !== null)
+              && (editorComponentData[key].constructor === Array)
+            ) {
+              if (compareArrays(item.componentData[key], editorComponentData[key])) {
+                editorComponentData[key] = null;
+                editorComponentData[`${key}HasValues`] = true;
+              }
             } else if (editorComponentData[key] !== item.componentData[key]) {
               editorComponentData[key] = null;
               editorComponentData[`${key}HasValues`] = true;
