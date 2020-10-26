@@ -346,19 +346,20 @@ const updateArray = (
   return updatedArray;
 };
 
-/** WIP
- * @description Takes a node object and traverses parent relationships until the top-level
- * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
+/**
+ * @description Takes two one-dimensional arrays and compare them. Returns `true` if they
+ * are different. Order of the array does not matter.
  *
  * @kind function
  * @name compareArrays
  *
- * @param {Array} array1 A Figma node object.
- * @param {Array} array2 A Figma node object.
+ * @param {Array} array1 A one-dimensional array.
+ * @param {Array} array2 A one-dimensional array to compare against.
  *
- * @returns {Object} The top-level `CONTAINER_NODE_TYPES.frame` node.
+ * @returns {boolean} Returns `true` if the arrays are different, `false` if they have identical
+ * values.
  */
-const compareArrays = (array1, array2) => {
+const compareArrays = (array1: Array<any>, array2: Array<any>) => {
   let isDifferent = false;
 
   if (!array1 && !array2) {
