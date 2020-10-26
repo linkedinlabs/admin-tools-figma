@@ -2,7 +2,7 @@
   import { afterUpdate, createEventDispatcher } from 'svelte';
   import ButtonRemove from './ButtonRemove';
   import FigmaInput from './FigmaInput';
-  import FigmaSelectmenu from './FigmaSelectmenu';
+  import FigmaSelectMenu from './FigmaSelectMenu';
   import FigmaTextarea from './FigmaTextarea';
   import FormLabel from './FormLabel';
 
@@ -100,7 +100,7 @@
     {/if}
 
     {#if kind === 'inputSelect'}
-      <FigmaSelectmenu
+      <FigmaSelectMenu
         className="form-element element-type-select split-50"
         disabled={isLocked || itemIsLocked}
         hasMultiple={hasMultiple}
