@@ -259,7 +259,7 @@ const makeNetworkRequest = (options: {
  *
  * @returns {boolean}
  */
-const existsInArray = (array, key, value) => {
+const existsInArray = (array, value, key = 'id') => {
   let doesExist = false;
   const itemIndex = array.findIndex(
     foundItem => (foundItem[key] === value),
@@ -427,7 +427,7 @@ const findTopFrame = (node: any) => {
 
   // if the parent is a page, we're done
   if (parent && parent.type === 'PAGE') {
-    return parent;
+    return node;
   }
 
   // loop through each parent until we find the outermost FRAME
