@@ -257,7 +257,7 @@ export default class Presenter {
    *
    * @returns {Object} All node items, groups, and types formatted for UI Presentation.
    */
-  extractComponents = (filter?: 'typography' | 'color-fill' | 'effects' | 'grid') => { // eslint-disable-line @typescript-eslint/no-unused-vars
+  extractComponents = () => {
     const { nodes } = this;
     const componentIds = [];
 

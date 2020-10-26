@@ -369,7 +369,7 @@ export default class App {
       }
       selected = presenter.extractStyles(filter, filters.newIsSelection);
     } else {
-      selected = presenter.extractComponents(null);
+      selected = presenter.extractComponents();
     }
 
     // resize the UI based on selection
