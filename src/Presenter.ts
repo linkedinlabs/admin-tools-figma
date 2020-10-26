@@ -1,16 +1,22 @@
 import { getPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
-/** WIP
- * @description Looks into the selection array for any groups and pulls out individual nodes,
- * effectively flattening the selection.
+/**
+ * @description Set up the `groups` object for the UI Presentation. Items are
+ * separated into groups based on their `groupId`.
  *
  * @kind function
  * @name setGroups
  *
+ * @param {Array} allItems Array of items formatted for UI Presentation.
+ * @param {Array} types Array of types formatted for UI Presentation.
+ *
  * @returns {Object} All items (including children) individual in an updated array.
  */
-const setGroups = (allItems, types: Array<PresenterTypeGroup>) => {
+const setGroups = (
+  allItems: Array<PresenterItem>,
+  types: Array<PresenterTypeGroup>,
+) => {
   const groups: Array<PresenterTypeGroup> = [];
 
   types.forEach((type) => {
@@ -30,16 +36,18 @@ const setGroups = (allItems, types: Array<PresenterTypeGroup>) => {
   return groups;
 };
 
-/** WIP
- * @description Looks into the selection array for any groups and pulls out individual nodes,
- * effectively flattening the selection.
+/**
+ * @description Set up the `types` object for the UI Presentation. Items are
+ * separated into types based on their `typeId`.
  *
  * @kind function
  * @name setTypes
  *
+ * @param {Array} allItems Array of items formatted for UI Presentation.
+ *
  * @returns {Object} All items (including children) individual in an updated array.
  */
-const setTypes = (allItems) => {
+const setTypes = (allItems: Array<PresenterItem>) => {
   const types: Array<PresenterTypeGroup> = [];
 
   const typeIds: Array<string> = [];
@@ -56,15 +64,17 @@ const setTypes = (allItems) => {
   return types;
 };
 
-/** WIP
- * @description A class to bridge Figma objects and the presentation layer.
+/**
+ * @description A class to bridge Figma objects and the presentation layer. Extracts styles from
+ * the selection (or all found in the document) or extracts nodes from the selection. Filter
+ * options set in the UI thread are applied to the resulting presentation array.
  *
  * @class
  * @name Presenter
  *
  * @constructor
  *
- * @property selectionArray The item of selected items.
+ * @property nodes Array of selected items.
  */
 export default class Presenter {
   nodes: Array<BaseNode | BaseStyle>;
@@ -72,14 +82,20 @@ export default class Presenter {
     this.nodes = nodesArray;
   }
 
-  /** WIP
-   * @description Looks into the selection array for any groups and pulls out individual nodes,
-   * effectively flattening the selection.
+  /**
+   * @description Pulls styles from an array of nodes (`isSelection` is enabled) otherwise reads
+   * all available location styles from the document. An optional filter is applied to the resulting
+   * array, and the array is formatted for UI Presentation.
    *
    * @kind function
    * @name extractStyles
    *
-   * @returns {Object} All items (including children) individual in an updated array.
+   * @param {string} filter An optional filter param to apply: `typography`, `color-fill`,
+   * `effects`, or `grid` are valid options.
+   * @param {boolean} isSelection Received from the UI. If set to `true`, styles should be pulled
+   * from the selection of nodes rather than the current document.
+   *
+   * @returns {Object} All style items, groups, and types formatted for UI Presentation.
    */
   extractStyles = (
     filter?: 'typography' | 'color-fill' | 'effects' | 'grid',
@@ -232,16 +248,16 @@ export default class Presenter {
     return presentationObject;
   }
 
-  /** WIP
-   * @description Looks into the selection array for any groups and pulls out individual nodes,
-   * effectively flattening the selection.
+  /**
+   * @description Pulls unique component nodes from the supplied array of nodes in the constructor.
+   * The resulting array is formatted for UI Presentation.
    *
    * @kind function
    * @name extractComponents
    *
-   * @returns {Object} All items (including children) individual in an updated array.
+   * @returns {Object} All node items, groups, and types formatted for UI Presentation.
    */
-  extractComponents = (filter?: 'typography' | 'color-fill' | 'effects' | 'grid') => { // eslint-disable-line @typescript-eslint/no-unused-vars
+  extractComponents = () => {
     const { nodes } = this;
     const componentIds = [];
 
