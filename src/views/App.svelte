@@ -14,9 +14,9 @@
 
   export let filter = 'all-components';
   export let inspect = 'components';
-  export let useSelection = false;
-  export let selected = null;
   export let newSessionKey = null;
+  export let selected = null;
+  export let useSelection = false;
 
   let bodyHeight = 0;
   let wasBodyHeight = 0;

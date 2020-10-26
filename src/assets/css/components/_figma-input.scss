@@ -49,7 +49,7 @@
 
   &:not(:disabled):focus:placeholder-shown {
     border: 2px solid $wl-action-primary;
-    color: blue;
+    color: $wl-action-primary;
   }
 
   &:focus,
