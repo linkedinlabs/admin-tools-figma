@@ -254,12 +254,16 @@ const makeNetworkRequest = (options: {
  * @name existsInArray
  *
  * @param {Array} array The array to be checked.
- * @param {string} value The string to match against `key`.
+ * @param {string} value The value to test against `key`.
  * @param {string} key String representing the key to match against `value` (default is `id`).
  *
  * @returns {boolean}
  */
-const existsInArray = (array, value, key = 'id') => {
+const existsInArray = (
+  array: Array<any>,
+  value,
+  key: string = 'id',
+) => {
   let doesExist = false;
   const itemIndex = array.findIndex(
     foundItem => (foundItem[key] === value),
@@ -270,26 +274,6 @@ const existsInArray = (array, value, key = 'id') => {
   }
 
   return doesExist;
-};
-
-/** WIP
- * @description A reusable helper function to take an array and add or remove data from it
- * based on a top-level key and a defined action.
- *
- * @kind function
- * @name filterByKey
- *
- * @param {Array} array The array to be modified.
- * @param {Object} item Object containing the new bit of data to add, remove, or update.
- * @param {string} itemKey String representing the key to match (default is `id`).
- * @param {string} action Constant string representing the action to take
- * (`add`, `update`, or `remove`).
- *
- * @returns {Object} The modified array.
- */
-const filterByKey = (array, key, value) => {
-  const filteredArray = array.filter(item => item[key] === value);
-  return filteredArray;
 };
 
 /**
@@ -346,15 +330,15 @@ const updateArray = (
   return updatedArray;
 };
 
-/** WIP
- * @description Takes a node object and traverses parent relationships until the top-level
- * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
+/**
+ * @description Clones a multi-dimensional object without references.
  *
  * @kind function
  * @name deepCopy
- * @param {Object} node A Figma node object.
  *
- * @returns {Object} The top-level `CONTAINER_NODE_TYPES.frame` node.
+ * @param {Object} objectToClone An object to clone.
+ *
+ * @returns {Object} The cloned object, without references.
  */
 const deepCopy = (objectToClone: Object) => {
   let clonedObject: Object = null;
@@ -376,15 +360,16 @@ const deepCopy = (objectToClone: Object) => {
   return clonedObject;
 };
 
-/** WIP
- * @description Takes a node object and traverses parent relationships until the top-level
- * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
+/**
+ * @description Compares two multi-dimensional objects. Returns `true` if they are different.
  *
  * @kind function
  * @name deepCompare
- * @param {Object} node A Figma node object.
  *
- * @returns {Object} The top-level `CONTAINER_NODE_TYPES.frame` node.
+ * @param {Array} unmodifiedObject An object to compare.
+ * @param {Array} modifiedObject An object to compare against `unmodifiedObject`.
+ *
+ * @returns {boolean} Returns `true` if the objects are different, `false` if they are identical.
  */
 const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
   let isDifferent: boolean = false;
@@ -573,14 +558,16 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
 };
 
 /**
- * @description A shared helper functional to easily retrieve the data namespace used
- * for shared plugin data. Changing this function will potentially make it impossible
- * for existing users to retrieve data saved to nodes before the change.
+ * @description A lookup function to easily retrieve the data namespace used for shared
+ * plugin data. Note: changing this function will potentially make it impossible for existing
+ * users to retrieve data saved to nodes before the change.
  *
  * @kind function
  * @name dataNamespace
  *
- * @returns {string} `true` if the build is internal, `false` if it is not.
+ * @param {string} pluginName The plugin name to use for lookup.
+ *
+ * @returns {string} The data namespace for the supplied plugin.
  */
 const dataNamespace = (pluginName: 'realish' | 'specter' = null): string => {
   let identifier: string = null;
@@ -608,12 +595,14 @@ const dataNamespace = (pluginName: 'realish' | 'specter' = null): string => {
 };
 
 /**
- * @description A shared helper function to retrieve type assignment data in raw form (JSON).
+ * @description A shared helper function to retrieve plugin data on a node from a
+ * peer plugin (Realish or Specter).
  *
  * @kind function
  * @name getPeerPluginData
  *
  * @param {Object} node The text node to retrieve the assignment on.
+ * @param {string} pluginName The plugin name to use for lookup.
  *
  * @returns {string} The assignment is returned as an unparsed JSON string.
  */
@@ -660,21 +649,26 @@ const getPeerPluginData = (
   return parsedData;
 };
 
+/* eslint-disable jsdoc/require-param-type */
 /**
- * @description A shared helper function to retrieve type assignment data in raw form (JSON).
+ * @description A shared helper function to set plugin data on a node for retrieval by
+ * a peer plugin (Realish or Specter).
  *
  * @kind function
  * @name setPeerPluginData
  *
  * @param {Object} node The text node to retrieve the assignment on.
+ * @param updatedPluginData A bit of data to save to the node.
+ * @param {string} pluginName The plugin name to use for lookup.
  *
  * @returns {string} The assignment is returned as an unparsed JSON string.
  */
+/* eslint-enable jsdoc/require-param-type */
 const setPeerPluginData = (
   node: SceneNode,
   updatedPluginData,
   pluginName: 'realish' | 'specter',
-) => {
+): void => {
   let dataKey: string = null;
   let nodeToUpdate: SceneNode = node;
 
@@ -814,17 +808,22 @@ const isInternal = (): boolean => {
   return buildIsInternal;
 };
 
-/** WIP
- * @description Checks the `FEATURESET` environment variable from webpack and
- * determines if the featureset build should be `internal` or not.
+/**
+ * @description Checks two supplied filters and returns `true` if they match.
  *
  * @kind function
  * @name checkFilterMatch
  *
- * @returns {boolean} `true` if the build is internal, `false` if it is not.
+ * @param {string} currentFilter A filter to check.
+ * @param {string} filterToMatch A filter to check against.
+ *
+ * @returns {boolean} `true` if the filters match.
  */
-const checkFilterMatch = (currentFilter, filterToMatch) => {
-  let isMatch = false;
+const checkFilterMatch = (
+  currentFilter: string,
+  filterToMatch: string,
+): boolean => {
+  let isMatch: boolean = false;
 
   if (
     (currentFilter === filterToMatch)
@@ -846,7 +845,6 @@ export {
   deepCompare,
   deepCopy,
   existsInArray,
-  filterByKey,
   findTopComponent,
   findTopFrame,
   findTopInstance,

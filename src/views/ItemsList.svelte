@@ -69,18 +69,16 @@
     return updatedArray;
   };
 
-  /** WIP
-   * @description A reusable helper function to take an array and add or remove data from it
-   * based on a top-level key and a defined action.
+  /**
+   * @description A reusable helper function to take an array and filter its items by
+   * a supplied key. Only the filtered items are returned.
    *
    * @kind function
    * @name filterByKey
    *
-   * @param {Array} array The array to be modified.
-   * @param {Object} item Object containing the new bit of data to add, remove, or update.
-   * @param {string} itemKey String representing the key to match (default is `id`).
-   * @param {string} action Constant string representing the action to take
-   * (`add`, `update`, or `remove`).
+   * @param {Array} array The array to be filtered.
+   * @param {string} value The value to test against `key`.
+   * @param {string} key String representing the key to match against `value` (default is `id`).
    *
    * @returns {Object} The modified array.
    */
