@@ -50,10 +50,10 @@ const dispatcher = async (action: {
   const shouldTerminate: boolean = !visual;
 
   // pass along some GUI management and navigation functions to the App class
-  // const app = new App({
-  //   shouldTerminate,
-  //   terminatePlugin,
-  // });
+  const app = new App({
+    shouldTerminate,
+    terminatePlugin,
+  });
 
   // run the action in the App class based on type
   const runAction = async () => {
@@ -82,36 +82,29 @@ const dispatcher = async (action: {
     //   return isVerified;
     // };
 
-    console.log(payload); // eslint-disable-line no-console
-    console.log(terminatePlugin); // eslint-disable-line no-console
-    console.log(shouldTerminate); // eslint-disable-line no-console
-
     switch (type) {
-      // case 'lock-toggle':
-      // case 'reassign':
-      // case 'remix':
-      // case 'restore':
-      //   App.actOnNode(type, payload, sessionKey);
-      //   break;
-      // case 'remix-all':
-      //   App.remixAll(sessionKey);
-      //   break;
-      // case 'submit':
-      //   app.commitContent(sessionKey);
-      //   break;
+      case 'detach-instances':
+        app.detachInstances(sessionKey);
+        break;
+      case 'inherit-description':
+        app.inheritDescription(sessionKey);
+        break;
+      case 'inherit-name':
+        app.inheritName(sessionKey);
+        break;
+      case 'resize':
+        App.resizeGUI(payload);
+        break;
+      case 'setFilters':
+        App.setFilters(payload, sessionKey);
+        break;
+      case 'submit':
+      case 'submit-bulk':
+        app.handleUpdate(payload, sessionKey);
+        break;
       case 'tools':
         App.showToolbar(sessionKey);
         break;
-      // case String(type.match(/^quick-randomize-.*/)):
-      //   if (verifyQuickType('randomize', type)) {
-      //     app.quickRandomize(type.replace('quick-randomize-', ''), sessionKey);
-      //   }
-      //   break;
-      // case String(type.match(/^quick-assign-.*/)):
-      //   if (verifyQuickType('assign', type)) {
-      //     app.quickAssign(type.replace('quick-assign-', ''));
-      //   }
-      //   break;
       default:
         return null;
     }

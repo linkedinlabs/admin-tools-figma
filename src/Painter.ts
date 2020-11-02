@@ -1,32 +1,3 @@
-import Messenger from './Messenger';
-import { asyncImageRequest, dataNamespace } from './Tools';
-import { DATA_KEYS } from './constants';
-
-/**
- * @description Makes an async call to the plugin UI thread to load a remote image,
- * retrieve the image data, and load it into a Figma `Image` object.
- *
- * @kind function
- * @name loadRemoteImage
- *
- * @param {string} remoteUrl The full URL of the image to request.
- *
- * @returns {Object} A result object container success/error status and log/toast messages.
- */
-const loadRemoteImage = async (remoteUrl) => {
-  const messenger = new Messenger({ for: figma, in: figma.currentPage });
-
-  // load the remote image and extract the data
-  const imageData: Uint8Array = await asyncImageRequest({
-    requestUrl: remoteUrl,
-    messenger,
-  });
-
-  // create the image within figma
-  const image: Image = await figma.createImage(imageData);
-  return image;
-};
-
 /**
  * @description A class to add elements directly onto Figma file frames.
  *
@@ -39,29 +10,24 @@ const loadRemoteImage = async (remoteUrl) => {
  * @property sessionKey The current session identifier.
  */
 export default class Painter {
-  node: TextNode
-    | EllipseNode
-    | PolygonNode
-    | RectangleNode
-    | StarNode;
-
+  node: SceneNode;
   sessionKey: number;
-
   constructor({ node, sessionKey }) {
     this.node = node;
     this.sessionKey = sessionKey;
   }
 
   /**
-   * @description Locates proposed text in a text node’s Settings object and updates
-   * the node’s characters.
+   * @description Takes an `InstanceNode` and detaches it (and ALL children) from any linked
+   * main components (`ComponentNode`. The high-level instance is recreated as a frame, and
+   * then all children get cloned and inserted into the instance.
    *
    * @kind function
-   * @name replaceText
+   * @name detachInstanceRecursive
    *
    * @returns {Object} A result object container success/error status and log/toast messages.
    */
-  replaceText() {
+  detachInstanceRecursive() {
     const result: {
       status: 'error' | 'success',
       messages: {
@@ -76,144 +42,150 @@ export default class Painter {
       },
     };
 
-    // load basic node data
-    const lockedData = this.node.getSharedPluginData(dataNamespace(), DATA_KEYS.locked);
-    const locked: boolean = lockedData ? JSON.parse(lockedData) : false;
-    const textProposedKey: string = `${DATA_KEYS.textProposed}-${this.sessionKey}`;
-    const proposedTextData = this.node.getSharedPluginData(dataNamespace(), textProposedKey);
-    const proposedText = JSON.parse(proposedTextData || null);
+    const cloneInstanceIntoFrame = (
+      newNode: FrameNode,
+      sourceNode: any, // type to `any` for more flexibility while cloning
+    ) => {
+      // iterate over the full object and set writeable values
+      const protoObject = Object.getPrototypeOf(sourceNode);
+      Object.keys(protoObject).forEach((key: string) => {
+        switch (key) {
+          case 'id':
+          case 'parent':
+          case 'removed':
+          case 'absoluteTransform':
+          case 'width':
+          case 'height':
+          case 'children':
+          case 'overlayPositionType':
+          case 'overlayBackground':
+          case 'overlayBackgroundInteraction':
+          case 'mainComponent':
+          case 'scaleFactor':
+          case 'reactions':
+          case 'type':
+            // not writeable; do nothing
+            break;
+          default: {
+            const value: any = sourceNode[key];
+            newNode[key] = value; // eslint-disable-line no-param-reassign
+          }
+        }
+      });
 
-    // if the node is marked as locked, shouldn’t do anything to it
-    if (locked) {
-      result.status = 'error';
-      result.messages.log = `Layer ${this.node.id} is locked`;
-      return result;
-    }
+      // set things that cannot be directly copied
+      newNode.resizeWithoutConstraints(sourceNode.width, sourceNode.height);
 
-    // if there is no proposed text, return with error
-    if (!proposedText) {
-      result.status = 'error';
-      result.messages.log = `Layer ${this.node.id} is missing proposed text`;
-      return result;
-    }
+      // insert new frame at the correct index
+      const sourceIndex = sourceNode.parent.children.indexOf(sourceNode);
+      sourceNode.parent.insertChild((sourceIndex + 1), newNode);
 
-    // set the node to manipulate
-    const textNode: TextNode = this.node as TextNode;
+      // re-add children
+      // mysteriously, this actually detaches any childen instances, eliminating the
+      // need for a recursive function
+      sourceNode.children.forEach((childNode) => {
+        const clonedNode: SceneNode = childNode.clone();
+        newNode.appendChild(clonedNode);
+      });
 
-    // if the current text matches the proposed text, nothing to do
-    if (proposedText === textNode.characters) {
-      result.status = 'success';
-      result.messages.log = 'Current text matches proposed; nothing to replace';
-      return result;
-    }
-
-    // update the node’s text with the proposed text
-    // update (replace) the text
-    const updatedCharacters: string = proposedText;
-    textNode.characters = updatedCharacters;
-
-    // return a successful result
-    result.status = 'success';
-    result.messages.log = `Layer ${textNode.id} text updated`;
-    return result;
-  }
-
-  /**
-   * @description Locates proposed content in a shape node’s Settings object and updates
-   * the node’s fill.
-   *
-   * @kind function
-   * @name replaceFill
-   *
-   * @returns {Object} A result object container success/error status and log/toast messages.
-   */
-  async replaceFill() {
-    const result: {
-      status: 'error' | 'success',
-      messages: {
-        toast: string,
-        log: string,
-      },
-    } = {
-      status: null,
-      messages: {
-        toast: null,
-        log: null,
-      },
+      return newNode;
     };
 
-    // load basic node data
-    const lockedData = this.node.getSharedPluginData(dataNamespace(), DATA_KEYS.locked);
-    const locked: boolean = lockedData ? JSON.parse(lockedData) : false;
-    const textProposedKey: string = `${DATA_KEYS.textProposed}-${this.sessionKey}`;
-    const proposedTextData = this.node.getSharedPluginData(dataNamespace(), textProposedKey);
-    const proposedText = JSON.parse(proposedTextData || null);
+    // set node as instance
+    const instanceNode: InstanceNode = this.node as InstanceNode;
 
-    // if the node is marked as locked, shouldn’t do anything to it
-    if (locked) {
+    // if the node is not an instance, return with error
+    if (!instanceNode.mainComponent) {
       result.status = 'error';
-      result.messages.log = `Layer ${this.node.id} is locked`;
+      result.messages.log = `Layer ${this.node.id} is not an instance`;
       return result;
     }
 
-    // if there is no proposed content, return with error
-    if (!proposedText) {
-      result.status = 'error';
-      result.messages.log = `Layer ${this.node.id} is missing proposed shape`;
-      return result;
-    }
+    // “detach” the node by cloning and re-framing
+    let newFrame: FrameNode = figma.createFrame();
 
-    // nothing to do if `proposedText` is “original”
-    if (proposedText === 'original') {
-      result.status = 'success';
-      result.messages.log = `Layer ${this.node.id} does not need to change`;
-      return result;
-    }
+    // clone the instance
+    newFrame = cloneInstanceIntoFrame(newFrame, instanceNode);
 
-    // update the node’s fill with the proposed image
-    const shapeNode: EllipseNode
-      | PolygonNode
-      | RectangleNode
-      | StarNode = this.node as EllipseNode | PolygonNode | RectangleNode | StarNode;
-
-    // set the proposed image URL
-    let remoteUrl: string = null;
-    const serverLocation: string = process.env.MEDIA_URL ? process.env.MEDIA_URL : 'https://somewhere.com';
-    remoteUrl = `${serverLocation}${proposedText}`;
-
-    // load the remote image
-    const newImage = await loadRemoteImage(remoteUrl);
-
-    // apply the image as a fill
-    if (newImage) {
-      // create the new image fill
-      // TKTK - this should not reset all other fills
-      const newFills = [];
-      const newPaint: ImagePaint = {
-        type: 'IMAGE',
-        imageHash: newImage.hash,
-        scaleMode: 'FILL',
-      };
-      newFills.push(newPaint);
-
-      // set the image as the new fill
-      shapeNode.fills = newFills;
-
-      // update the proposed content to match the new fill
-      shapeNode.setSharedPluginData(
-        dataNamespace(),
-        textProposedKey,
-        JSON.stringify(newImage.hash),
-      );
+    if (newFrame) {
+      instanceNode.remove();
 
       // return a successful result
       result.status = 'success';
-      result.messages.log = `Layer ${shapeNode.id} fill updated`;
+      result.messages.log = `Layer ${this.node.id} detached from all components and cloned as ${newFrame.id}`;
       return result;
     }
 
     result.status = 'error';
-    result.messages.log = `There was an error setting image: ${proposedText} on ${shapeNode.id}`;
+    result.messages.log = `Layer ${this.node.id} was not detached`;
+    return result;
+  }
+
+  /**
+   * @description Takes a wrapped `ComponentNode` (component wrapped around an instance of another
+   * component) reads the key (`name` or `description`) from the main component of the wrapped
+   * instance and applies it to the outer component.
+   *
+   * @kind function
+   * @name inheritParentItem
+   *
+   @param {string} key The key to read from the inner component node. Either
+   * `description` or `name`.
+   *
+   * @returns {Object} A result object container success/error status and log/toast messages.
+   */
+  inheritParentItem(key: 'description' | 'name' = 'description') {
+    const result: {
+      status: 'error' | 'success',
+      messages: {
+        toast: string,
+        log: string,
+      },
+    } = {
+      status: null,
+      messages: {
+        toast: null,
+        log: null,
+      },
+    };
+
+    // set node as component
+    const componentNode: ComponentNode = this.node as ComponentNode;
+
+    // if the node is not an instance, return with error
+    if (componentNode.type !== 'COMPONENT') {
+      result.status = 'error';
+      result.messages.log = `Layer ${this.node.id} is not a component`;
+      return result;
+    }
+
+    const firstChildNodeIndex = 0;
+    const childInstanceNode: InstanceNode = componentNode.children[
+      firstChildNodeIndex] as InstanceNode;
+
+    if (
+      childInstanceNode.type !== 'INSTANCE'
+      || !childInstanceNode.mainComponent
+    ) {
+      result.status = 'error';
+      result.messages.log = `Layer ${this.node.id} is not a wrapped component`;
+      return result;
+    }
+
+    if (childInstanceNode) {
+      const { mainComponent }: { mainComponent: ComponentNode } = childInstanceNode;
+      const itemToInherit: string = mainComponent[key];
+
+      componentNode[key] = itemToInherit; // eslint-disable-line no-param-reassign
+
+      // return a successful result
+      result.status = 'success';
+      result.messages.log = `Layer ${this.node.id} ${key} inherited from ${childInstanceNode.mainComponent.id}`;
+      return result;
+    }
+
+    result.status = 'error';
+    result.messages.log = `Layer ${this.node.id} could not inherit a ${key}`;
     return result;
   }
 }

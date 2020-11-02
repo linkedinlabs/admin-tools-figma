@@ -4,8 +4,11 @@ import App from './views/App.svelte'; // eslint-disable-line import/extensions
 const app = new App({
   target: document.body,
   props: {
-    inspect: 'styles', // 'styles' or 'components'
-    items: null,
+    inspect: 'styles',
+    filter: 'all-styles',
+    selected: null,
+    newSessionKey: null,
+    useSelection: false,
   },
 });
 
@@ -27,35 +30,53 @@ const sendLoadedMsg = (): void => {
 
 /* process Messages from the plugin */
 
-/** WIP
- * @description Clones a template html element and then updates the clone’s contents to match
- * the supplied options for each layer in the supplied array.
+/**
+ * @description Receives objects with the currently selected items/groups/types and
+ * any filters, and passes them along to the Svelte UI class.
  *
  * @kind function
  * @name updateSelected
  *
- * @param {Array} items An array of items to clone. Each entry should include an `id`,
- * an `assignment`, `originalText`, `proposedText`, and a `locked` boolean.
+ * @param {Object} selected An object containing `items`, `groups`, and `types` arrays
+ * formatted for presentation in the UI.
+ * @param {Object} filters An object with filters to show/hide elements in the UI.
+ * @param {string} sessionKey A rotating key used during the single run of the plugin.
  *
  * @returns {null}
  */
-const updateSelected = (items: Array<{
-  id: string,
-  assignment: string,
-  name: string,
-  nodeType: 'text' | 'shape',
-  originalImage: Uint8Array,
-  originalText: string,
-  proposedText: string,
-  rounded: 'all' | 'none' | 'some',
-  locked: boolean,
-}>): void => {
-  if (items) {
-    app.items = items;
+const updateSelected = (
+  selected: {
+    items: Array<PresenterItem>,
+    groups: Array<PresenterTypeGroup>,
+    types: Array<PresenterTypeGroup>,
+  },
+  filters: {
+    newFilter?: string,
+    newIsSelection?: boolean,
+    newIsStyles?: boolean,
+  },
+  sessionKey: string,
+): void => {
+  if (selected) {
+    app.selected = selected;
   }
+
+  if (filters) {
+    if (filters.newFilter) {
+      app.filter = filters.newFilter;
+    }
+
+    const newUseSelection = filters.newIsSelection;
+    const newInspect = filters.newIsStyles ? 'styles' : 'components';
+    app.inspect = newInspect;
+    app.newSessionKey = sessionKey;
+    app.useSelection = newUseSelection;
+  }
+
+  return null;
 };
 
-/** WIP
+/**
  * @description Watches for incoming messages from the plugin’s main thread and dispatches
  * them to the appropriate GUI actions.
  *
@@ -77,15 +98,12 @@ const watchIncomingMessages = (): void => {
   ) => {
     const { pluginMessage } = event.data;
     const { payload } = pluginMessage;
-    const { selected } = payload;
+    const { filters, selected, sessionKey } = payload;
 
     switch (pluginMessage.action) {
       case 'refreshState':
-        updateSelected(selected);
+        updateSelected(selected, filters, sessionKey);
         break;
-      // case 'resetState':
-      //   setButtonState('ready');
-      //   break;
       default:
         return null;
     }
@@ -96,7 +114,6 @@ const watchIncomingMessages = (): void => {
 
 // init GUI
 window.app = app; // eslint-disable-line no-undef
-// watchActions();
 watchIncomingMessages();
 sendLoadedMsg();
 

@@ -1,23 +1,29 @@
 <script>
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
+  import ButtonRemove from './ButtonRemove';
   import FigmaInput from './FigmaInput';
-  import FigmaSelectmenu from './FigmaSelectmenu';
+  import FigmaSelectMenu from './FigmaSelectMenu';
   import FigmaTextarea from './FigmaTextarea';
   import FormLabel from './FormLabel';
 
   export let className = null;
   export let disableActions = false;
   export let disableCopy = false;
+  export let hasMultiple = false;
   export let invertView = false;
+  export let isDeletable = false;
+  export let isDirty = false;
   export let itemIsLocked = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
   export let placeholder = null;
   export let nameId = 'text-input-id';
+  export let resetValue = false;
   export let value = null;
+  export let options = [];
 
-  const originalValue = value;
-  let isDirty = false;
+  const dispatch = createEventDispatcher();
+  let originalValue = value;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
 
@@ -25,20 +31,31 @@
     value = originalValue;
   };
 
-  // watch locking changes and restore value if item becomes locked
-  $: {
-    if (!wasUnlocked && isLocked) {
-      restoreValue();
-    }
-
-    // update the comparion variable
-    wasUnlocked = isLocked;
-  }
+  const handleDelete = () => dispatch('deleteSignal');
 
   afterUpdate(() => {
-    if (value !== originalValue) {
+    // watch locking changes and restore value if item becomes locked
+    if (!wasUnlocked && isLocked) {
+      restoreValue();
+      dispatch('lockUnlockSignal', isLocked);
+    }
+
+    if (wasUnlocked && !isLocked) {
+      dispatch('lockUnlockSignal', isLocked);
+    }
+
+    // update the comparison variable
+    wasUnlocked = isLocked;
+
+    if ((value !== originalValue) && (value !== 'blank--multiple')) {
       isDirty = true;
     } else {
+      isDirty = false;
+    }
+
+    // reset based on higher-level update
+    if (resetValue) {
+      originalValue = value;
       isDirty = false;
     }
   });
@@ -58,35 +75,48 @@
     value={value}
   />
 
-  {#if kind === 'inputText'}
-    <FigmaInput
-      className="form-element element-type-text"
-      disabled={isLocked || itemIsLocked}
-      invertView={invertView}
-      nameId={nameId}
-      placeholder={placeholder}
-      bind:value={value}
-    />
-  {/if}
+  <span class="form-inner-row">
+    {#if kind === 'inputText'}
+      <FigmaInput
+        className="form-element element-type-text"
+        disabled={isLocked || itemIsLocked}
+        invertView={invertView}
+        nameId={nameId}
+        placeholder={hasMultiple ? 'multiple…' : placeholder}
+        on:saveSignal
+        bind:value={value}
+      />
+    {/if}
 
-  {#if kind === 'inputTextarea'}
-    <FigmaTextarea
-      className="form-element element-type-textarea"
-      disabled={isLocked || itemIsLocked}
-      invertView={invertView}
-      nameId={nameId}
-      placeholder={placeholder}
-      bind:value={value}
-    />
-  {/if}
+    {#if kind === 'inputTextarea'}
+      <FigmaTextarea
+        className="form-element element-type-textarea"
+        disabled={isLocked || itemIsLocked}
+        invertView={invertView}
+        nameId={nameId}
+        placeholder={hasMultiple ? 'multiple…' : placeholder}
+        bind:value={value}
+      />
+    {/if}
 
-  {#if kind === 'inputSelect'}
-    <FigmaSelectmenu
-      className="form-element element-type-select split-50"
-      disabled={isLocked || itemIsLocked}
-      invertView={invertView}
-      nameId={nameId}
-      bind:value={value}
-    />
-  {/if}
+    {#if kind === 'inputSelect'}
+      <FigmaSelectMenu
+        className="form-element element-type-select split-50"
+        disabled={isLocked || itemIsLocked}
+        hasMultiple={hasMultiple}
+        invertView={invertView}
+        nameId={nameId}
+        options={options}
+        bind:value={value}
+      />
+    {/if}
+
+    {#if isDeletable}
+      <ButtonRemove
+        disabled={isLocked || itemIsLocked}
+        on:handleUpdate={() => handleDelete()}
+        invertView={invertView}
+      />
+    {/if}
+  </span>
 </span>

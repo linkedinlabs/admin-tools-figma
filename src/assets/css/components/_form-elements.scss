@@ -116,6 +116,11 @@
 }
 
 .form-element-holder {
+  .form-inner-row {
+    display: flex;
+    width: 100%;
+  }
+
   .form-label {
     @include form-label;
 
@@ -186,6 +191,20 @@
         .switch__label {
           @include figma-switch-label-inverted;
         }
+      }
+    }
+  }
+
+  #{$all-buttons} {
+    &.inline-button {
+      @include button-icon($wl-action-secondary-accent, 32, $wl-action-tertiary);
+      width: em(32);
+      height: em(32);
+
+      &.inverted {
+        @include button-icon($wl-action-tertiary, 32, $wl-action-secondary);
+        width: em(32);
+        height: em(32);
       }
     }
   }

@@ -1,92 +1,167 @@
 <script>
-  import FigmaInput from './forms-controls/FigmaInput';
-  import FigmaSwitch from './forms-controls/FigmaSwitch';
-  import FormLabel from './forms-controls/FormLabel';
+  import { afterUpdate, beforeUpdate } from 'svelte';
+  import { currentFilter, isStyles } from './stores';
+  import ComponentData from './ComponentData';
+  import Description from './Description';
+  import FormActions from './forms-controls/FormActions';
   import FormUnit from './forms-controls/FormUnit';
+  import {
+    checkFilterMatch,
+    deepCopy,
+    deepCompare,
+  } from '../Tools';
+
+  export let editorItem;
+  export let editableItemIds = [];
+
+  let originalEditableItemIds = editableItemIds;
+  let dirtyItem = deepCopy(editorItem);
+  let originalItem = deepCopy(editorItem);
+  let isDirty = false;
+  let itemCount = originalEditableItemIds.length;
+  let resetValue = false;
+  let wasCurrentFilter = $currentFilter;
+  let wasResetValue = false;
+
+  const handleReset = () => {
+    originalItem = deepCopy(editorItem);
+    dirtyItem = deepCopy(editorItem);
+    originalEditableItemIds = editableItemIds;
+    isDirty = false;
+    resetValue = true;
+  };
+
+  const handleSave = (currentItem, itemIds) => {
+    parent.postMessage({
+      pluginMessage: {
+        action: 'submit-bulk',
+        payload: {
+          updatedItem: dirtyItem,
+          itemIds,
+        },
+      },
+    }, '*');
+  };
+
+  const setClasses = (classes, hasValues) => {
+    if (hasValues) {
+      return `${classes} has-multiple`;
+    }
+    return classes;
+  };
+
+  const compareEditableIds = (currentArray, originalArray) => {
+    let isEqual = true;
+    currentArray.forEach((id) => {
+      if (!originalArray.includes(id)) {
+        isEqual = false;
+      }
+    });
+
+    originalArray.forEach((id) => {
+      if (!currentArray.includes(id)) {
+        isEqual = false;
+      }
+    });
+
+    return isEqual;
+  };
+
+  beforeUpdate(() => {
+    // check `editorItem` against dirty to see if it was updated in the form
+    isDirty = deepCompare(editorItem, dirtyItem);
+
+    // check `editorItem` against original to see if it was updated on the Figma side
+    if (deepCompare(editorItem, originalItem)) {
+      resetValue = true;
+    }
+
+    // check if filter has changed (components only)
+    if (!$isStyles && (wasCurrentFilter !== $currentFilter)) {
+      resetValue = true;
+    }
+
+    // check selected item ids against original to see if items were locked/unlocked
+    if (!compareEditableIds(editableItemIds, originalEditableItemIds)) {
+      originalEditableItemIds = editableItemIds;
+      itemCount = originalEditableItemIds.length;
+      handleReset();
+    }
+
+    // tee off a full reset
+    if (resetValue) {
+      handleReset();
+    }
+
+    // set trackers
+    wasCurrentFilter = $currentFilter;
+    wasResetValue = resetValue;
+  });
+
+  afterUpdate(() => {
+    if (resetValue || wasResetValue) {
+      resetValue = false;
+    }
+  });
 </script>
 
 <section class="expanded-content editor">
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
-    <span class="form-row">
-      <FormUnit
-        className="form-unit split-40"
-        invertView={true}
-        kind="inputText"
-        labelText="Group&nbsp;&nbsp;&nbsp;/"
-        nameId="editor-test-group"
-        value="Container"
-      />
-      <FormUnit
-        className="form-unit split-60"
-        invertView={true}
-        kind="inputText"
-        labelText="Name"
-        nameId="editor-test-name"
-        value="color-bg-container-dark"
-      />
-    </span>
+    {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
+      <span class="form-row">
+        <FormUnit
+          className={setClasses('form-unit split-40', editorItem.groupHasValues)}
+          hasMultiple={editorItem.groupHasValues}
+          invertView={true}
+          kind="inputText"
+          labelText="Group&nbsp;&nbsp;&nbsp;/"
+          nameId="editor-test-group"
+          resetValue={resetValue}
+          on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+          bind:value={dirtyItem.group}
+        />
+        <FormUnit
+          className={setClasses('form-unit split-60', editorItem.nameHasValues)}
+          hasMultiple={editorItem.nameHasValues}
+          invertView={true}
+          kind="inputText"
+          labelText="Name"
+          nameId="editor-test-name"
+          resetValue={resetValue}
+          on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+          bind:value={dirtyItem.name}
+        />
+      </span>
 
-    <FormUnit
-      className="form-row"
-      invertView={true}
-      kind="inputText"
-      labelText="Label text here"
-      nameId="editor-test-label-link"
-      placeholder="Type something…"
-      value="I am some text to measure against"
-    />
-    
-    <span class="form-row">
-      <FormLabel
+      <Description
+        bind:description={dirtyItem.description}
         invertView={true}
-        labelText="Add new…"
-        nameId="add-new-label"
-        disableActions={true}
+        isEditor={true}
+        itemCount={itemCount}
+        itemId="editor-test"
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
       />
-      <FigmaInput
-        className="form-element element-type-text-new split-40"
-        invertView={true}
-        nameId="add-new-label"
-        placeholder="Add stuff to me…"
-      />
-      <FigmaInput
-        className="form-element element-type-text-new split-60"
-        invertView={true}
-        nameId="add-new-text"
-        placeholder="Add other stuff to me…"
-      />
-    </span>
+    {/if}
 
-    <FormUnit
-      className="form-row"
-      invertView={true}
-      kind="inputTextarea"
-      labelText="Description"
-      nameId="editor-test-description"
-      placeholder="Description"
-      value="Vape stumptown taxidermy brooklyn offal. Hell of YOLO affogato four loko palo santo church-key DIY activated charcoal salvia. Vape stumptown taxidermy brooklyn offal."
-    />
-
-    <FormUnit
-      className="form-row"
-      disableCopy={true}
-      invertView={true}
-      kind="inputSelect"
-      labelText="Library"
-      nameId="editor-test-library"
-      value="component"
-    />
-
-    <span class="form-row">
-      <FigmaSwitch
-        className="form-element element-type-switch"
+    {#if !$isStyles && dirtyItem.componentData}
+      <ComponentData
         invertView={true}
-        labelText="Interactive?"
-        nameId="is-interactive"
+        isEditor={true}
+        bind:item={dirtyItem}
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
       />
-    </span>
-    
+    {/if}
   </span>
+
+  {#if isDirty}
+    <FormActions
+      invertView={true}
+      on:resetSignal={() => handleReset()}
+      on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
+    />
+  {/if}
 </section>

@@ -1,104 +1,137 @@
 <script>
-  import FigmaInput from './forms-controls/FigmaInput';
-  import FigmaSwitch from './forms-controls/FigmaSwitch';
-  import FormLabel from './forms-controls/FormLabel';
+  import { afterUpdate, beforeUpdate } from 'svelte';
+  import { currentFilter, isStyles } from './stores';
+  import ComponentData from './ComponentData';
+  import Description from './Description';
+  import FormActions from './forms-controls/FormActions';
   import FormUnit from './forms-controls/FormUnit';
+  import {
+    checkFilterMatch,
+    deepCopy,
+    deepCompare,
+  } from '../Tools';
 
+  export let isLocked = false;
   export let item = null;
+
+  let dirtyItem = deepCopy(item);
+  let originalItem = deepCopy(item);
+  let isDirty = false;
+  let resetValue = false;
+  let wasCurrentFilter = $currentFilter;
+  let wasResetValue = false;
+
+  const handleReset = () => {
+    originalItem = deepCopy(item);
+    dirtyItem = deepCopy(item);
+    isDirty = false;
+    resetValue = true;
+  };
+
+  const handleSave = () => {
+    parent.postMessage({
+      pluginMessage: {
+        action: 'submit',
+        payload: { updatedItem: dirtyItem },
+      },
+    }, '*');
+  };
+
+  beforeUpdate(() => {
+    // check `item` against dirty to see if it was updated in the form
+    isDirty = deepCompare(item, dirtyItem);
+
+    // check `item` against original to see if it was updated on the Figma side
+    if (deepCompare(item, originalItem)) {
+      resetValue = true;
+    }
+
+    // check if filter has changed (components only)
+    if (!$isStyles && (wasCurrentFilter !== $currentFilter)) {
+      resetValue = true;
+    }
+
+    // tee off a full reset
+    if (resetValue) {
+      handleReset();
+    }
+
+    // set trackers
+    wasCurrentFilter = $currentFilter;
+    wasResetValue = resetValue;
+  });
+
+  afterUpdate(() => {
+    if (resetValue || wasResetValue) {
+      resetValue = false;
+    }
+  });
 </script>
 
-<section class={`expanded-content${item.locked ? ' locked' : ''}`}>
+<section class={`expanded-content${isLocked ? ' locked' : ''}`}>
   <span class="divider-top"><hr class="inner"></span>
 
   <span class="form-element-holder">
-    {#if item.group}
-      <span class="form-row">
+    {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
+      {#if item.group}
+        <span class="form-row">
+          <FormUnit
+            className="form-unit split-40"
+            itemIsLocked={isLocked}
+            kind="inputText"
+            labelText="Group&nbsp;&nbsp;&nbsp;/"
+            nameId={`item-group-${item.id}`}
+            resetValue={resetValue}
+            on:saveSignal={() => handleSave()}
+            bind:value={dirtyItem.group}
+          />
+          <FormUnit
+            className="form-unit split-60"
+            itemIsLocked={isLocked}
+            kind="inputText"
+            labelText="Name"
+            nameId={`item-name-${item.id}`}
+            resetValue={resetValue}
+            on:saveSignal={() => handleSave()}
+            bind:value={dirtyItem.name}
+          />
+        </span>
+      {:else}
         <FormUnit
-          className="form-unit split-40"
-          itemIsLocked={item.locked}
-          kind="inputText"
-          labelText={`${item.group}&nbsp;&nbsp;&nbsp;/`}
-          nameId={`item-group-${item.id}`}
-          value={item.group}
-        />
-        <FormUnit
-          className="form-unit split-60"
-          itemIsLocked={item.locked}
+          className="form-row"
+          itemIsLocked={isLocked}
           kind="inputText"
           labelText="Name"
           nameId={`item-name-${item.id}`}
-          value={item.name}
+          resetValue={resetValue}
+          on:saveSignal={() => handleSave()}
+          bind:value={dirtyItem.name}
         />
-      </span>
-    {:else}
-      <FormUnit
-        className="form-row"
-        itemIsLocked={item.locked}
-        kind="inputText"
-        labelText="Name"
-        nameId={`item-name-${item.id}`}
-        value={item.name}
+      {/if}
+
+      <Description
+        bind:description={dirtyItem.description}
+        isLocked={isLocked}
+        itemId={item.id}
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave()}
       />
     {/if}
 
-    <FormUnit
-      className="form-row"
-      itemIsLocked={item.locked}
-      kind="inputTextarea"
-      labelText="Description"
-      nameId={`item-description-${item.id}`}
-      placeholder="Description"
-      value={item.description}
-    />
-
-    <FormUnit
-      className="form-row"
-      itemIsLocked={item.locked}
-      kind="inputText"
-      labelText="Label text here"
-      nameId={`item-label-link-${item.id}`}
-      placeholder="Type something…"
-      value="I am some text to measure against"
-    />
-
-    <span class="form-row">
-      <FormLabel
-        labelText="Add new…"
-        nameId={`add-new-label-${item.id}`}
-        disableActions={true}
+    {#if !$isStyles && dirtyItem.componentData}
+      <ComponentData
+        bind:item={dirtyItem}
+        isLocked={isLocked}
+        resetValue={resetValue}
+        on:saveSignal={() => handleSave()}
       />
-      <FigmaInput
-        className="form-element element-type-text-new split-40"
-        disabled={item.locked}
-        nameId={`add-new-label-${item.id}`}
-        placeholder="Add stuff to me…"
-      />
-      <FigmaInput
-        className="form-element element-type-text-new split-60"
-        disabled={item.locked}
-        nameId={`add-new-text-${item.id}`}
-        placeholder="Add other stuff to me…"
-      />
-    </span>
-
-    <FormUnit
-      className="form-row"
-      disableCopy={true}
-      itemIsLocked={item.locked}
-      kind="inputSelect"
-      labelText="Library"
-      nameId={`item-library-${item.id}`}
-      value="unassigned"
-    />
-    
-    <span class="form-row">
-      <FigmaSwitch
-        className="form-element element-type-switch"
-        disabled={item.locked}
-        labelText="Interactive?"
-        nameId="is-interactive"
-      />
-    </span>
-    
+    {/if}
   </span>
+
+  {#if isDirty}
+    <FormActions
+      on:resetSignal={() => handleReset()}
+      on:saveSignal={() => handleSave()}
+    />
+  {/if}
 </section>

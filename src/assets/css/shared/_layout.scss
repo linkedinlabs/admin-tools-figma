@@ -1,6 +1,6 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++ layout
 
-$footer-height-px: 64px;
+$footer-height-px: 40px;
 
 * {
   // border box default
@@ -42,10 +42,21 @@ svg {
   }
 }
 
+.options#action-options {
+  margin: 0;
+  padding: 0;
+
+  .items-list {
+    margin: 0;
+    padding: 0;
+  }
+}
+
 .bulk-editor,
-.master-item {
+.main-item {
   &.expanded {
     .expanded-content {
+      padding-bottom: em(12);
       border-bottom: 1px solid $wl-accent-tertiary;
 
       .divider-top {
@@ -66,6 +77,10 @@ svg {
           .form-label, {
             &.split-40 {
               width: calc(40% - #{em(3)});
+
+              .split-50 {
+                width: 100%;
+              }
             }
 
             &.split-50 {
@@ -74,7 +89,53 @@ svg {
 
             &.split-60 {
               width: calc(60% - #{em(3)});
+
+              .split-50 {
+                width: 100%;
+              }
             }
+
+            &.has-multiple {
+              #{$all-text-inputs} {
+                &::placeholder {
+                  font-style: italic;
+                  color: rgba($wl-type-01-invert, 0.8);
+                }
+              }
+            }
+          }
+
+          &.has-multiple {
+            #{$all-text-inputs} {
+              &::placeholder {
+                font-style: italic;
+                color: rgba($wl-type-01-invert, 0.8);
+              }
+            }
+          }
+        }
+
+        .form-header {
+          padding: em(18) em(18) em(9) em(18);
+          @include type-01(600);
+
+          &.invert {
+            color: rgba($wl-type-01-invert, 0.8);
+          }
+        }
+      }
+
+      .form-action-controls {
+        display: flex;
+        justify-content: flex-end;
+        padding: em(12) em(12) 0 em(12);
+        width: 100%;
+
+        button {
+          margin-left: em(15);
+
+          &:first-child {
+            margin-left: 0;
           }
         }
       }
