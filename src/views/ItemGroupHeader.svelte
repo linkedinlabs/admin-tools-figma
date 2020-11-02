@@ -1,56 +1,25 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher } from 'svelte';
 
   import ButtonLock from './forms-controls/ButtonLock';
   import ButtonOpenClose from './forms-controls/ButtonOpenClose';
 
-  export let groupIsLocked = 'unlocked';
   export let isGroupContainer = false;
   export let isLocked = false;
   export let isOpen = false;
+  export let isTypeContainer = false;
   export let labelGroupText = null;
   export let labelText = 'Item name here';
-  export let type = 'master-item';
+  export let type = 'main-item';
 
   const dispatch = createEventDispatcher();
 
-  let groupWasUnlocked = false;
   let wasUnlocked = false;
 
-  // set initial locking status
-  if (!isGroupContainer && groupIsLocked) {
-    isLocked = true;
-  }
-
   // watch parent locking changes to match an item unlock
-  $: {
-    // lock item if group is locked
-    if ((groupWasUnlocked) && (groupIsLocked === 'locked')) {
-      isLocked = true;
-    }
-
-    // unlock item if group is unlocked
-    if ((!groupWasUnlocked) && (groupIsLocked === 'unlocked')) {
-      isLocked = false;
-    }
-
-    // the header is a group header
-    if (isGroupContainer) {
-      if (!wasUnlocked && isLocked) {
-        groupIsLocked = 'locked';
-      }
-
-      if (wasUnlocked && !isLocked) {
-        groupIsLocked = 'unlocked';
-      }
-
-      if (!groupWasUnlocked && groupIsLocked === 'partial') {
-        isLocked = false;
-      }
-    }
-
+  beforeUpdate(() => {
     // the header is an item header
-    if (!isGroupContainer) {
+    if (!isGroupContainer && !isTypeContainer) {
       // bubble up unlock events to make sure the group
       // lock status is representative
       if (wasUnlocked && !isLocked) {
@@ -59,9 +28,8 @@
     }
 
     // set tracking flags
-    groupWasUnlocked = groupIsLocked !== 'locked';
     wasUnlocked = isLocked;
-  }
+  });
 </script>
 
 <style>
@@ -82,10 +50,13 @@
   <span class="right">
     <span class="actions">
       {#if type !== 'bulk-editor'}
-        <ButtonLock bind:isLocked={isLocked}/>
+        <ButtonLock
+          on:handleUpdate={() => dispatch('handleUpdate', 'toggleLock')}
+          isLocked={isLocked}
+        />
       {/if}
       <ButtonOpenClose
-        on:handleUpdate={() => dispatch('handleUpdate')}
+        on:handleUpdate={() => dispatch('handleUpdate', 'toggleOpen')}
         isOpen={isOpen}
       />
     </span>

@@ -6,7 +6,7 @@ You must be using the Figma [desktop app](https://www.figma.com/downloads/). It 
 
 ## Installation
 
-1. Unzip the `AdminTool.figmaplugin.zip` file somewhere on your computer where you will be able to find it later.
+1. Unzip the `Stapler.figmaplugin.zip` file somewhere on your computer where you will be able to find it later.
 2. Open the Figma desktop app
 3. In Figma, on the left-hand sidebar of your dashboard, click “Plugins”
 4. On the right-hand sidebar of “Plugins”, next to “Create your own plugin”, click the “plus” icon.
@@ -25,7 +25,7 @@ Local plugin builds are all accessed from the plugin development menu:
 
 To upgrade a local plugin build (and replace the old version):
 
-1. Unzip the `AdminTool.figmaplugin.zip` file.
+1. Unzip the `Stapler.figmaplugin.zip` file.
 2. Copy the `dist` directory and `manifest.json` file.
 3. Locate the directory where the current version of the plugin resides.
 4. Replace the current versions of `dist` and `manifest.json` with the new ones.

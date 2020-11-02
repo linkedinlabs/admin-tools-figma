@@ -1,10 +1,10 @@
 <script>
-  export let checked = false;
   export let className = 'switch';
   export let disabled = false;
   export let invertView = false;
   export let labelText = null;
   export let nameId = null;
+  export let value = false;
 
   if (className && invertView) {
     className = `${className} inverted`;
@@ -17,12 +17,12 @@
 
 <span class={className}>
   <input
+    bind:checked={value}
     class="switch__toggle"
     disabled={disabled}
     id={nameId}
     name={nameId}
     type="checkbox"
-    bind:checked={checked}
   >
   <label
     class="switch__label"

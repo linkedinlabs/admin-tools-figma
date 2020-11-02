@@ -59,6 +59,23 @@
   }
 }
 
+@mixin figma-button--secondary--invert {
+  @include figma-button--secondary;
+  color: rgba($wl-type-01-invert, 0.8);
+  border-color: rgba($wl-ctrl-primary-invert, 0.4);
+  background: none;
+
+  &:enabled:active,
+  &:enabled:focus {
+    border: 2px solid $wl-action-primary;
+  }
+
+  &:disabled {
+    color: rgba($wl-type-01-invert, 0.3);
+    border-color: rgba($wl-ctrl-primary-invert, 0.3);
+  }
+}
+
 @mixin figma-button--secondary-destructive {
   @include figma-button--secondary;
   color: $wl-type-03;
@@ -78,5 +95,11 @@
 .button--primary { @include figma-button--primary; }
 .button--primary-destructive { @include figma-button--primary-destructive; }
 
-.button--secondary { @include figma-button--secondary; }
+.button--secondary {
+  @include figma-button--secondary;
+
+  &.invert {
+    @include figma-button--secondary--invert;
+  }
+}
 .button--secondary-destructive { @include figma-button--secondary-destructive; }

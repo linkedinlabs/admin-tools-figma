@@ -25,7 +25,7 @@
 
 <span class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}>
   <span class="text">
-    <label for={nameId}>{labelText}</label>
+    <label for={nameId}>{@html labelText}</label>
   </span>
   {#if !disableActions}
     <span class="actions">

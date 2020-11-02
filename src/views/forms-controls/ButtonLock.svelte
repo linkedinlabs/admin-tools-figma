@@ -1,9 +1,14 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+
   export let disabled = false;
   export let isLocked = false;
 
+  const dispatch = createEventDispatcher();
+
   const handleClick = () => {
     isLocked = !isLocked;
+    dispatch('handleUpdate');
   };
 </script>
 

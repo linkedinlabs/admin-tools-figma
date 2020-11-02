@@ -5,6 +5,7 @@
 
   export let className = null;
   export let disabled = false;
+  export let hasMultiple = false;
   export let invertView = false;
   export let nameId = null;
   export let value = null;
@@ -12,16 +13,6 @@
     {
       value: 'unassigned',
       text: 'Not assigned',
-      disabled: false,
-    },
-    {
-      value: 'component',
-      text: 'Component',
-      disabled: false,
-    },
-    {
-      value: 'foundation',
-      text: 'Foundational Element',
       disabled: false,
     },
   ];
@@ -61,10 +52,16 @@
 
   const setSelected = (optionValue = value) => {
     const index = 0;
+    let valueToCompare = optionValue;
+
+    // set a string for blanks in select
+    if (valueToCompare === null) {
+      valueToCompare = 'blank--multiple';
+    }
 
     // update for faux select
-    if (optionValue) {
-      selected = options.filter(option => option.value === optionValue)[index];
+    if (valueToCompare) {
+      selected = options.filter(option => option.value === valueToCompare)[index];
     } else {
       selected = options[index];
     }
@@ -249,7 +246,6 @@
       setSelected();
     }
   });
-
 </script>
 
 <style>
@@ -272,7 +268,7 @@
       disabled={disabled}
       on:click={() => handleMenuClick()}
     >
-      <span class="styled-select__button-label">
+      <span class={`styled-select__button-label${hasMultiple && selected.value === 'blank--multiple' ? ' has-multiple' : ''}`}>
         {selected.text}
       </span>
       <span class="styled-select__icon"></span>
@@ -288,7 +284,7 @@
           on:click={() => handleItemClick(option.value)}
         >
           <span class="styled-select__list-item-icon"></span>
-          <span class="styled-select__list-item-text">
+          <span class={`styled-select__list-item-text${option.value === 'blank--multiple' ? ' has-multiple' : ''}`}>
             {option.text}
           </span>
         </li>

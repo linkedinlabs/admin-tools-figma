@@ -1,4 +1,6 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+
   export let className = null;
   export let disabled = null;
   export let invertView = false;
@@ -6,9 +8,21 @@
   export let placeholder = null;
   export let value = null;
 
+  const dispatch = createEventDispatcher();
+
   if (className && invertView) {
     className = `${className} inverted`;
   }
+
+  const watchKeys = (event) => {
+    const { key } = event;
+
+    if (key === 'Enter') {
+      dispatch('saveSignal');
+    }
+
+    return null;
+  };
 </script>
 
 <style>
@@ -19,6 +33,7 @@
   <input
     disabled={disabled}
     id={nameId}
+    on:keyup={watchKeys}
     name={nameId}
     placeholder={placeholder}
     type="text"

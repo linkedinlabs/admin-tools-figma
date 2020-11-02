@@ -231,7 +231,7 @@
     @include list-header-group;
   }
 
-  &.master-item {
+  &.main-item {
     @include list-header-single;
 
     &.isOpen {

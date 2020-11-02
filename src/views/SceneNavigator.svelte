@@ -1,11 +1,14 @@
 <script>
-  import { onMount } from 'svelte';
-  import { isStyles } from './stores';
+  import { beforeUpdate } from 'svelte';
+  import {
+    currentFilter,
+    isSelection,
+    isStyles,
+  } from './stores';
 
   import SceneBackArrow from './forms-controls/SceneBackArrow';
 
   let currentItems = [];
-  let selected = 'all-components';
 
   const menuItems = [
     // components menu
@@ -24,11 +27,11 @@
       id: 'interaction',
       type: 'components',
     },
-    {
-      text: 'Labels & Data',
-      id: 'labels-data',
-      type: 'components',
-    },
+    // {
+    //   text: 'Labels & Data',
+    //   id: 'labels-data',
+    //   type: 'components',
+    // },
     // styles menu
     {
       text: 'All',
@@ -57,6 +60,19 @@
     },
   ];
 
+  const setCurrentFilters = (newIsStyles, newFilter) => {
+    parent.postMessage({
+      pluginMessage: {
+        action: 'setFilters',
+        payload: {
+          newIsSelection: $isSelection,
+          newIsStyles,
+          newFilter,
+        },
+      },
+    }, '*');
+  };
+
   const setCurrentItems = (useStyles) => {
     currentItems = menuItems.filter(
       item => item.type === (useStyles ? 'styles' : 'components'),
@@ -64,19 +80,18 @@
   };
 
   const handleItemClick = (selectedId) => {
-    selected = selectedId;
+    setCurrentFilters($isStyles, selectedId);
   };
 
-  // temp
   const handleBackClick = () => {
-    isStyles.set(!$isStyles);
+    const newIsStyles = !$isStyles;
 
-    // reset menu
-    setCurrentItems($isStyles);
-    selected = $isStyles ? 'all-styles' : 'all-components';
+    // reset filters
+    const newFilter = newIsStyles ? 'all-styles' : 'all-components';
+    setCurrentFilters(newIsStyles, newFilter);
   };
 
-  onMount(() => {
+  beforeUpdate(() => {
     setCurrentItems($isStyles);
   });
 </script>
@@ -91,7 +106,7 @@
     {#each currentItems as item, i}
     <li>
       <button
-        class:selected="{selected === item.id}"
+        class:selected="{item.id === $currentFilter}"
         on:click={() => handleItemClick(item.id)}
       >
         {item.text}
