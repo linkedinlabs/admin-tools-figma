@@ -78,8 +78,8 @@
    * @name filterByKey
    *
    * @param {Array} array The array to be filtered.
-   * @param {string} value The value to test against `key`.
    * @param {string} key String representing the key to match against `value` (default is `id`).
+   * @param {string} value The value to test against `key`.
    *
    * @returns {Object} The modified array.
    */
