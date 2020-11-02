@@ -22,14 +22,18 @@
     count: 0,
   };
 
-  /** WIP
-   * @description Looks into the selection array for any groups and pulls out individual nodes,
-   * effectively flattening the selection.
+  /**
+   * @description Takes a `currentDescription` string and parses it: splitting each
+   * line into an array, and further splitting each line into a key/value pair using the
+   * `:` as the signifier for the end of the key.
    *
    * @kind function
    * @name parseDescription
    *
-   * @returns {Object} All items (including children) individual in an updated array.
+   * @param {string} currentDescription A string representing the node/style description
+   * to be parsed.
+   *
+   * @returns {Array} The parsed description as an array of key/value pairs.
    */
   const parseDescription = (currentDescription) => {
     const currentDescriptionArray = [];
