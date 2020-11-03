@@ -348,6 +348,8 @@ export default class Presenter {
           componentData = existingComponentData;
         }
 
+        const isVariant = component.parent && (component.parent.type === 'COMPONENT_SET');
+
         extractedComponents.push(component);
 
         // update the bundle of info for the current `node` in the selection
@@ -356,6 +358,7 @@ export default class Presenter {
           description,
           group: nameGroup,
           groupId,
+          isVariant,
           kind,
           name: nameClean,
           type,

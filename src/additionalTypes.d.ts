@@ -33,6 +33,7 @@ declare global {
     group: string,
     groupId: string,
     id: string,
+    isVariant?: boolean,
     kind: string,
     name: string,
     type: StyleType | NodeType,
