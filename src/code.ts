@@ -2,7 +2,6 @@
 import App from './App';
 import Messenger from './Messenger';
 import { awaitUIReadiness } from './Tools';
-import { ASSIGNMENTS } from './constants';
 
 // GUI management -------------------------------------------------
 
@@ -65,49 +64,46 @@ const dispatcher = async (action: {
     //   languages: Array<string>,
     // } = await figma.clientStorage.getAsync(DATA_KEYS.options);
 
-    // make sure the type passed from the menu command exists
-    const verifyQuickType = (kind: string, quickType: string): boolean => {
-      const typeSimplified = quickType.replace(`quick-${kind}-`, '');
-      let isVerified = false;
+    // // make sure the type passed from the menu command exists
+    // const verifyQuickType = (kind: string, quickType: string): boolean => {
+    //   const typeSimplified = quickType.replace(`quick-${kind}-`, '');
+    //   let isVerified = false;
 
-      if (typeSimplified === 'assigned') {
-        isVerified = true;
-        return isVerified;
-      }
+    //   if (typeSimplified === 'assigned') {
+    //     isVerified = true;
+    //     return isVerified;
+    //   }
 
-      Object.keys(ASSIGNMENTS).forEach((key) => {
-        if (ASSIGNMENTS[key].id === typeSimplified) {
-          isVerified = true;
-        }
-      });
-      return isVerified;
-    };
+    //   Object.keys(ASSIGNMENTS).forEach((key) => {
+    //     if (ASSIGNMENTS[key].id === typeSimplified) {
+    //       isVerified = true;
+    //     }
+    //   });
+    //   return isVerified;
+    // };
 
     switch (type) {
-      case 'lock-toggle':
-      case 'reassign':
-      case 'remix':
-      case 'restore':
-        App.actOnNode(type, payload, sessionKey);
+      case 'detach-instances':
+        app.detachInstances(sessionKey);
         break;
-      case 'remix-all':
-        App.remixAll(sessionKey);
+      case 'inherit-description':
+        app.inheritDescription(sessionKey);
+        break;
+      case 'inherit-name':
+        app.inheritName(sessionKey);
+        break;
+      case 'resize':
+        App.resizeGUI(payload);
+        break;
+      case 'setFilters':
+        App.setFilters(payload, sessionKey);
         break;
       case 'submit':
-        app.commitContent(sessionKey);
+      case 'submit-bulk':
+        app.handleUpdate(payload, sessionKey);
         break;
       case 'tools':
         App.showToolbar(sessionKey);
-        break;
-      case String(type.match(/^quick-randomize-.*/)):
-        if (verifyQuickType('randomize', type)) {
-          app.quickRandomize(type.replace('quick-randomize-', ''), sessionKey);
-        }
-        break;
-      case String(type.match(/^quick-assign-.*/)):
-        if (verifyQuickType('assign', type)) {
-          app.quickAssign(type.replace('quick-assign-', ''));
-        }
         break;
       default:
         return null;
@@ -174,7 +170,7 @@ const main = async () => {
 
   // watch selection changes on the Figma level -------------------------------
   figma.on('selectionchange', () => {
-    // App.refreshGUI(SESSION_KEY); // temp
+    App.refreshGUI(SESSION_KEY);
   });
 };
 

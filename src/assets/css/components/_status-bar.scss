@@ -7,11 +7,12 @@
   margin: 0;
   padding: em(4) em(12);
   width: 100%;
+  min-height: em(41);
   border-top: 1px solid $wl-accent-tertiary;
   background: $wl-canvas;
   z-index: $z-status-bar;
 
-  p {
+  p, span {
     margin: 0;
     padding: 0;
     @include type-02;

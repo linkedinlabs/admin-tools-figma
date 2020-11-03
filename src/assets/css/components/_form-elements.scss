@@ -36,10 +36,6 @@
 
       .item-toggle {
         opacity: 0;
-
-        &.inactive {
-          display: none;
-        }
       }
 
       #{$all-buttons} {
@@ -60,6 +56,8 @@
 
         // re-size restore icon
         &.action-restore {
+          opacity: 1;
+
           span {
             &.icon {
               width: em(12);
@@ -75,6 +73,10 @@
           // keep locked icon visible
           &.locked {
             opacity: 1;
+
+            &:disabled {
+              opacity: 0.4;
+            }
 
             .icon.unlocked { display: none; }
             .icon.locked { display: block; }
@@ -99,9 +101,32 @@
   }
 }
 
+@mixin form-label-inverted {
+  @include form-label;
+
+  span {
+    &.actions {
+      #{$all-buttons} {
+        @include button-icon($wl-action-tertiary, 16, $wl-action-secondary);
+        width: em(16);
+        height: em(16);
+      }
+    }
+  }
+}
+
 .form-element-holder {
+  .form-inner-row {
+    display: flex;
+    width: 100%;
+  }
+
   .form-label {
     @include form-label;
+
+    &.inverted {
+      @include form-label-inverted;
+    }
   }
 
   // style form element types
@@ -112,17 +137,32 @@
     &.element-type-text-new,
     &.element-type-textarea {
       #{$all-text-inputs} { @include figma-input; }
+
+      &.inverted {
+        #{$all-text-inputs} { @include figma-input-inverted; }
+      }
     }
 
     &.element-type-text-new {
       #{$all-text-inputs} {
         border: 1px solid rgba($wl-ctrl-primary, 0.1);
+
+        &:disabled {
+          @include hover {
+            border: 1px solid rgba($wl-ctrl-primary, 0.1);
+          }
+        }
       }
     }
 
     &.element-type-textarea {
       #{$all-text-inputs} {
         min-height: em(68);
+
+        &:active,
+        &:focus {
+          // min-height: em(70);
+        }
       }
     }
 
@@ -141,6 +181,30 @@
         &:after {
           left: em(8);
         }
+      }
+
+      &.inverted {
+        .switch__toggle {
+          @include figma-switch-toggle-inverted;
+        }
+
+        .switch__label {
+          @include figma-switch-label-inverted;
+        }
+      }
+    }
+  }
+
+  #{$all-buttons} {
+    &.inline-button {
+      @include button-icon($wl-action-secondary-accent, 32, $wl-action-tertiary);
+      width: em(32);
+      height: em(32);
+
+      &.inverted {
+        @include button-icon($wl-action-tertiary, 32, $wl-action-secondary);
+        width: em(32);
+        height: em(32);
       }
     }
   }
