@@ -168,6 +168,7 @@ export default class Presenter {
         const nameArray = name.split(' / ');
         let nameGroup: string = null;
         let nameClean: string = name;
+        let nameDisplay: string = name;
 
         if (nameArray.length > 1) {
           const gIndex: number = 0;
@@ -175,6 +176,7 @@ export default class Presenter {
 
           nameArray.shift();
           nameClean = nameArray.join(' / ');
+          nameDisplay = nameClean;
 
           groupId = `${typeId}-${nameGroup}`;
         }
@@ -205,6 +207,7 @@ export default class Presenter {
           groupId,
           kind,
           name: nameClean,
+          nameDisplay,
           type,
           typeId,
           typeName,
@@ -300,21 +303,50 @@ export default class Presenter {
         const { id, description, name } = component;
         const kind: 'style' | 'component' = 'component';
         const { type }: { type: NodeType } = component;
+        const isVariant = component.parent && (component.parent.type === 'COMPONENT_SET' as NodeTypeTemp);
         const typeId = type.toLowerCase();
         let groupId = null;
 
-        const nameArray = name.split(' / ');
+        const nameGroupArray = name.split(' / ');
         let nameGroup: string = null;
         let nameClean: string = name;
+        let nameDisplay: string = name;
 
-        if (nameArray.length > 1) {
+        if (nameGroupArray.length > 1) {
           const gIndex: number = 0;
-          nameGroup = nameArray[gIndex].trim();
+          nameGroup = nameGroupArray[gIndex].trim();
 
-          nameArray.shift();
-          nameClean = nameArray.join(' / ');
+          nameGroupArray.shift();
+          nameClean = nameGroupArray.join(' / ');
+          nameDisplay = nameClean;
 
           groupId = `${typeId}-${nameGroup}`;
+        }
+        if (isVariant) {
+          const componentName = component.parent.name;
+          const nameVariantArray = name.split(',');
+          let nameIsCorrupt = false;
+          if (nameVariantArray.length > 1) {
+            const variantOptions = [];
+            nameVariantArray.forEach((variantOption) => {
+              const variantOptionArray = variantOption.split('=');
+              if (variantOptionArray.length === 2) {
+                const optIndex = 1;
+                const option = variantOptionArray[optIndex];
+                variantOptions.push(option);
+              } else {
+                nameIsCorrupt = true;
+              }
+            });
+
+            if (
+              !nameIsCorrupt
+              && componentName
+              && (variantOptions.length > 0)
+            ) {
+              nameDisplay = `${componentName}: ${variantOptions.join(', ')}`;
+            }
+          }
         }
         const typeName: PresenterTypeName = 'Component';
 
@@ -348,8 +380,6 @@ export default class Presenter {
           componentData = existingComponentData;
         }
 
-        const isVariant = component.parent && (component.parent.type === 'COMPONENT_SET' as NodeTypeTemp);
-
         extractedComponents.push(component);
 
         // update the bundle of info for the current `node` in the selection
@@ -361,6 +391,7 @@ export default class Presenter {
           isVariant,
           kind,
           name: nameClean,
+          nameDisplay,
           type,
           typeId,
           typeName,

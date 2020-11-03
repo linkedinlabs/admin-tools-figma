@@ -540,7 +540,7 @@
                   isLocked={checkIsLocked(item.id)}
                   isOpen={checkIsOpen(item.id)}
                   labelGroupText={item.group}
-                  labelText={item.name}
+                  labelText={item.nameDisplay}
                   type="main-item"
                 />
                 {#if checkIsOpen(item.id)}

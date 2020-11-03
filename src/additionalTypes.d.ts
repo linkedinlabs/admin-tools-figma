@@ -36,6 +36,7 @@ declare global {
     isVariant?: boolean,
     kind: string,
     name: string,
+    nameDisplay: string,
     type: StyleType | NodeType,
     typeId: string,
     typeName: PresenterTypeName,
