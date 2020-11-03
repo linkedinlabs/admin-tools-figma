@@ -2,6 +2,23 @@ import { getPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /**
+ * @description Takes a node/style `type` and parses it for use as `typeId` in the
+ * UI groups and type sets.
+ *
+ * @kind function
+ * @name getTypeId
+ *
+ * @param {string} type Item type for parsing.
+ *
+ * @returns {string} The parsed `typeId` for use in managing groups.
+ */
+const getTypeId = (type: string) => {
+  let typeId: string = type.toLowerCase();
+  typeId = typeId.replace('_set', '');
+  return typeId;
+};
+
+/**
  * @description Set up the `groups` object for the UI Presentation. Items are
  * separated into groups based on their `groupId`.
  *
@@ -27,7 +44,7 @@ const setGroups = (
           id: item.groupId,
           name: item.group,
           type: item.type,
-          typeId: item.type.toLowerCase(),
+          typeId: getTypeId(item.type),
         });
         groupIds.push(item.groupId);
       }
@@ -162,7 +179,7 @@ export default class Presenter {
         const { id, description, name } = style;
         const kind: 'style' | 'component' = 'style';
         const { type }: { type: StyleType } = style;
-        const typeId = type.toLowerCase();
+        const typeId = getTypeId(type);
         let groupId = null;
 
         const nameArray = name.split(' / ');
@@ -278,11 +295,12 @@ export default class Presenter {
     const items: Array<PresenterItem> = [];
 
     // get styles here
-    const extractedComponents: Array<ComponentNode> = [];
+    const extractedComponents: Array<ComponentNode | ComponentSetNode> = [];
 
     nodes.forEach((node: SceneNode) => {
       if (
         (node.type === CONTAINER_NODE_TYPES.component)
+        || (node.type === CONTAINER_NODE_TYPES.componentSet)
         || (node.type === CONTAINER_NODE_TYPES.instance)
       ) {
         if (node.type === CONTAINER_NODE_TYPES.instance) {
@@ -303,8 +321,9 @@ export default class Presenter {
         const { id, description, name } = component;
         const kind: 'style' | 'component' = 'component';
         const { type }: { type: NodeType } = component;
-        const isVariant = component.parent && (component.parent.type === 'COMPONENT_SET' as NodeTypeTemp);
-        const typeId = type.toLowerCase();
+        const isVariant = component.parent
+          && (component.parent.type === CONTAINER_NODE_TYPES.componentSet as NodeTypeTemp);
+        const typeId = getTypeId(type);
         let groupId = null;
 
         const nameGroupArray = name.split(' / ');
@@ -322,6 +341,7 @@ export default class Presenter {
 
           groupId = `${typeId}-${nameGroup}`;
         }
+
         if (isVariant) {
           const componentName = component.parent.name;
           const nameVariantArray = name.split(',');
@@ -348,6 +368,7 @@ export default class Presenter {
             }
           }
         }
+
         const typeName: PresenterTypeName = 'Component';
 
         // set up plugin data

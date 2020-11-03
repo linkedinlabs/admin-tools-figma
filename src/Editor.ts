@@ -116,8 +116,11 @@ export default class Editor {
     const selectIndex = 0;
     const presenter = new Presenter({ for: this.array });
     let existingItem = null;
-    let baseItem: BaseStyle | ComponentNode = null;
-    if (updatedItem.type !== CONTAINER_NODE_TYPES.component) {
+    let baseItem: BaseStyle | ComponentNode | ComponentSetNode = null;
+    if (
+      (updatedItem.type !== CONTAINER_NODE_TYPES.component)
+      && (updatedItem.type !== CONTAINER_NODE_TYPES.componentSet)
+    ) {
       // grab existing style presentation object for comparison
       const extractedStyles = presenter.extractStyles();
       existingItem = extractedStyles.items.filter(
@@ -224,8 +227,11 @@ export default class Editor {
 
     const presenter = new Presenter({ for: this.array });
     const existingItems = [];
-    const baseItems: Array<BaseStyle | ComponentNode> = [];
-    if (updatedItem.type !== CONTAINER_NODE_TYPES.component) {
+    const baseItems: Array<BaseStyle | ComponentNode | ComponentSetNode> = [];
+    if (
+      (updatedItem.type !== CONTAINER_NODE_TYPES.component)
+      && (updatedItem.type !== CONTAINER_NODE_TYPES.componentSet)
+    ) {
       // grab existing style presentation objects for comparison
       const extractedStyles = presenter.extractStyles();
       extractedStyles.items.forEach((item) => {
