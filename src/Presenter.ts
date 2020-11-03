@@ -348,7 +348,7 @@ export default class Presenter {
           componentData = existingComponentData;
         }
 
-        const isVariant = component.parent && (component.parent.type === 'COMPONENT_SET');
+        const isVariant = component.parent && (component.parent.type === 'COMPONENT_SET' as NodeTypeTemp);
 
         extractedComponents.push(component);
 
