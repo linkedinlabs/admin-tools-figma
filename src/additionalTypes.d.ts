@@ -24,6 +24,10 @@ declare global {
     role: 'none' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
+    variants?: Array<{
+      key: string,
+      ignore: boolean,
+    }>,
     version?: string,
   }
 

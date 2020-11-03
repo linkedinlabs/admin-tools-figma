@@ -318,18 +318,35 @@ export default class Presenter {
     uniqueComponentIds.forEach((componentId) => {
       const component = figma.getNodeById(componentId) as ComponentNode;
       if (component && !component.remote) {
-        const { id, description, name } = component;
-        const kind: 'style' | 'component' = 'component';
-        const { type }: { type: NodeType } = component;
+        // base info
+        const {
+          id,
+          description,
+          name,
+          type,
+        }: {
+          id: string,
+          description: string,
+          name: string,
+          type: NodeType,
+        } = component;
+
+        // meta info
         const isVariant = component.parent
           && (component.parent.type === CONTAINER_NODE_TYPES.componentSet as NodeTypeTemp);
+        const kind: 'style' | 'component' = 'component';
         const typeId = getTypeId(type);
-        let groupId = null;
+        const variants: Array<{
+          key: string,
+          ignore: boolean,
+        }> = [];
 
+        // set up naming scheme + `groupId`
         const nameGroupArray = name.split(' / ');
         let nameGroup: string = null;
         let nameClean: string = name;
         let nameDisplay: string = name;
+        let groupId = null;
 
         if (nameGroupArray.length > 1) {
           const gIndex: number = 0;
@@ -342,18 +359,19 @@ export default class Presenter {
           groupId = `${typeId}-${nameGroup}`;
         }
 
+        // set up a custom display name for Variants (mimics Figma’s treatment)
         if (isVariant) {
           const componentName = component.parent.name;
           const nameVariantArray = name.split(',');
           let nameIsCorrupt = false;
           if (nameVariantArray.length > 1) {
-            const variantOptions = [];
-            nameVariantArray.forEach((variantOption) => {
-              const variantOptionArray = variantOption.split('=');
-              if (variantOptionArray.length === 2) {
-                const optIndex = 1;
-                const option = variantOptionArray[optIndex];
-                variantOptions.push(option);
+            const variantValues = [];
+            nameVariantArray.forEach((variantValue) => {
+              const variantValueArray = variantValue.split('=');
+              if (variantValueArray.length === 2) {
+                const valIndex = 1;
+                const value = variantValueArray[valIndex];
+                variantValues.push(value);
               } else {
                 nameIsCorrupt = true;
               }
@@ -362,11 +380,48 @@ export default class Presenter {
             if (
               !nameIsCorrupt
               && componentName
-              && (variantOptions.length > 0)
+              && (variantValues.length > 0)
             ) {
-              nameDisplay = `${componentName}: ${variantOptions.join(', ')}`;
+              nameDisplay = `${componentName}: ${variantValues.join(', ')}`;
             }
           }
+        }
+
+        // extract variants for the options and set up presentation object
+        if (component.type === CONTAINER_NODE_TYPES.componentSet as NodeTypeTemp) {
+          const variantKeysArray: Array<string> = [];
+          const { children } = component;
+
+          // extract variants
+          children.forEach((node: SceneNode) => {
+            if (node.type === CONTAINER_NODE_TYPES.component) {
+              const nameVariantArray: Array<string> = node.name.split(',');
+              nameVariantArray.forEach((variantKey) => {
+                const variantKeyArray: Array<string> = variantKey.split('=');
+                if (variantKeyArray.length === 2) {
+                  const keyIndex: number = 0;
+                  const key: string = variantKeyArray[keyIndex];
+
+                  if (!variantKeysArray.includes(key)) {
+                    variantKeysArray.push(key);
+                  }
+                }
+              });
+            }
+          });
+
+          // set up initial presentation object
+          variantKeysArray.forEach((variantKey: string) => {
+            const variant: {
+              key: string,
+              ignore: boolean,
+            } = {
+              key: variantKey,
+              ignore: false,
+            };
+
+            variants.push(variant);
+          });
         }
 
         const typeName: PresenterTypeName = 'Component';
@@ -382,6 +437,7 @@ export default class Presenter {
           role: 'none',
           type: 'component',
           usageStatus: 'production',
+          variants,
           version: '1.0',
         };
         const existingComponentData: PresenterComponentData = getPeerPluginData(
