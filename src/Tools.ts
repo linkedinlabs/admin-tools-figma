@@ -2,6 +2,8 @@ import {
   ASSIGNMENTS,
   CONTAINER_NODE_TYPES,
   DATA_KEYS,
+  DATA_KEYS_REALISH,
+  DATA_KEYS_SPECTER,
   GUI_SETTINGS,
   PLUGIN_IDENTIFIER,
 } from './constants';
@@ -245,6 +247,36 @@ const makeNetworkRequest = (options: {
 };
 
 /**
+ * @description A reusable helper function to take an array and check if an item exists
+ * based on a `key`/`value` pair.
+ *
+ * @kind function
+ * @name existsInArray
+ *
+ * @param {Array} array The array to be checked.
+ * @param {string} value The value to test against `key`.
+ * @param {string} key String representing the key to match against `value` (default is `id`).
+ *
+ * @returns {boolean}
+ */
+const existsInArray = (
+  array: Array<any>,
+  value,
+  key: string = 'id',
+) => {
+  let doesExist = false;
+  const itemIndex = array.findIndex(
+    foundItem => (foundItem[key] === value),
+  );
+
+  if (itemIndex > -1) {
+    doesExist = true;
+  }
+
+  return doesExist;
+};
+
+/**
  * @description A reusable helper function to take an array and add or remove data from it
  * based on a top-level key and a defined action.
  *
@@ -272,21 +304,97 @@ const updateArray = (
     foundItem => (foundItem[itemKey] === item[itemKey]),
   );
 
-  // if a match exists, remove it
-  // even if the action is `add`, always remove the existing entry to prevent duplicates
+  // if a match exists
   if (itemIndex > -1) {
-    updatedArray = [
-      ...updatedArray.slice(0, itemIndex),
-      ...updatedArray.slice(itemIndex + 1),
-    ];
+    if (action === 'update') {
+      // remove it and re-add it
+      updatedArray = [
+        ...updatedArray.slice(0, itemIndex),
+        ...[item],
+        ...updatedArray.slice(itemIndex + 1),
+      ];
+    } else {
+      // remove it
+      updatedArray = [
+        ...updatedArray.slice(0, itemIndex),
+        ...updatedArray.slice(itemIndex + 1),
+      ];
+    }
   }
 
-  // if the `action` is `add` (or update), append the new `item` to the array
-  if (action !== 'remove') {
+  // if the `action` is `add`, append the new `item` to the array
+  if (action === 'add') {
     updatedArray.push(item);
   }
 
   return updatedArray;
+};
+
+/**
+ * @description Clones a multi-dimensional object without references.
+ *
+ * @kind function
+ * @name deepCopy
+ *
+ * @param {Object} objectToClone An object to clone.
+ *
+ * @returns {Object} The cloned object, without references.
+ */
+const deepCopy = (objectToClone: Object) => {
+  let clonedObject: Object = null;
+
+  if (typeof objectToClone !== 'object' || objectToClone === null) {
+    return objectToClone; // return if objectToClone is not object
+  }
+
+  // create an array or object to hold the values
+  clonedObject = Array.isArray(objectToClone) ? [] : {};
+
+  Object.keys(objectToClone).forEach((key: string) => {
+    const value: any = objectToClone[key];
+
+    // recursively copy for nested objects, including arrays
+    clonedObject[key] = deepCopy(value);
+  });
+
+  return clonedObject;
+};
+
+/**
+ * @description Compares two multi-dimensional objects. Returns `true` if they are different.
+ *
+ * @kind function
+ * @name deepCompare
+ *
+ * @param {Array} unmodifiedObject An object to compare.
+ * @param {Array} modifiedObject An object to compare against `unmodifiedObject`.
+ *
+ * @returns {boolean} Returns `true` if the objects are different, `false` if they are identical.
+ */
+const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
+  let isDifferent: boolean = false;
+
+  if (typeof unmodifiedObject !== 'object' || unmodifiedObject === null) {
+    return isDifferent;
+  }
+
+  Object.entries(unmodifiedObject).forEach(([key, value]) => {
+    // check for inner object first
+    if ((typeof value === 'object') && (value !== null)) {
+      if (
+        modifiedObject[key] === undefined
+        || deepCompare(value, modifiedObject[key])
+      ) {
+        isDifferent = true;
+      }
+    } else if (modifiedObject[key] !== value) {
+      if (modifiedObject[key] !== 'blank--multiple') {
+        isDifferent = true;
+      }
+    }
+  });
+
+  return isDifferent;
 };
 
 /**
@@ -304,12 +412,12 @@ const findTopFrame = (node: any) => {
 
   // if the parent is a page, we're done
   if (parent && parent.type === 'PAGE') {
-    return parent;
+    return node;
   }
 
   // loop through each parent until we find the outermost FRAME
   if (parent) {
-    while (parent && parent.type !== CONTAINER_NODE_TYPES.frame) {
+    while (parent && parent.parent.type !== 'PAGE') {
       parent = parent.parent;
     }
   }
@@ -338,7 +446,7 @@ const findTopInstance = (node: any) => {
     while (parent && parent.type !== 'PAGE') {
       currentNode = parent;
       if (currentNode.type === CONTAINER_NODE_TYPES.instance) {
-        // update the top-most master component with the current one
+        // update the top-most main component with the current one
         currentTopInstance = currentNode;
       }
       parent = parent.parent;
@@ -378,7 +486,7 @@ const findTopComponent = (node: any) => {
     while (parent && parent.type !== 'PAGE' && componentNode === null) {
       currentNode = parent;
       if (currentNode.type === CONTAINER_NODE_TYPES.component) {
-        // update the top-most master component with the current one
+        // update the top-most main component with the current one
         componentNode = currentNode;
       }
       parent = parent.parent;
@@ -401,7 +509,7 @@ const findTopComponent = (node: any) => {
  * @param {Object} node A Figma node object (`SceneNode`).
  * @param {Object} topNode A Figma instance node object (`InstanceNode`).
  *
- * @returns {Object} Returns the master component or `null`.
+ * @returns {Object} Returns the main component or `null`.
  */
 const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
   // finds the `index` of self in the parent’s children list
@@ -412,8 +520,8 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
   // set some defaults
   let { parent } = node;
   const childIndices = [];
-  const masterComponentNode = topNode.masterComponent;
-  let masterPeerNode = null;
+  const mainComponentNode = topNode.mainComponent;
+  let mainPeerNode = null;
   let currentNode = node;
 
   // iterate up the chain, collecting indices in each child list
@@ -426,11 +534,11 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
     }
   }
 
-  // navigate down the chain of the corresponding master component using the
+  // navigate down the chain of the corresponding main component using the
   // collected child indices to locate the peer node
-  if (childIndices.length > 0 && masterComponentNode) {
+  if (childIndices.length > 0 && mainComponentNode) {
     const childIndicesReversed = childIndices.reverse();
-    let { children } = masterComponentNode;
+    let { children } = mainComponentNode;
     let selectedChild = null;
 
     childIndicesReversed.forEach((childIndex, index) => {
@@ -442,55 +550,161 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
 
     // the last selected child should be the peer node
     if (selectedChild) {
-      masterPeerNode = selectedChild;
+      mainPeerNode = selectedChild;
     }
   }
 
-  return masterPeerNode;
+  return mainPeerNode;
 };
 
 /**
- * @description A shared helper functional to easily retrieve the data namespace used
- * for shared plugin data. Changing this function will potentially make it impossible
- * for existing users to retrieve data saved to nodes before the change.
+ * @description A lookup function to easily retrieve the data namespace used for shared
+ * plugin data. Note: changing this function will potentially make it impossible for existing
+ * users to retrieve data saved to nodes before the change.
  *
  * @kind function
  * @name dataNamespace
  *
- * @returns {string} `true` if the build is internal, `false` if it is not.
+ * @param {string} pluginName The plugin name to use for lookup.
+ *
+ * @returns {string} The data namespace for the supplied plugin.
  */
-const dataNamespace = (): string => {
-  const identifier: string = PLUGIN_IDENTIFIER;
-  const key: string = process.env.SECRET_KEY ? process.env.SECRET_KEY : '1234';
+const dataNamespace = (pluginName: 'realish' | 'specter' = null): string => {
+  let identifier: string = null;
+  let key: string = null;
+
+  switch (pluginName) {
+    case 'realish':
+      identifier = process.env.PLUGIN_IDENTIFIER_REALISH
+        ? process.env.PLUGIN_IDENTIFIER_REALISH : pluginName;
+      key = process.env.SECRET_KEY_REALISH ? process.env.SECRET_KEY_REALISH : '1234';
+      break;
+    case 'specter':
+      identifier = process.env.PLUGIN_IDENTIFIER_SPECTER
+        ? process.env.PLUGIN_IDENTIFIER_SPECTER : pluginName;
+      key = process.env.SECRET_KEY_SPECTER ? process.env.SECRET_KEY_SPECTER : '1234';
+      break;
+    default:
+      identifier = PLUGIN_IDENTIFIER;
+      key = process.env.SECRET_KEY ? process.env.SECRET_KEY : '1234';
+  }
+
   let namespace: string = `${identifier.toLowerCase()}${key.toLowerCase()}`;
   namespace = namespace.replace(/[^0-9a-z]/gi, '');
   return namespace;
 };
 
 /**
- * @description A shared helper function to retrieve type assignment data in raw form (JSON).
+ * @description A shared helper function to retrieve plugin data on a node from a
+ * peer plugin (Realish or Specter).
  *
  * @kind function
- * @name getNodeAssignmentData
+ * @name getPeerPluginData
  *
  * @param {Object} node The text node to retrieve the assignment on.
+ * @param {string} pluginName The plugin name to use for lookup.
  *
  * @returns {string} The assignment is returned as an unparsed JSON string.
  */
-const getNodeAssignmentData = (node: SceneNode) => {
-  let assignmentData = node.getSharedPluginData(dataNamespace(), DATA_KEYS.assignment);
+const getPeerPluginData = (
+  node: SceneNode,
+  pluginName: 'realish' | 'specter',
+) => {
+  let dataKey: string = null;
+  let parsedData = null;
 
-  if (!assignmentData) {
+  switch (pluginName) {
+    case 'realish':
+      dataKey = DATA_KEYS_REALISH.assignment;
+      break;
+    case 'specter':
+      dataKey = DATA_KEYS_SPECTER.bundle;
+      break;
+    default:
+      dataKey = DATA_KEYS.bundle;
+  }
+
+  let pluginData = node.getSharedPluginData(
+    dataNamespace(pluginName),
+    dataKey,
+  );
+
+  if (!pluginData) {
     const topInstanceNode = findTopInstance(node);
     if (topInstanceNode) {
       const peerNode = matchMasterPeerNode(node, topInstanceNode);
       if (peerNode) {
-        assignmentData = peerNode.getSharedPluginData(dataNamespace(), DATA_KEYS.assignment);
+        pluginData = peerNode.getSharedPluginData(
+          dataNamespace(pluginName),
+          dataKey,
+        );
       }
     }
   }
 
-  return assignmentData;
+  if (pluginData) {
+    parsedData = JSON.parse(pluginData);
+  }
+
+  return parsedData;
+};
+
+/* eslint-disable jsdoc/require-param-type */
+/**
+ * @description A shared helper function to set plugin data on a node for retrieval by
+ * a peer plugin (Realish or Specter).
+ *
+ * @kind function
+ * @name setPeerPluginData
+ *
+ * @param {Object} node The text node to retrieve the assignment on.
+ * @param updatedPluginData A bit of data to save to the node.
+ * @param {string} pluginName The plugin name to use for lookup.
+ *
+ * @returns {string} The assignment is returned as an unparsed JSON string.
+ */
+/* eslint-enable jsdoc/require-param-type */
+const setPeerPluginData = (
+  node: SceneNode,
+  updatedPluginData,
+  pluginName: 'realish' | 'specter',
+): void => {
+  let dataKey: string = null;
+  let nodeToUpdate: SceneNode = node;
+
+  switch (pluginName) {
+    case 'realish':
+      dataKey = DATA_KEYS_REALISH.assignment;
+      break;
+    case 'specter':
+      dataKey = DATA_KEYS_SPECTER.bundle;
+      break;
+    default:
+      dataKey = DATA_KEYS.bundle;
+  }
+
+  const pluginData = node.getSharedPluginData(
+    dataNamespace(pluginName),
+    dataKey,
+  );
+
+  if (!pluginData) {
+    const topInstanceNode = findTopInstance(node);
+    if (topInstanceNode) {
+      const peerNode = matchMasterPeerNode(node, topInstanceNode);
+      if (peerNode) {
+        nodeToUpdate = peerNode;
+      }
+    }
+  }
+
+  nodeToUpdate.setSharedPluginData(
+    dataNamespace(pluginName),
+    dataKey,
+    JSON.stringify(updatedPluginData),
+  );
+
+  return null;
 };
 
 /**
@@ -594,16 +808,47 @@ const isInternal = (): boolean => {
   return buildIsInternal;
 };
 
+/**
+ * @description Checks two supplied filters and returns `true` if they match.
+ *
+ * @kind function
+ * @name checkFilterMatch
+ *
+ * @param {string} currentFilter A filter to check.
+ * @param {string} filterToMatch A filter to check against.
+ *
+ * @returns {boolean} `true` if the filters match.
+ */
+const checkFilterMatch = (
+  currentFilter: string,
+  filterToMatch: string,
+): boolean => {
+  let isMatch: boolean = false;
+
+  if (
+    (currentFilter === filterToMatch)
+    || (currentFilter === 'all-components')
+  ) {
+    isMatch = true;
+  }
+
+  return isMatch;
+};
+
 export {
   asyncForEach,
   asyncImageRequest,
   asyncNetworkRequest,
   awaitUIReadiness,
+  checkFilterMatch,
   dataNamespace,
+  deepCompare,
+  deepCopy,
+  existsInArray,
   findTopComponent,
   findTopFrame,
   findTopInstance,
-  getNodeAssignmentData,
+  getPeerPluginData,
   isInternal,
   isTextNode,
   isValidAssignment,
@@ -612,5 +857,6 @@ export {
   matchMasterPeerNode,
   pollWithPromise,
   resizeGUI,
+  setPeerPluginData,
   updateArray,
 };

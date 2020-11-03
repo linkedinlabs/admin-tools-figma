@@ -55,6 +55,9 @@ export default class Crawler {
         // non-frame or -group nodes get added to the final selection
         flatSelection.push(node);
       } else {
+        // +++ frames and groups are added for their own styles to be evaluated
+        flatSelection.push(node);
+
         // +++ frames and groups are checked for child nodes
 
         // set initial holding array and add first level of children
@@ -100,6 +103,9 @@ export default class Crawler {
               // non-frame or -group nodes get added to the final selection
               flatSelection.push(innerLayer);
             } else if (innerLayer.visible && !innerLayer.locked) {
+              // frames and groups are added for their own styles to be evaluated
+              flatSelection.push(innerLayer);
+
               innerLayer.children.forEach((child) => {
                 if (child.visible && !child.locked) {
                   innerLayers.push(child);
@@ -182,7 +188,7 @@ export default class Crawler {
    *
    * @kind function
    * @name filterByTypes
-   * @param {Array} filterTypes Array of type constants to filter for (inclusive).
+   * @param {Array} filterTypes Array of type constants to filter for (inclusive)
    * in the selection.
    *
    * @returns {Array} All TextNode items in an array.

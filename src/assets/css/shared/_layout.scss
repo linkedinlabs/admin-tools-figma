@@ -1,9 +1,14 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++ layout
 
-$footer-height-px: 64px;
+$footer-height-px: 40px;
 
 * {
+  // border box default
   box-sizing: border-box;
+
+  // disable selection highlighting and cursor
+  cursor: default;
+  user-select: none;
 }
 
 body {
@@ -23,91 +28,131 @@ svg {
   width: 100%;
 }
 
-.container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-direction: column;
+.hide-visually {
+  @include hide-visually;
+}
 
-  ul#layer-list,
-  ul#layer-list li.shape-layer-holder,
-  ul#layer-list li.text-layer-holder {
+.container {
+  nav {
+    &.scene-navigator {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+  }
+}
+
+.options#action-options {
+  margin: 0;
+  padding: 0;
+
+  .items-list {
     margin: 0;
     padding: 0;
-    list-style-type: none;
   }
+}
 
-  ul#layer-list {
-    li {
-      &.shape-layer-holder,
-      &.text-layer-holder {
-        margin-bottom: em(12);
+.bulk-editor,
+.main-item {
+  &.expanded {
+    .expanded-content {
+      padding-bottom: em(12);
+      border-bottom: 1px solid $wl-accent-tertiary;
 
-        &:last-child {
-          margin-bottom: 0;
+      .divider-top {
+        @include divider-base(100%, #{em(15.5)});
+        margin-bottom: em(8);
+      }
+
+      .form-element-holder {
+        .form-row {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          padding: em(2) em(10);
+          width: 100%;
+
+          .form-unit,
+          .form-element,
+          .form-label, {
+            &.split-40 {
+              width: calc(40% - #{em(3)});
+
+              .split-50 {
+                width: 100%;
+              }
+            }
+
+            &.split-50 {
+              width: calc(50% - #{em(3)});
+            }
+
+            &.split-60 {
+              width: calc(60% - #{em(3)});
+
+              .split-50 {
+                width: 100%;
+              }
+            }
+
+            &.has-multiple {
+              #{$all-text-inputs} {
+                &::placeholder {
+                  font-style: italic;
+                  color: rgba($wl-type-01-invert, 0.8);
+                }
+              }
+            }
+          }
+
+          &.has-multiple {
+            #{$all-text-inputs} {
+              &::placeholder {
+                font-style: italic;
+                color: rgba($wl-type-01-invert, 0.8);
+              }
+            }
+          }
+        }
+
+        .form-header {
+          padding: em(18) em(18) em(9) em(18);
+          @include type-01(600);
+
+          &.invert {
+            color: rgba($wl-type-01-invert, 0.8);
+          }
+        }
+      }
+
+      .form-action-controls {
+        display: flex;
+        justify-content: flex-end;
+        padding: em(12) em(12) 0 em(12);
+        width: 100%;
+
+        button {
+          margin-left: em(15);
+
+          &:first-child {
+            margin-left: 0;
+          }
         }
       }
     }
   }
+}
 
-  .options {
-    display: block;
-    width: 100%;
-  }
+.bulk-editor {
+  &.expanded {
+    .expanded-content {
+      background-color: rgba($wl-accent, 0.8);
+      border-bottom-color: rgba($wl-accent, 0.8);
 
-  .select {
-    display: block;
-    width: 100%;
-
-    label {
-      display: none;
-    }
-  }
-
-  .button {
-    &.working {
-      opacity: 0.5;
-    }
-  }
-
-  .edit-actions {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    width: 100%;
-    height: em($footer-height-px);
-    background: $wl-canvas;
-
-    .mark {
-      width: 26px;
-      height: 30px;
-    }
-  }
-
-  &.padding {
-    padding: 16px 8px 16px 8px;
-
-    h2, h3, p, ul#layer-list {
-      padding-left: 8px;
-      padding-right: 8px;
-    }
-
-    p {
-      &.select {
-        padding: 0;
-      }
-    }
-
-    .styled-select {
-      margin-top: -4px;
-      margin-bottom: -4px;
-
-      ul {
-        padding: 8px 0 8px 0;
+      .divider-top {
+        hr.inner {
+          background-color: $wl-accent-tertiary-invert;
+        }
       }
     }
   }

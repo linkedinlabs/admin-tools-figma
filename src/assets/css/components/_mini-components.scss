@@ -1,0 +1,25 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ smaller (mini) components
+
+@mixin divider-base(
+  $width: 100%,
+  $paddingSide-px: 0,
+  $paddingTop-px: 0,
+  $paddingBottom-px: $paddingTop-px,
+) {
+  display: block;
+  margin: 0;
+  padding-top: $paddingTop-px;
+  padding-right: $paddingSide-px;
+  padding-bottom: $paddingBottom-px;
+  padding-left: $paddingSide-px;
+  width: 100%;
+
+  .inner {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 1px;
+    background: $wl-accent-tertiary;
+    border: 0;
+  }
+}
