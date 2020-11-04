@@ -397,7 +397,8 @@ export default class Presenter {
             if (node.type === CONTAINER_NODE_TYPES.component) {
               const nameVariantArray: Array<string> = node.name.split(',');
               nameVariantArray.forEach((variantKey) => {
-                const variantKeyArray: Array<string> = variantKey.split('=');
+                const variantKeyStripped = variantKey.trim();
+                const variantKeyArray: Array<string> = variantKeyStripped.split('=');
                 if (variantKeyArray.length === 2) {
                   const keyIndex: number = 0;
                   const key: string = variantKeyArray[keyIndex];

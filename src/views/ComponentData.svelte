@@ -7,6 +7,7 @@
     libraryStatusOptions,
     roleOptions,
   } from './stores';
+  import ComponentVariants from './ComponentVariants';
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
   import KeystopKeys from './KeystopKeys';
@@ -40,6 +41,7 @@
 
     return finalizedOptions;
   };
+
 </script>
 
 {#if checkFilterMatch($currentFilter, 'design-system')}
@@ -62,6 +64,7 @@
     resetValue={resetValue}
     bind:value={item.componentData.library}
   />
+
 
   <FormUnit
     className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}

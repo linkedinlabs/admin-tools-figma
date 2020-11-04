@@ -3,6 +3,7 @@
   import ButtonRemove from './ButtonRemove';
   import FigmaInput from './FigmaInput';
   import FigmaSelectMenu from './FigmaSelectMenu';
+  import FigmaSwitchSet from './FigmaSwitchSet';
   import FigmaTextarea from './FigmaTextarea';
   import FormLabel from './FormLabel';
 
@@ -112,6 +113,18 @@
         options={options}
         on:changeSignal
         bind:value={value}
+        watchChange={selectWatchChange}
+      />
+    {/if}
+
+    {#if kind === 'inputSwitchSet'}
+      <FigmaSwitchSet
+        disabled={isLocked || itemIsLocked}
+        hasMultiple={hasMultiple}
+        invertView={invertView}
+        nameId={nameId}
+        options={options}
+        value={options}
         watchChange={selectWatchChange}
       />
     {/if}
