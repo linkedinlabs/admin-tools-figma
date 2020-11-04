@@ -54,10 +54,6 @@ declare global {
   }
 
   // Figma’s typings in npm package @figma/plugin-typings
-
-  // temp until Figma updates their types
-  type ComponentSetTypeTemp = 'COMPONENT_SET';
-  type NodeTypeTemp = NodeType & ComponentSetTypeTemp;
 } // declare global
 
 export {}

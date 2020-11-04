@@ -333,7 +333,7 @@ export default class Presenter {
 
         // meta info
         const isVariant = component.parent
-          && (component.parent.type === CONTAINER_NODE_TYPES.componentSet as NodeTypeTemp);
+          && (component.parent.type === CONTAINER_NODE_TYPES.componentSet);
         const kind: 'style' | 'component' = 'component';
         const typeId = getTypeId(type);
         const variants: Array<{
@@ -388,7 +388,7 @@ export default class Presenter {
         }
 
         // extract variants for the options and set up presentation object
-        if (component.type === CONTAINER_NODE_TYPES.componentSet as NodeTypeTemp) {
+        if (component.type === CONTAINER_NODE_TYPES.componentSet) {
           const variantKeysArray: Array<string> = [];
           const { children } = component;
 
