@@ -361,14 +361,41 @@ export default class Editor {
                     && (innerValue !== 'blank--multiple')
                     && (innerValue !== null)
                   ) {
-                    if (
-                      (updatedComponentData[innerKey] === undefined)
-                      || (
-                        updatedComponentData[innerKey] !== undefined
-                        && (updatedComponentData[innerKey] !== innerValue)
-                      )
-                    ) {
-                      updatedComponentData[innerKey] = innerValue;
+                    if (innerKey !== 'variants') {
+                      if (
+                        (updatedComponentData[innerKey] === undefined)
+                        || (
+                          updatedComponentData[innerKey] !== undefined
+                          && (updatedComponentData[innerKey] !== innerValue)
+                        )
+                      ) {
+                        updatedComponentData[innerKey] = innerValue;
+                      }
+                    } else {
+                      // remove null entries
+                      /* eslint-disable no-param-reassign */
+                      const updatedVariants = updatedComponentData[innerKey];
+                      if (updatedVariants !== undefined) {
+                        innerValue.forEach((updatedVariant, index) => {
+                          if (updatedVariant.ignore === null) {
+                            innerValue = [
+                              ...innerValue.slice(0, index),
+                              ...innerValue.slice(index + 1),
+                            ];
+                          }
+                        });
+
+                        // set the updates, if the variant exists
+                        updatedVariants.forEach((variant) => {
+                          innerValue.forEach((newVariant) => {
+                            if (variant.key === newVariant.key) {
+                              variant.ignore = newVariant.ignore;
+                            }
+                          });
+                        });
+                        updatedComponentData[innerKey] = updatedVariants;
+                        /* eslint-enable no-param-reassign */
+                      }
                     }
                   }
                 });
