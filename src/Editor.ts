@@ -390,6 +390,8 @@ export default class Editor {
                           innerValue.forEach((newVariant) => {
                             if (variant.key === newVariant.key) {
                               variant.ignore = newVariant.ignore;
+                            } else {
+                              updatedVariants.push(newVariant);
                             }
                           });
                         });
