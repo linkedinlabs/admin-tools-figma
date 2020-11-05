@@ -44,9 +44,9 @@
   beforeUpdate(() => {
     // check `variants` against original to see if it was updated on the Figma side
     if (compareArrays(variants, originalVariants)) {
-      // originalVariants = variants.map(variant => ({ ...variant }));
-      // resetValue = true;
       isDirty = true;
+    } else {
+      isDirty = false;
     }
 
     // watch locking changes and restore value if item becomes locked
