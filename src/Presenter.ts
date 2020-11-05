@@ -454,6 +454,21 @@ export default class Presenter {
             }
           });
 
+          // update variants - underlying variants can change, so must always be updated.
+          // we use the current `variants` array, flip any ignore/true matches to `true`
+          // and then replace the existing bundle with the updated, current bundle
+          existingComponentData.variants.forEach((existingVariant) => {
+            variants.forEach((variant) => {
+              if (
+                (variant.key === existingVariant.key)
+                && (existingVariant.ignore)
+              ) {
+                variant.ignore = true; // eslint-disable-line no-param-reassign
+              }
+            });
+          });
+          existingComponentData.variants = variants;
+
           // set data
           componentData = existingComponentData;
         }
