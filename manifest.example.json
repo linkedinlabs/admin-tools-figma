@@ -1,5 +1,5 @@
 {
-  "name": "Stapler (b-0.0.8)",
+  "name": "Stapler",
   "id": "PLUGIN_ID",
   "api": "1.0.0",
   "main": "dist/main.js",
