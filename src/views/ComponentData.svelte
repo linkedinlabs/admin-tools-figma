@@ -50,20 +50,6 @@
     Design System
   </span>
 
-  <FormUnit
-    className="form-row form-unit split-50"
-    disableCopy={true}
-    hasMultiple={isEditor && item.componentData.library === 'blank--multiple'}
-    invertView={invertView}
-    itemIsLocked={isLocked}
-    kind="inputSelect"
-    labelText="Library"
-    nameId={`item-library-${item.id}`}
-    options={setOptions($libraryOptions, item.componentData.library, isEditor)}
-    resetValue={resetValue}
-    bind:value={item.componentData.library}
-  />
-
   <ComponentVariants
     hasMultiple={isEditor && item.componentData.variants === 'blank--multiple'}
     invertView={invertView}
@@ -85,6 +71,20 @@
     resetValue={resetValue}
     on:saveSignal
     bind:value={item.componentData.annotationText}
+  />
+
+  <FormUnit
+    className="form-row form-unit split-50"
+    disableCopy={true}
+    hasMultiple={isEditor && item.componentData.library === 'blank--multiple'}
+    invertView={invertView}
+    itemIsLocked={isLocked}
+    kind="inputSelect"
+    labelText="Library"
+    nameId={`item-library-${item.id}`}
+    options={setOptions($libraryOptions, item.componentData.library, isEditor)}
+    resetValue={resetValue}
+    bind:value={item.componentData.library}
   />
 
   <span class="form-row">
