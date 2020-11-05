@@ -2,46 +2,45 @@
   import { afterUpdate, beforeUpdate } from 'svelte';
   import FormLabel from './forms-controls/FormLabel';
   import FigmaSwitchSet from './forms-controls/FigmaSwitchSet';
-  import { compareArrays, updateArray } from '../Tools';
+  import { compareArrays } from '../Tools';
 
   export let hasMultiple = false;
   export let invertView = false;
-  export let isEditor = false;
+  // export let isEditor = false;
   export let itemId = null;
   export let itemIsLocked = false;
   export let resetValue = false;
   export let variants = null;
 
-  let originalVariants = variants.map(variant => ({ ...variant }));
+  const originalVariants = variants.map(variant => ({ ...variant }));
   let isDirty = false;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
 
   const restoreValue = () => {
-    variants = originalVariants.map(variant => ({ ...variant }));;
-    console.log(variants)
+    variants = originalVariants.map(variant => ({ ...variant }));
     resetValue = true;
     isDirty = false;
   };
 
-  const setNameId = (variantKey, id) => {
+  const setNameId = (variantKey, currentItemId) => {
     const keyAsSlug = variantKey.toLowerCase().replace(' ', '-');
-    const nameId = `ignore-variant-${keyAsSlug}-${itemId}`;
-    return nameId
-  }
+    const nameId = `ignore-variant-${keyAsSlug}-${currentItemId}`;
+    return nameId;
+  };
 
-  const setOptions = (variantsArray) => {
+  const setOptions = (variantsArray, currentItemId) => {
     const options = [];
     variantsArray.forEach((variant) => {
       const option = {
-        id: setNameId(variant.key, itemId),
+        id: setNameId(variant.key, currentItemId),
         text: variant.key,
         value: variant.ignore,
-      }
+      };
       options.push(option);
     });
     return options;
-  }
+  };
 
   beforeUpdate(() => {
     // check `variants` against original to see if it was updated on the Figma side
@@ -50,11 +49,6 @@
       // resetValue = true;
       isDirty = true;
     }
-
-    console.log('variants')
-    console.log(variants)
-    console.log('originalVariants')
-    console.log(originalVariants)
 
     // watch locking changes and restore value if item becomes locked
     if (!wasUnlocked && isLocked) {
@@ -67,7 +61,7 @@
 
   afterUpdate(() => {
     if (resetValue) {
-      setOptions(variants);
+      setOptions(variants, itemId);
       resetValue = false;
       isDirty = false;
     }
@@ -94,7 +88,7 @@
       invertView={invertView}
       bind:isDirty={isDirty}
       nameId={`item-variants-${itemId}`}
-      options={setOptions(variants)}
+      options={setOptions(variants, itemId)}
       optionValueKeys={['key', 'ignore']}
       resetValue={resetValue}
       bind:value={variants}

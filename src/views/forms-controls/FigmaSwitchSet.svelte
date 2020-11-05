@@ -1,11 +1,10 @@
 <script>
   import { beforeUpdate } from 'svelte';
-  import FormLabel from './FormLabel';
   import FigmaSwitch from './FigmaSwitch';
   import { compareArrays } from '../../Tools';
 
   export let disabled = false;
-  export let hasMultiple = false;
+  // export let hasMultiple = false;
   export let invertView = false;
   export let isDirty = false;
   export let nameId = null;
@@ -23,19 +22,21 @@
 
   const updateValue = (currentOptions) => {
     currentOptions.forEach((option) => {
-      const compareKey = optionValueKeys[0];
-      const valueKey = optionValueKeys[1];
+      const cKeyIndex = 0;
+      const vKeyIndex = 1;
+      const compareKey = optionValueKeys[cKeyIndex];
+      const valueKey = optionValueKeys[vKeyIndex];
 
-      const valueIndex = value.findIndex(valItem => valItem[compareKey] === option.text)
+      const valueIndex = value.findIndex(valItem => valItem[compareKey] === option.text);
       if (valueIndex > -1) {
         value[valueIndex][valueKey] = option.value;
       }
-    })
-  }
+    });
+  };
 
   beforeUpdate(() => {
+    // if the the arrays are different
     if (compareArrays(options, originalOptions)) {
-      console.log('they are different')
       // update the value
       updateValue(options);
       isDirty = true;
@@ -43,7 +44,7 @@
       // reset the options
       originalOptions = options ? [...options] : [];
     }
-  })
+  });
 </script>
 
 {#each options as option (option.id)}

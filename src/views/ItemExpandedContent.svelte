@@ -26,7 +26,6 @@
     dirtyItem = deepCopy(item);
     isDirty = false;
     resetValue = true;
-    console.log('reset me')
   };
 
   const handleSave = () => {
@@ -39,7 +38,6 @@
   };
 
   beforeUpdate(() => {
-    console.log(dirtyItem)
     // check `item` against dirty to see if it was updated in the form
     isDirty = deepCompare(item, dirtyItem);
 

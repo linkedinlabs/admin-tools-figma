@@ -470,8 +470,6 @@
     items = selected.items;
     types = selected.types;
 
-    console.log(items)
-
     if (!compareTypesGroups(types, originalTypes)) {
       setGroupsTypesOpen(types);
       originalTypes = types;
