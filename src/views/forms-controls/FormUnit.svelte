@@ -3,7 +3,6 @@
   import ButtonRemove from './ButtonRemove';
   import FigmaInput from './FigmaInput';
   import FigmaSelectMenu from './FigmaSelectMenu';
-  import FigmaSwitchSet from './FigmaSwitchSet';
   import FigmaTextarea from './FigmaTextarea';
   import FormLabel from './FormLabel';
 
@@ -18,7 +17,6 @@
   export let itemIsLocked = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
-  export let optionValueKeys = null;
   export let placeholder = null;
   export let nameId = 'text-input-id';
   export let resetValue = false;
@@ -80,7 +78,7 @@
     value={value}
   />
 
-  <span class={`form-inner-row ${kind}`}>
+  <span class="form-inner-row">
     {#if kind === 'inputText'}
       <FigmaInput
         className="form-element element-type-text"
@@ -115,18 +113,6 @@
         on:changeSignal
         bind:value={value}
         watchChange={selectWatchChange}
-      />
-    {/if}
-
-    {#if kind === 'inputSwitchSet'}
-      <FigmaSwitchSet
-        disabled={isLocked || itemIsLocked}
-        hasMultiple={hasMultiple}
-        invertView={invertView}
-        nameId={nameId}
-        options={options}
-        optionValueKeys={optionValueKeys}
-        bind:value={value}
       />
     {/if}
 
