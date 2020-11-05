@@ -79,7 +79,7 @@
     value={value}
   />
 
-  <span class="form-inner-row">
+  <span class={`form-inner-row ${kind}`}>
     {#if kind === 'inputText'}
       <FigmaInput
         className="form-element element-type-text"
@@ -124,7 +124,7 @@
         invertView={invertView}
         nameId={nameId}
         options={options}
-        value={options}
+        bind:value={options}
         watchChange={selectWatchChange}
       />
     {/if}

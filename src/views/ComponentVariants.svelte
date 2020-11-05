@@ -1,6 +1,7 @@
 <script>
-  import { beforeUpdate } from 'svelte';
+  import { afterUpdate, beforeUpdate } from 'svelte';
   import FormUnit from './forms-controls/FormUnit';
+  import { compareArrays, updateArray } from '../Tools';
 
   export let hasMultiple = false;
   export let invertView = false;
@@ -9,6 +10,9 @@
   export let itemId = null;
   export let resetValue = false;
   export let variants = null;
+
+  let dirtyVariants = variants ? [...variants] : [];
+  let originalVariants = variants ? [...variants] : [];
 
   const setNameId = (variantKey, id) => {
     const keyAsSlug = variantKey.toLowerCase().replace(' ', '-');
@@ -28,6 +32,28 @@
     });
     return options;
   }
+
+  beforeUpdate(() => {
+    // check `variants` against original to see if it was updated on the Figma side
+    if (compareArrays(variants, originalVariants)) {
+      dirtyVariants = variants ? [...variants] : [];
+      originalVariants = variants ? [...variants] : [];
+      resetValue = true;
+    }
+
+    // check `variants` against dirty to see if it was updated in the plugin UI
+    if (compareArrays(variants, dirtyVariants)) {
+      variants = dirtyVariants ? [...dirtyVariants] : [];
+      dirtyVariants = variants ? [...variants] : [];
+      resetValue = true;
+    }
+  });
+
+  afterUpdate(() => {
+    if (resetValue) {
+      resetValue = false;
+    }
+  });
 </script>
 
 <FormUnit
@@ -41,5 +67,5 @@
   nameId={`item-variants-${itemId}`}
   options={setOptions(variants)}
   resetValue={resetValue}
-  value={variants}
+  bind:value={variants}
 />

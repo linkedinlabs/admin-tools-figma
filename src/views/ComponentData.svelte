@@ -41,7 +41,6 @@
 
     return finalizedOptions;
   };
-
 </script>
 
 {#if checkFilterMatch($currentFilter, 'design-system')}
@@ -65,6 +64,14 @@
     bind:value={item.componentData.library}
   />
 
+  <ComponentVariants
+    hasMultiple={isEditor && item.componentData.variants === 'blank--multiple'}
+    invertView={invertView}
+    isLocked={isLocked}
+    itemId={item.id}
+    resetValue={resetValue}
+    bind:variants={item.componentData.variants}
+  />
 
   <FormUnit
     className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}

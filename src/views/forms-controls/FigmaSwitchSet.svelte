@@ -16,7 +16,7 @@
 </script>
 
 {#each options as option (option.id)}
-  <span class="form-row">
+  <span class="switch-set">
     <FigmaSwitch
       className="form-element element-type-switch"
       disabled={disabled}
