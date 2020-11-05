@@ -45,7 +45,6 @@
 
     // check `item` against original to see if it was updated on the Figma side
     if (deepCompare(item, originalItem)) {
-      
       resetValue = true;
     }
 

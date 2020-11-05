@@ -18,6 +18,7 @@
   export let itemIsLocked = false;
   export let kind = 'inputText';
   export let labelText = 'Type something…';
+  export let optionValueKeys = null;
   export let placeholder = null;
   export let nameId = 'text-input-id';
   export let resetValue = false;
@@ -124,8 +125,8 @@
         invertView={invertView}
         nameId={nameId}
         options={options}
-        bind:value={options}
-        watchChange={selectWatchChange}
+        optionValueKeys={optionValueKeys}
+        bind:value={value}
       />
     {/if}
 
