@@ -4,9 +4,8 @@
   import FigmaSwitchSet from './forms-controls/FigmaSwitchSet';
   import { compareArrays } from '../Tools';
 
-  export let hasMultiple = false;
   export let invertView = false;
-  // export let isEditor = false;
+  export let isEditor = false;
   export let itemId = null;
   export let itemIsLocked = false;
   export let resetValue = false;
@@ -85,9 +84,9 @@
   <span class="form-inner-row inputSwitchSet">
     <FigmaSwitchSet
       disabled={isLocked || itemIsLocked}
-      hasMultiple={hasMultiple}
       invertView={invertView}
       bind:isDirty={isDirty}
+      isEditor={isEditor}
       nameId={`item-variants-${itemId}`}
       options={setOptions(variants, itemId)}
       optionValueKeys={['key', 'ignore']}

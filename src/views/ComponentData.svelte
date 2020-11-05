@@ -51,8 +51,8 @@
   </span>
 
   <ComponentVariants
-    hasMultiple={isEditor && item.componentData.variants === 'blank--multiple'}
     invertView={invertView}
+    isEditor={isEditor}
     itemIsLocked={isLocked}
     itemId={item.id}
     resetValue={resetValue}

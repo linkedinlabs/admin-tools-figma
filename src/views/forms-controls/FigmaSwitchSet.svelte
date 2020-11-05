@@ -4,9 +4,9 @@
   import { compareArrays } from '../../Tools';
 
   export let disabled = false;
-  // export let hasMultiple = false;
   export let invertView = false;
   export let isDirty = false;
+  export let isEditor = false;
   export let nameId = null;
   export let options = [
     {
@@ -52,6 +52,7 @@
     <FigmaSwitch
       className="form-element element-type-switch"
       disabled={disabled}
+      hasMultiple={isEditor && option.value === null}
       invertView={invertView}
       labelText={option.text}
       nameId={`${nameId}-${option.id}`}
