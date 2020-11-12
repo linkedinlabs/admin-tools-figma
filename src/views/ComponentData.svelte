@@ -50,14 +50,16 @@
     Design System
   </span>
 
-  <ComponentVariants
-    invertView={invertView}
-    isEditor={isEditor}
-    itemIsLocked={isLocked}
-    itemId={item.id}
-    resetValue={resetValue}
-    bind:variants={item.componentData.variants}
-  />
+  {#if (item.componentData.variants && item.componentData.variants.length > 0)}
+    <ComponentVariants
+      invertView={invertView}
+      isEditor={isEditor}
+      itemIsLocked={isLocked}
+      itemId={item.id}
+      resetValue={resetValue}
+      bind:variants={item.componentData.variants}
+    />
+  {/if}
 
   <FormUnit
     className={setClasses('form-row', isEditor && item.componentData.annotationTextHasValues)}
