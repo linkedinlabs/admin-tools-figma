@@ -4,6 +4,7 @@
   import EditorExpandedContent from './EditorExpandedContent';
   import ItemExpandedContent from './ItemExpandedContent';
   import ItemGroupHeader from './ItemGroupHeader';
+  import { compareArrays, existsInArray } from '../Tools';
 
   // props
   export let selected = null;
@@ -397,7 +398,10 @@
       if (!currentNames.includes(item.name)) {
         currentNames.push(item.name);
       }
-      if (item.type !== 'COMPONENT') {
+      if (
+        (item.type !== 'COMPONENT')
+        && (item.type !== 'COMPONENT_SET')
+      ) {
         isComponents = false;
       }
     });
@@ -420,13 +424,46 @@
     if (isComponents) {
       editorItem.type = 'COMPONENT';
 
-      // set up editorComponentData
+      // set up editorComponentData ------------
+      // compare each successive value; if they do not match, set to `null`
+      // and set `HasValues` to `true`.
       itemsToCompare.forEach((item) => {
         if (item.componentData) {
           Object.keys(item.componentData).forEach((key) => {
             if (editorComponentData[key] === undefined) {
               editorComponentData[key] = item.componentData[key];
               editorComponentData[`${key}HasValues`] = item.componentData[key] !== null;
+            } else if (
+              (editorComponentData[key] !== undefined)
+              && (editorComponentData[key] !== null)
+              && (editorComponentData[key].constructor === Array)
+            ) {
+              if (key !== 'variants') {
+                if (compareArrays(item.componentData[key], editorComponentData[key])) {
+                  editorComponentData[key] = [];
+                  editorComponentData[`${key}HasValues`] = true;
+                } else {
+                  editorComponentData[`${key}HasValues`] = false;
+                }
+              } else {
+                item.componentData.variants.forEach((itemVariant) => {
+                  if (!existsInArray(editorComponentData.variants, itemVariant.key, 'key')) {
+                    editorComponentData.variants.push(itemVariant);
+                  } else {
+                    const compareVariantIndex = 0;
+                    const compareVariant = editorComponentData.variants.filter(
+                      editorVariant => editorVariant.key === itemVariant.key,
+                    )[compareVariantIndex];
+
+                    // if they are different, set ignore to `null`
+                    // and set `hasMultiple` flag
+                    if (itemVariant.ignore !== compareVariant.ignore) {
+                      compareVariant.ignore = null;
+                      compareVariant.hasMultiple = true;
+                    }
+                  }
+                });
+              }
             } else if (editorComponentData[key] !== item.componentData[key]) {
               editorComponentData[key] = null;
               editorComponentData[`${key}HasValues`] = true;
@@ -526,7 +563,7 @@
                   isLocked={checkIsLocked(item.id)}
                   isOpen={checkIsOpen(item.id)}
                   labelGroupText={item.group}
-                  labelText={item.name}
+                  labelText={item.nameDisplay}
                   type="main-item"
                 />
                 {#if checkIsOpen(item.id)}

@@ -72,9 +72,23 @@ svg {
           padding: em(2) em(10);
           width: 100%;
 
+          &.indent {
+            padding: em(2) em(44);
+
+            &.text-buffer {
+              padding: em(2) em(54) em(12) em(54);
+
+              &.has-multiple {
+                font-style: italic;
+                color: rgba($wl-type-01-invert, 0.8);
+              }
+            }
+          }
+
           .form-unit,
           .form-element,
-          .form-label, {
+          .form-label,
+          &.form-unit {
             &.split-40 {
               width: calc(40% - #{em(3)});
 

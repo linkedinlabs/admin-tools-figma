@@ -1,7 +1,11 @@
 <script>
   // this component is a svelte rebuild of the vendor/figma-select-menu.js script
   // used in other LinkedIn Figma plugins
-  import { afterUpdate, onMount } from 'svelte';
+  import {
+    afterUpdate,
+    beforeUpdate,
+    createEventDispatcher,
+  } from 'svelte';
 
   export let className = null;
   export let disabled = false;
@@ -9,6 +13,7 @@
   export let invertView = false;
   export let nameId = null;
   export let value = null;
+  export let watchChange = false;
   export let options = [
     {
       value: 'unassigned',
@@ -23,6 +28,8 @@
     value,
     text: null,
   };
+
+  const dispatch = createEventDispatcher();
 
   // ui
   let fauxSelectorElement = null;
@@ -53,10 +60,16 @@
   const setSelected = (optionValue = value) => {
     const index = 0;
     let valueToCompare = optionValue;
+    let newValue = false;
 
     // set a string for blanks in select
     if (valueToCompare === null) {
       valueToCompare = 'blank--multiple';
+    }
+
+    // send save signal if watching
+    if ((value !== valueToCompare) && watchChange) {
+      newValue = true;
     }
 
     // update for faux select
@@ -68,6 +81,12 @@
 
     // update for real select + return binding
     value = selected.value;
+
+    // send change signal if watching and if values are different
+    if (newValue && watchChange) {
+      dispatch('changeSignal');
+    }
+
     return selected;
   };
 
@@ -116,31 +135,31 @@
         const dropdown = currentlySelectedItem.parentNode;
 
         // default is `down`, grab the next sibling
-        let nextSelectedItem = currentlySelectedItem.nextSibling;
+        let nextSelectedItem = currentlySelectedItem.nextElementSibling;
         if (direction === 'up') {
           // grab the previous sibling
-          nextSelectedItem = currentlySelectedItem.previousSibling;
+          nextSelectedItem = currentlySelectedItem.previousElementSibling;
 
           // skip over separators
           if (nextSelectedItem && nextSelectedItem.tagName !== 'LI') {
-            nextSelectedItem = nextSelectedItem.previousSibling;
+            nextSelectedItem = nextSelectedItem.previousElementSibling;
           }
 
           // if the previous sibling is missing, must be at the top
           // grab the last element in the list
           if (!nextSelectedItem) {
-            nextSelectedItem = currentlySelectedItem.parentNode.lastChild;
+            nextSelectedItem = currentlySelectedItem.parentNode.lastElementChild;
           }
         } else {
           // skip over separators
           if (nextSelectedItem && nextSelectedItem.tagName !== 'LI') {
-            nextSelectedItem = nextSelectedItem.nextSibling;
+            nextSelectedItem = nextSelectedItem.nextElementSibling;
           }
 
           // if the next sibling is missing, must be at the bottom
           // grab the first element in the list
           if (!nextSelectedItem) {
-            nextSelectedItem = currentlySelectedItem.parentNode.firstChild;
+            nextSelectedItem = currentlySelectedItem.parentNode.firstElementChild;
           }
         }
 
@@ -235,15 +254,13 @@
     menuListElement.style.top = `${menuPosition}px`;
   };
 
-  onMount(async () => {
+  beforeUpdate(async () => {
     setSelected();
   });
 
   afterUpdate(() => {
     if (isMenuOpen) {
       setMenuPosition();
-    } else {
-      setSelected();
     }
   });
 </script>
@@ -278,26 +295,32 @@
       style="top: 0px"
     >
       {#each options as option (option.value)}
-        <li
-          class={`styled-select__list-item${isSelected(option.value, selected, value) ? ' styled-select__list-item--active' : ''}`}
-          data-value={option.value}
-          on:click={() => handleItemClick(option.value)}
-        >
-          <span class="styled-select__list-item-icon"></span>
-          <span class={`styled-select__list-item-text${option.value === 'blank--multiple' ? ' has-multiple' : ''}`}>
-            {option.text}
-          </span>
-        </li>
+        {#if (option.value && !option.value.includes('divider--'))}
+          <li
+            class={`styled-select__list-item${isSelected(option.value, selected, value) ? ' styled-select__list-item--active' : ''}${option.disabled ? ' styled-select__list-item--disabled' : ''}`}
+            data-value={option.value}
+            on:click={() => handleItemClick(option.value)}
+          >
+            <span class="styled-select__list-item-icon"></span>
+            <span class={`styled-select__list-item-text${option.value === 'blank--value' ? ' is-blank' : ''}${option.disabled ? ' styled-select__list-item-text--disabled' : ''}`}>
+              {option.text}
+            </span>
+          </li>
+        {:else if option.value.includes('divider--')}
+          <div class="styled-select__divider">
+            <span class="styled-select__divider-line"></span>
+          </div>
+        {/if}
       {/each}
 
     </ul>
   </div>
   <select
-    bind:value={value}
     class="styled-select select-menu"
     disabled={disabled}
     id={nameId}
     style="display:none"
+    bind:value={value}
   >
     {#each options as option (option.value)}
       <option

@@ -20,13 +20,20 @@
   overflow: hidden;
   opacity: 0;
 
-  &:checked + label {
+  &:checked + label,
+  &:checked.has-multiple + label {
     &:before {
       background-color: $wl-ctrl-primary;
     }
 
     &:after {
       transform: translateX(14px);
+    }
+  }
+
+  &.has-multiple + label {
+    &:after {
+      transform: translateX(7px);
     }
   }
 
@@ -140,7 +147,7 @@
     display: block;
     position: absolute;
     top: em(10);
-    left: em(2);
+    left: em(8);
     border: 1px solid $wl-ctrl-primary;
     background-color: $wl-canvas;
   }

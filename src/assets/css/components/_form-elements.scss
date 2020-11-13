@@ -16,6 +16,10 @@
   width: 100%;
   min-height: em(30);
 
+  &.hidden {
+    @include hide-visually;
+  }
+
   span {
     display: flex;
     flex-flow: row;
@@ -119,6 +123,15 @@
   .form-inner-row {
     display: flex;
     width: 100%;
+
+    &.inputSwitchSet {
+      flex-wrap: wrap;
+    }
+
+    .switch-set {
+      display: block;
+      width: 100%;
+    }
   }
 
   .form-label {
@@ -168,6 +181,7 @@
 
     &.element-type-switch {
       @include figma-switch-base;
+      position: relative;
       padding-left: em(6);
 
       .switch__toggle {
