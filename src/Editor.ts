@@ -116,8 +116,11 @@ export default class Editor {
     const selectIndex = 0;
     const presenter = new Presenter({ for: this.array });
     let existingItem = null;
-    let baseItem: BaseStyle | ComponentNode = null;
-    if (updatedItem.type !== CONTAINER_NODE_TYPES.component) {
+    let baseItem: BaseStyle | ComponentNode | ComponentSetNode = null;
+    if (
+      (updatedItem.type !== CONTAINER_NODE_TYPES.component)
+      && (updatedItem.type !== CONTAINER_NODE_TYPES.componentSet)
+    ) {
       // grab existing style presentation object for comparison
       const extractedStyles = presenter.extractStyles();
       existingItem = extractedStyles.items.filter(
@@ -224,8 +227,11 @@ export default class Editor {
 
     const presenter = new Presenter({ for: this.array });
     const existingItems = [];
-    const baseItems: Array<BaseStyle | ComponentNode> = [];
-    if (updatedItem.type !== CONTAINER_NODE_TYPES.component) {
+    const baseItems: Array<BaseStyle | ComponentNode | ComponentSetNode> = [];
+    if (
+      (updatedItem.type !== CONTAINER_NODE_TYPES.component)
+      && (updatedItem.type !== CONTAINER_NODE_TYPES.componentSet)
+    ) {
       // grab existing style presentation objects for comparison
       const extractedStyles = presenter.extractStyles();
       extractedStyles.items.forEach((item) => {
@@ -355,14 +361,43 @@ export default class Editor {
                     && (innerValue !== 'blank--multiple')
                     && (innerValue !== null)
                   ) {
-                    if (
-                      (updatedComponentData[innerKey] === undefined)
-                      || (
-                        updatedComponentData[innerKey] !== undefined
-                        && (updatedComponentData[innerKey] !== innerValue)
-                      )
-                    ) {
-                      updatedComponentData[innerKey] = innerValue;
+                    if (innerKey !== 'variants') {
+                      if (
+                        (updatedComponentData[innerKey] === undefined)
+                        || (
+                          updatedComponentData[innerKey] !== undefined
+                          && (updatedComponentData[innerKey] !== innerValue)
+                        )
+                      ) {
+                        updatedComponentData[innerKey] = innerValue;
+                      }
+                    } else {
+                      // remove null entries
+                      /* eslint-disable no-param-reassign */
+                      const updatedVariants = updatedComponentData[innerKey];
+                      if (updatedVariants !== undefined) {
+                        innerValue.forEach((updatedVariant, index) => {
+                          if (updatedVariant.ignore === null) {
+                            innerValue = [
+                              ...innerValue.slice(0, index),
+                              ...innerValue.slice(index + 1),
+                            ];
+                          }
+                        });
+
+                        // set the updates, if the variant exists
+                        updatedVariants.forEach((variant) => {
+                          innerValue.forEach((newVariant) => {
+                            if (variant.key === newVariant.key) {
+                              variant.ignore = newVariant.ignore;
+                            } else {
+                              updatedVariants.push(newVariant);
+                            }
+                          });
+                        });
+                        updatedComponentData[innerKey] = updatedVariants;
+                        /* eslint-enable no-param-reassign */
+                      }
                     }
                   }
                 });

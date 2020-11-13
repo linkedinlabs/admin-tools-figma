@@ -123,6 +123,15 @@
   .form-inner-row {
     display: flex;
     width: 100%;
+
+    &.inputSwitchSet {
+      flex-wrap: wrap;
+    }
+
+    .switch-set {
+      display: block;
+      width: 100%;
+    }
   }
 
   .form-label {

@@ -24,6 +24,10 @@ declare global {
     role: 'none' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
+    variants?: Array<{
+      key: string,
+      ignore: boolean,
+    }>,
     version?: string,
   }
 
@@ -33,8 +37,10 @@ declare global {
     group: string,
     groupId: string,
     id: string,
+    isVariant?: boolean,
     kind: string,
     name: string,
+    nameDisplay: string,
     type: StyleType | NodeType,
     typeId: string,
     typeName: PresenterTypeName,

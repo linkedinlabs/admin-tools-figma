@@ -344,6 +344,17 @@ const updateArray = (
  * values.
  */
 const compareArrays = (array1: Array<any>, array2: Array<any>) => {
+  // compares two values; uses `deepCompare` if values are an object
+  const isMatch = (value1: any, value2: any) => {
+    let match = false;
+    if ((typeof value1 === 'object') && (value1 !== null)) {
+      match = !deepCompare(value1, value2); // eslint-disable-line no-use-before-define
+    } else {
+      match = (value2 === value1);
+    }
+    return match;
+  };
+
   let isDifferent = false;
 
   if (!array1 && !array2) {
@@ -364,9 +375,7 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
   }
 
   array1.forEach((value) => {
-    const itemIndex = array2.findIndex(
-      foundValue => (foundValue === value),
-    );
+    const itemIndex = array2.findIndex(foundValue => isMatch(value, foundValue));
 
     if (itemIndex < 0) {
       isDifferent = true;
@@ -378,9 +387,7 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
   }
 
   array2.forEach((value) => {
-    const itemIndex = array1.findIndex(
-      foundValue => (foundValue === value),
-    );
+    const itemIndex = array1.findIndex(foundValue => isMatch(value, foundValue));
 
     if (itemIndex < 0) {
       isDifferent = true;
