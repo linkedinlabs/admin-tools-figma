@@ -24,5 +24,12 @@
       "name": "Inherit Name",
       "command": "inherit-name"
     }
+  ],
+  "relaunchButtons": [
+    {
+      "command": "tools",
+      "name": "Open Stapler",
+      "multipleSelection": true
+    }
   ]
 }

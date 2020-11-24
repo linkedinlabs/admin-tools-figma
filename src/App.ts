@@ -71,6 +71,27 @@ const assemble = (context: any = null) => {
 // };
 
 /**
+ * @description Invokes Figma’s `setRelaunchData` on the passed node and (if applicable),
+ * the container component node.
+ *
+ * @kind function
+ * @name setRelaunchCommands
+ *
+ * @param {Object} node The node (`SceneNode`) to use with `setRelaunchData`.
+ *
+ * @returns {null}
+ */
+const setRelaunchCommands = (): void => {
+  // add “Open Stapler” to page
+  figma.currentPage.parent.setRelaunchData({
+    tools: '',
+  });
+
+  return null;
+};
+
+
+/**
  * @description A class to handle core app logic and dispatch work to other classes.
  *
  * @class
@@ -203,6 +224,10 @@ export default class App {
     if (updateResult.status === 'success') {
       App.refreshGUI(sessionKey);
     }
+
+    // add the relaunch button
+    setRelaunchCommands();
+
     return this.closeOrReset();
   }
 
