@@ -35,7 +35,7 @@ Follow the [JSDoc](https://jsdoc.app) style for documentation.
 
 * Similar to `watch`, you may specify a build environment: `npm run build:internal` or `npm run build:public`. If not specified, the default is `:internal`.
 
-Once a new build is created, the updates can be published through Figma’s desktop app (see `build-README-template.md` for further instructions).
+Once a new build is created, the updates can be published through Figma’s desktop app (see [the wiki](https://go/designtools) for further instructions).
 
 ## Technologies
 
@@ -51,7 +51,7 @@ Figma maintains a [Typings File](https://www.figma.com/plugin-docs/api/typings/)
 The UI for this plugin is built using [Svelte](https://svelte.dev). If you are familiar with React, Vue, or another state-based UI engine, Svelte will
 look familiar and hopefully more simple.
 
-The Svelte site contains an excellent [Tutorial](https://svelte.dev/tutorial/basics) to quickly get up-to-speed on the basics.
+The Svelte site contains an excellent [tutorial](https://svelte.dev/tutorial/basics) to quickly get up-to-speed on the basics.
 
 ### Sass
 
