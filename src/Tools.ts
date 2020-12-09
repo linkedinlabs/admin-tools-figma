@@ -433,8 +433,8 @@ const deepCopy = (objectToClone: Object) => {
  * @kind function
  * @name deepCompare
  *
- * @param {Array} unmodifiedObject An object to compare.
- * @param {Array} modifiedObject An object to compare against `unmodifiedObject`.
+ * @param {Object} unmodifiedObject An object to compare.
+ * @param {Object} modifiedObject An object to compare against `unmodifiedObject`.
  *
  * @returns {boolean} Returns `true` if the objects are different, `false` if they are identical.
  */
