@@ -8,12 +8,13 @@ Big-picture background and technical notes for our Design Org Tools can be found
 1. Copy `.plugin-id.example` to `.plugin-id` and replace “PLUGIN_ID” with the current plugin ID
 1. Run `npm install` – this will install dependencies, generate the `manifest.json` file (based on `manifest.example.json`), and run `build`
 1. Add the plugin’s fresh `manifest.json` to Figma’s desktop app (see `build-README-template.md` for instructions)
+1. View the plugin in Figma’s “Development” sub-menu: “Plugins > Development > Plugin name”
 
 ## Running the plugin for development
 
 `npm run watch` – Run during development to keep the latest changes built.
 
-* _Note:_ The `manifest.json` file is re-generated each time `watch` is run. Make menu/command updates to `manifest.example.json` and restart the process to see them reflected in the current build.
+* _Note:_ The `manifest.json` file is re-generated each time `watch` is started and is not committed to the repo. Make menu/command updates to `manifest.example.json` and restart the process to see them reflected in the current build.
 * If you want to watch a specific build environment, you can specify it: `npm run watch:internal` or `npm run watch:public`. If not specified, the default is `:internal`.
 
 ### Linting
@@ -36,12 +37,22 @@ Follow the [JSDoc](https://jsdoc.app) style for documentation.
 
 Once a new build is created, the updates can be published through Figma’s desktop app (see `build-README-template.md` for further instructions).
 
-## Typescript
-This plugin uses Typescript. If you are familiar with Javascript, Typescript will
+## Technologies
+
+### Typescript
+
+This plugin uses [Typescript](https://www.typescriptlang.org). If you are familiar with Javascript, Typescript will
 look very familiar. In fact, valid Javascript code is already valid Typescript code.
 
-Typescript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
-
 Figma maintains a [Typings File](https://www.figma.com/plugin-docs/api/typings/) npm package that is generally updated soon after API changes.
+
+### Svelte
+
+The UI for this plugin is built using [Svelte](https://svelte.dev). If you are familiar with React, Vue, or another state-based UI engine, Svelte will
+look familiar and hopefully more simple.
+
+The Svelte site contains an excellent [Tutorial](https://svelte.dev/tutorial/basics) to quickly get up-to-speed on the basics.
+
+### Sass
+
+CSS for the UI takes advantage of [Sass](https://sass-lang.com).
