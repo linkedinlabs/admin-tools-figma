@@ -77,8 +77,6 @@ const assemble = (context: any = null) => {
  * @kind function
  * @name setRelaunchCommands
  *
- * @param {Object} node The node (`SceneNode`) to use with `setRelaunchData`.
- *
  * @returns {null}
  */
 const setRelaunchCommands = (): void => {
