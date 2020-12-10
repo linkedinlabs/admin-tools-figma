@@ -8,14 +8,14 @@ Big-picture background and technical notes for our Design Org Tools can be found
 1. Copy `.plugin-id.example` to `.plugin-id` and replace “PLUGIN_ID” with the current plugin ID
 1. Run `npm install` – this will install dependencies, generate the `manifest.json` file (based on `manifest.example.json`), and run `build`
 1. Add the plugin’s fresh `manifest.json` to Figma’s desktop app (see `build-README-template.md` for instructions)
-1. View the plugin in Figma’s “Development” sub-menu: “Plugins > Development > Plugin name”
+1. View the plugin in Figma’s “Development” sub-menu: “Plugins > Development > [Plugin name]”
 
 ## Running the plugin for development
 
 `npm run watch` – Run during development to keep the latest changes built.
 
 * _Note:_ The `manifest.json` file is re-generated each time `watch` is started and is not committed to the repo. Make menu/command updates to `manifest.example.json` and restart the process to see them reflected in the current build.
-* If you want to watch a specific build environment, you can specify it: `npm run watch:internal` or `npm run watch:public`. If not specified, the default is `:internal`.
+* If you want to watch a specific build target, you can specify it: `npm run watch:internal` or `npm run watch:public`. If not specified, the default is `:internal`.
 
 ### Linting
 
@@ -33,7 +33,7 @@ Follow the [JSDoc](https://jsdoc.app) style for documentation.
 
 `npm run build` – Run to build a production version of the plugin. Use this as a final step before publishing updates.
 
-* Similar to `watch`, you may specify a build environment: `npm run build:internal` or `npm run build:public`. If not specified, the default is `:internal`.
+* Similar to `watch`, you may specify a build target: `npm run build:internal` or `npm run build:public`. If not specified, the default is `:internal`.
 
 Once a new build is created, the updates can be published through Figma’s desktop app (see [the wiki](https://go/designtools) for further instructions).
 
