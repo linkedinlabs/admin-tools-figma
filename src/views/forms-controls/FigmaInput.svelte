@@ -31,6 +31,7 @@
 
 <span class={className}>
   <input
+    on:blur={() => dispatch('saveSignal')}
     disabled={disabled}
     id={nameId}
     on:keyup={watchKeys}

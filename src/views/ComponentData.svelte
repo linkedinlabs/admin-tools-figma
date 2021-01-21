@@ -11,11 +11,13 @@
   import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
   import KeystopKeys from './KeystopKeys';
+  import AriaLabels from './AriaLabels';
   import { checkFilterMatch, deepCopy } from '../Tools';
 
   export let invertView = false;
   export let isEditor = false;
   export let item = null;
+  export let savedItem = null;
   export let isLocked = false;
   export let resetValue = false;
 
@@ -26,6 +28,7 @@
     return classes;
   };
 
+  // tktk: need to add equivalent to set value for labels
   const setOptions = (options, currentValue, addNullAllowed) => {
     let finalizedOptions = options;
     if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
@@ -34,7 +37,6 @@
         text: 'multiple…',
         disabled: false,
       };
-
       finalizedOptions = deepCopy(options);
       finalizedOptions.unshift(nullOption);
     }
@@ -184,10 +186,19 @@
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputSelect"
-    labelText="ARIA Role"
+    labelText="Role"
     nameId={`item-aria-role-${item.id}`}
     options={setOptions($roleOptions, item.componentData.role, isEditor)}
     resetValue={resetValue}
     bind:value={item.componentData.role}
+  />
+  <AriaLabels 
+    role={item.componentData.role}
+    invertView={invertView}
+    hasMultiple={isEditor && item.componentData.role === 'blank--multiple'}
+    isEditor={isEditor}
+    itemId={item.id}
+    savedLabels={savedItem.componentData.labels}
+    bind:labels={item.componentData.labels}
   />
 {/if}

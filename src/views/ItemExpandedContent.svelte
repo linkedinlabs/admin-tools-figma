@@ -121,6 +121,7 @@
     {#if !$isStyles && dirtyItem.componentData}
       <ComponentData
         bind:item={dirtyItem}
+        savedItem={originalItem}
         isLocked={isLocked}
         resetValue={resetValue}
         on:saveSignal={() => handleSave()}

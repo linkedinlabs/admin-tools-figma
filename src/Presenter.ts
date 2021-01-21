@@ -435,7 +435,12 @@ export default class Presenter {
           hasKeystop: false,
           keys: [],
           library: 'unassigned',
-          role: 'none',
+          role: 'no-role',
+          labels: {
+            alt: null,
+            visible: null,
+            a11y: null,
+          },
           type: 'component',
           usageStatus: 'production',
           variants,

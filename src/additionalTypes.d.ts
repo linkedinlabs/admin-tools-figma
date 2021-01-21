@@ -21,7 +21,8 @@ declare global {
     hasKeystop: boolean,
     keys: Array<'arrows-left-right' | 'arrows-up-down' | 'enter' | 'escape' | 'space'>,
     library: 'unassigned' | 'art-deco' | 'mercado',
-    role: 'none' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
+    role: 'no-role' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
+    labels: PresenterComponentLabels,
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
     variants?: Array<{
@@ -45,6 +46,12 @@ declare global {
     typeId: string,
     typeName: PresenterTypeName,
   };
+
+  type PresenterComponentLabels = {
+    alt: string,
+    visible: string,
+    a11y: string
+  }
 
   // Vendor Declarations
 
