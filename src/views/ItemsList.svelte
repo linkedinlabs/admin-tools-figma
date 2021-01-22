@@ -383,7 +383,7 @@
       type: 'style',
     };
 
-    const editorComponentData = {};
+    const editorComponentData = { overrides: [] };
 
     const currentDescriptions = [];
     const currentGroups = [];
@@ -465,8 +465,23 @@
                 });
               }
             } else if (editorComponentData[key] !== item.componentData[key]) {
-              editorComponentData[key] = null;
-              editorComponentData[`${key}HasValues`] = true;
+              if (key === 'labels') {
+                Object.entries(item.componentData.labels).forEach((label) => {
+                  const [labelKey, val] = label;
+                  if (editorComponentData.labels[labelKey] !== val) {
+                    editorComponentData.overrides.push(labelKey);
+                  }
+                });
+                if (editorComponentData.overrides.length) {
+                  editorComponentData.labels = { alt: null, visible: null, a11y: null };
+                }
+              } else {
+                editorComponentData[key] = null;
+                editorComponentData[`${key}HasValues`] = true;
+                if (key === 'role') {
+                  editorComponentData.overrides.push('role');
+                }
+              }
             }
           });
         }

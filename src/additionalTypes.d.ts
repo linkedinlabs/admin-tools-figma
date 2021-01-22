@@ -22,7 +22,7 @@ declare global {
     keys: Array<'arrows-left-right' | 'arrows-up-down' | 'enter' | 'escape' | 'space'>,
     library: 'unassigned' | 'art-deco' | 'mercado',
     role: 'no-role' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
-    labels: PresenterComponentLabels,
+    labels: PresenterAriaLabels,
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
     variants?: Array<{
@@ -47,7 +47,7 @@ declare global {
     typeName: PresenterTypeName,
   };
 
-  type PresenterComponentLabels = {
+  type PresenterAriaLabels = {
     alt: string,
     visible: string,
     a11y: string

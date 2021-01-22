@@ -107,7 +107,7 @@
 
 <section class="expanded-content editor">
   <span class="divider-top"><hr class="inner"></span>
-
+  <p class="banner-text"><strong>WARNING:</strong> Fields marked with <span class="warning">!</span> have existing values in your selection that will be overridden.</p>
   <span class="form-element-holder">
     {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
       <span class="form-row">
@@ -151,7 +151,9 @@
         invertView={true}
         isEditor={true}
         bind:item={dirtyItem}
+        savedItem={originalItem}
         resetValue={resetValue}
+        overrides={editorItem.componentData.overrides}
         on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
       />
     {/if}

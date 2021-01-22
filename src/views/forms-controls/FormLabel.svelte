@@ -13,6 +13,7 @@
   export let nameId = null;
   export let parentIsLocked = false;
   export let value = null;
+  export let hasMultiple;
 
   // watch parent locking changes to match an item unlock
   $: {
@@ -22,14 +23,25 @@
 
 <style>
   /* components/form-elements > @form-label */
+  label {
+    display: flex;
+  }
+  .warning {
+    margin-left: 4px;
+  }
 </style>
 
 <span
-  class:hidden={hide}
-  class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
+class:hidden={hide}
+class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
 >
-  <span class="text">
-    <label for={nameId}>{@html labelText}</label>
+<span class="text">
+    <label for={nameId}>
+      {@html labelText}
+      {#if hasMultiple} 
+        <span class="warning"> !</span>
+      {/if}
+    </label>
   </span>
   {#if !disableActions}
     <span class="actions">

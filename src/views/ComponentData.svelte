@@ -16,6 +16,7 @@
 
   export let invertView = false;
   export let isEditor = false;
+  export let overrides;
   export let item = null;
   export let savedItem = null;
   export let isLocked = false;
@@ -182,20 +183,20 @@
   <FormUnit
     className="form-row form-unit split-50"
     disableCopy={true}
-    hasMultiple={isEditor && item.componentData.role === 'blank--multiple'}
+    hasMultiple={overrides && overrides.includes('role')}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputSelect"
     labelText="Role"
     nameId={`item-aria-role-${item.id}`}
     options={setOptions($roleOptions, item.componentData.role, isEditor)}
-    resetValue={resetValue}
     bind:value={item.componentData.role}
+    preserveDirtyProp={true}
   />
   <AriaLabels 
     role={item.componentData.role}
     invertView={invertView}
-    hasMultiple={isEditor && item.componentData.role === 'blank--multiple'}
+    overrides={overrides}
     isEditor={isEditor}
     itemId={item.id}
     savedLabels={savedItem.componentData.labels}
