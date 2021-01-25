@@ -25,7 +25,7 @@
       placeholder="Short description of the scene"
       invertView={invertView}
       itemIsLocked={false}
-      hasMultiple={overrides && overrides.includes('alt')}
+      hasMultiple={overrides.includes('alt')}
       isDirty={savedLabels.alt !== labels.alt}
       bind:value={labels.alt}
       preserveDirtyProp={true}
@@ -39,7 +39,7 @@
       placeholder="Leave empty to use a11y label"
       invertView={invertView}
       itemIsLocked={false}
-      hasMultiple={overrides && overrides.includes('visible')}
+      hasMultiple={overrides.includes('visible')}
       isDirty={savedLabels.visible !== labels.visible}
       bind:value={labels.visible}
       preserveDirtyProp={true}
@@ -52,7 +52,7 @@
       placeholder="Leave empty to use visible label"
       invertView={invertView}
       itemIsLocked={false}
-      hasMultiple={overrides && overrides.includes('a11y')}
+      hasMultiple={overrides.includes('a11y')}
       isDirty={savedLabels.a11y !== labels.a11y}
       bind:value={labels.a11y}
       preserveDirtyProp={true}

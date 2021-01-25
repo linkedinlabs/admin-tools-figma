@@ -22,6 +22,7 @@
   let resetValue = false;
   let wasCurrentFilter = $currentFilter;
   let wasResetValue = false;
+  $: overrides = editorItem.componentData.overrides;
 
   const handleReset = () => {
     originalItem = deepCopy(editorItem);
@@ -107,13 +108,13 @@
 
 <section class="expanded-content editor">
   <span class="divider-top"><hr class="inner"></span>
-  <p class="banner-text"><strong>WARNING:</strong> Fields marked with <span class="warning">!</span> have existing values in your selection that will be overridden.</p>
+  <p class="banner-text"><strong>WARNING:</strong> Fields marked with <span class="fa fa-exclamation-circle warning"/> have existing values in your selection that will be overridden.</p>
   <span class="form-element-holder">
     {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
       <span class="form-row">
         <FormUnit
-          className={setClasses('form-unit split-40', editorItem.groupHasValues)}
-          hasMultiple={editorItem.groupHasValues}
+          className={setClasses('form-unit split-40', overrides.includes('group'))}
+          hasMultiple={overrides.includes('group')}
           invertView={true}
           kind="inputText"
           labelText="Group&nbsp;&nbsp;&nbsp;/"
@@ -123,8 +124,8 @@
           bind:value={dirtyItem.group}
         />
         <FormUnit
-          className={setClasses('form-unit split-60', editorItem.nameHasValues)}
-          hasMultiple={editorItem.nameHasValues}
+          className={setClasses('form-unit split-60', overrides.includes('name'))}
+          hasMultiple={overrides.includes('name')}
           invertView={true}
           kind="inputText"
           labelText="Name"

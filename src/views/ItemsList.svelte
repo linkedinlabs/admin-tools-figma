@@ -372,14 +372,10 @@
     const itemsToCompare = setEditableItems(currentItems, lockedIdsArray).items;
     const editorItem = {
       description: null,
-      descriptionHasValues: false,
       group: null,
-      groupHasValues: false,
       id: 'editor-item',
       kind: null,
-      kindHasValues: false,
       name: null,
-      nameHasValues: false,
       type: 'style',
     };
 
@@ -408,17 +404,17 @@
 
     if (currentGroups.length >= 1) {
       editorItem.group = currentGroups.length === 1 ? currentGroups[0] : null;
-      editorItem.groupHasValues = true;
+      editorComponentData.overrides.push('group');
     }
 
     if (currentNames.length >= 1) {
       editorItem.name = currentNames.length === 1 ? currentNames[0] : null;
-      editorItem.nameHasValues = true;
+      editorComponentData.overrides.push('name');
     }
 
     if (currentDescriptions.length >= 1) {
       editorItem.description = combineDescriptions(currentDescriptions);
-      editorItem.descriptionHasValues = true;
+      editorComponentData.overrides.push('description');
     }
 
     if (isComponents) {
@@ -426,13 +422,15 @@
 
       // set up editorComponentData ------------
       // compare each successive value; if they do not match, set to `null`
-      // and set `HasValues` to `true`.
+      // and add them to the "overrides" list.
       itemsToCompare.forEach((item) => {
         if (item.componentData) {
           Object.keys(item.componentData).forEach((key) => {
             if (editorComponentData[key] === undefined) {
               editorComponentData[key] = item.componentData[key];
-              editorComponentData[`${key}HasValues`] = item.componentData[key] !== null;
+              if (item.componentData[key] !== null) {
+                editorComponentData.overrides.push(key);
+              }
             } else if (
               (editorComponentData[key] !== undefined)
               && (editorComponentData[key] !== null)
@@ -441,9 +439,7 @@
               if (key !== 'variants') {
                 if (compareArrays(item.componentData[key], editorComponentData[key])) {
                   editorComponentData[key] = [];
-                  editorComponentData[`${key}HasValues`] = true;
-                } else {
-                  editorComponentData[`${key}HasValues`] = false;
+                  editorComponentData.overrides.push(key);
                 }
               } else {
                 item.componentData.variants.forEach((itemVariant) => {
@@ -477,10 +473,7 @@
                 }
               } else {
                 editorComponentData[key] = null;
-                editorComponentData[`${key}HasValues`] = true;
-                if (key === 'role') {
-                  editorComponentData.overrides.push('role');
-                }
+                editorComponentData.overrides.push(key);
               }
             }
           });

@@ -26,9 +26,6 @@
   label {
     display: flex;
   }
-  .warning {
-    margin-left: 4px;
-  }
 </style>
 
 <span
@@ -39,7 +36,7 @@ class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
     <label for={nameId}>
       {@html labelText}
       {#if hasMultiple} 
-        <span class="warning"> !</span>
+        <span class="fa fa-exclamation-circle warning"/>
       {/if}
     </label>
   </span>

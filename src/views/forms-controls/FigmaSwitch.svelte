@@ -29,6 +29,10 @@
     class="switch__label"
     for={nameId}
   >
-    {#if labelText}{labelText}{/if} {#if hasMultiple && value === null}&nbsp;<i>multiple…</i>{/if}
+    {#if labelText}
+      {labelText}{#if hasMultiple} 
+        <span class="fa fa-exclamation-circle warning"/>
+      {/if}
+    {/if} 
   </label>
 </span>
