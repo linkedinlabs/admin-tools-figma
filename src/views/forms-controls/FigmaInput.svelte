@@ -30,7 +30,6 @@
 </style>
 
 <span class={className}>
-  <!-- on:blur={() => dispatch('saveSignal')} -->
   <input
     disabled={disabled}
     id={nameId}
