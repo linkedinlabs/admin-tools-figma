@@ -30,8 +30,8 @@
 </style>
 
 <span class={className}>
+  <!-- on:blur={() => dispatch('saveSignal')} -->
   <input
-    on:blur={() => dispatch('saveSignal')}
     disabled={disabled}
     id={nameId}
     on:keyup={watchKeys}

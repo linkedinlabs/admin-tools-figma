@@ -428,7 +428,9 @@
         if (item.componentData) {
           Object.keys(item.componentData).forEach((key) => {
             if (!Object.keys(editorComponentData).includes(key)) {
-              editorComponentData[key] = item.componentData[key];
+              // tktk: I have a temp fix below for my labels obj to avoid a reference issue
+              // I may come back and make this one-size-fits-all copies of complex data types
+              editorComponentData[key] = key === 'labels' ? { ...item.componentData[key] } : item.componentData[key];
             } else if (
               (editorComponentData[key] !== undefined)
               && (editorComponentData[key] !== null)
