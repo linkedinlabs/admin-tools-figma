@@ -377,9 +377,10 @@
       kind: null,
       name: null,
       type: 'style',
+      overrides: [],
     };
 
-    const editorComponentData = { overrides: [] };
+    const editorComponentData = {};
 
     const currentDescriptions = [];
     const currentGroups = [];
@@ -404,17 +405,17 @@
 
     if (currentGroups.length >= 1) {
       editorItem.group = currentGroups.length === 1 ? currentGroups[0] : null;
-      editorComponentData.overrides.push('group');
+      editorItem.overrides.push('group');
     }
 
     if (currentNames.length >= 1) {
       editorItem.name = currentNames.length === 1 ? currentNames[0] : null;
-      editorComponentData.overrides.push('name');
+      editorItem.overrides.push('name');
     }
 
     if (currentDescriptions.length >= 1) {
       editorItem.description = combineDescriptions(currentDescriptions);
-      editorComponentData.overrides.push('description');
+      editorItem.overrides.push('description');
     }
 
     if (isComponents) {
@@ -426,11 +427,8 @@
       itemsToCompare.forEach((item) => {
         if (item.componentData) {
           Object.keys(item.componentData).forEach((key) => {
-            if (editorComponentData[key] === undefined) {
+            if (!Object.keys(editorComponentData).includes(key)) {
               editorComponentData[key] = item.componentData[key];
-              if (item.componentData[key] !== null) {
-                editorComponentData.overrides.push(key);
-              }
             } else if (
               (editorComponentData[key] !== undefined)
               && (editorComponentData[key] !== null)
@@ -439,7 +437,7 @@
               if (key !== 'variants') {
                 if (compareArrays(item.componentData[key], editorComponentData[key])) {
                   editorComponentData[key] = [];
-                  editorComponentData.overrides.push(key);
+                  editorItem.overrides.push(key);
                 }
               } else {
                 item.componentData.variants.forEach((itemVariant) => {
@@ -462,18 +460,18 @@
               }
             } else if (editorComponentData[key] !== item.componentData[key]) {
               if (key === 'labels') {
-                Object.entries(item.componentData.labels).forEach((label) => {
-                  const [labelKey, val] = label;
-                  if (editorComponentData.labels[labelKey] !== val) {
-                    editorComponentData.overrides.push(labelKey);
+                Object.entries(item.componentData.labels).forEach(([labelKey, val]) => {
+                  if (
+                    !(!editorComponentData.labels[labelKey] && !val)
+                    && editorComponentData.labels[labelKey] !== val
+                  ) {
+                    editorItem.overrides.push(labelKey);
+                    editorComponentData.labels[labelKey] = null;
                   }
                 });
-                if (editorComponentData.overrides.length) {
-                  editorComponentData.labels = { alt: null, visible: null, a11y: null };
-                }
               } else {
                 editorComponentData[key] = null;
-                editorComponentData.overrides.push(key);
+                editorItem.overrides.push(key);
               }
             }
           });
@@ -481,7 +479,6 @@
       });
       editorItem.componentData = editorComponentData;
     }
-
     return editorItem;
   };
 

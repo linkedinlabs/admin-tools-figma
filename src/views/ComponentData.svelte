@@ -21,7 +21,6 @@
   export let savedItem = null;
   export let isLocked = false;
   export let resetValue = false;
-  $: overrides = item.componentData.overrides || [];
 
   const setClasses = (classes, hasValues) => {
     if (hasValues) {
@@ -66,8 +65,8 @@
   {/if}
 
   <FormUnit
-    className={setClasses('form-row', isEditor && overrides.includes('annotationText'))}
-    hasMultiple={isEditor && overrides.includes('annotationText') && item.componentData.keys.length === 0}
+    className={setClasses('form-row', overrides.includes('annotationText'))}
+    hasMultiple={overrides.includes('annotationText') && item.componentData.keys.length === 0}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputText"
@@ -108,8 +107,8 @@
       bind:value={item.componentData.usageStatus}
     />
     <FormUnit
-      className={setClasses('form-unit split-40', isEditor && overrides.includes('version'))}
-      hasMultiple={isEditor && overrides.includes('version')}
+      className={setClasses('form-unit split-40', overrides.includes('version'))}
+      hasMultiple={overrides.includes('version')}
       invertView={invertView}
       itemIsLocked={isLocked}
       kind="inputText"
@@ -123,8 +122,8 @@
   </span>
 
   <FormUnit
-    className={setClasses('form-row', isEditor && overrides.includes('documentationUri'))}
-    hasMultiple={isEditor && overrides.includes('documentationUri')}
+    className={setClasses('form-row', overrides.includes('documentationUri'))}
+    hasMultiple={overrides.includes('documentationUri')}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputText"
@@ -148,7 +147,7 @@
     <FigmaSwitch
       className="form-element element-type-switch"
       disabled={isLocked}
-      hasMultiple={isEditor && overrides.includes('hasKeystop')}
+      hasMultiple={overrides.includes('hasKeystop')}
       invertView={invertView}
       labelText="Has a focus stop?"
       nameId={`has-keystop-${item.id}`}
@@ -159,7 +158,7 @@
   {#if item.componentData.hasKeystop}
     <KeystopKeys
       invertView={invertView}
-      hasMultiple={isEditor && overrides.includes('keys')}
+      hasMultiple={overrides.includes('keys')}
       isEditor={isEditor}
       itemId={item.id}
       bind:keys={item.componentData.keys}
@@ -172,7 +171,7 @@
       <FigmaSwitch
         className="form-element element-type-switch"
         disabled={isLocked}
-        hasMultiple={isEditor && overrides.includes('allowKeystopPassthrough')}
+        hasMultiple={overrides.includes('allowKeystopPassthrough')}
         invertView={invertView}
         labelText="Allow pass-through focus?"
         nameId={`allow-keystop-passthrough-${item.id}`}
@@ -184,7 +183,7 @@
   <FormUnit
     className="form-row form-unit split-50"
     disableCopy={true}
-    hasMultiple={isEditor && overrides.includes('role')}
+    hasMultiple={overrides.includes('role')}
     invertView={invertView}
     itemIsLocked={isLocked}
     kind="inputSelect"

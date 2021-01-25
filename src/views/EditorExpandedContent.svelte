@@ -22,7 +22,6 @@
   let resetValue = false;
   let wasCurrentFilter = $currentFilter;
   let wasResetValue = false;
-  $: overrides = editorItem.componentData.overrides;
 
   const handleReset = () => {
     originalItem = deepCopy(editorItem);
@@ -113,8 +112,8 @@
     {#if $isStyles || checkFilterMatch($currentFilter, 'all-components')}
       <span class="form-row">
         <FormUnit
-          className={setClasses('form-unit split-40', overrides.includes('group'))}
-          hasMultiple={overrides.includes('group')}
+          className={setClasses('form-unit split-40', editorItem.overrides.includes('group'))}
+          hasMultiple={editorItem.overrides.includes('group')}
           invertView={true}
           kind="inputText"
           labelText="Group&nbsp;&nbsp;&nbsp;/"
@@ -124,8 +123,8 @@
           bind:value={dirtyItem.group}
         />
         <FormUnit
-          className={setClasses('form-unit split-60', overrides.includes('name'))}
-          hasMultiple={overrides.includes('name')}
+          className={setClasses('form-unit split-60', editorItem.overrides.includes('name'))}
+          hasMultiple={editorItem.overrides.includes('name')}
           invertView={true}
           kind="inputText"
           labelText="Name"
@@ -154,7 +153,7 @@
         bind:item={dirtyItem}
         savedItem={originalItem}
         resetValue={resetValue}
-        overrides={editorItem.componentData.overrides}
+        overrides={editorItem.overrides}
         on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
       />
     {/if}
