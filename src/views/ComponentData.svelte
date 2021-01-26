@@ -22,8 +22,8 @@
   export let isLocked = false;
   export let resetValue = false;
 
-  const setClasses = (classes, hasValues) => {
-    if (hasValues) {
+  const setClasses = (classes, hasMultiple) => {
+    if (hasMultiple) {
       return `${classes} has-multiple`;
     }
     return classes;
