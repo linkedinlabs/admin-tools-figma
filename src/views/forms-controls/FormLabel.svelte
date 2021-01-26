@@ -30,10 +30,10 @@
 </style>
 
 <span
-class:hidden={hide}
-class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
+  class:hidden={hide}
+  class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
 >
-<span class="text">
+  <span class="text">
     <label for={nameId}>
       {@html labelText}
       {#if hasMultiple} 
