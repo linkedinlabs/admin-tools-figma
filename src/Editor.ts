@@ -357,8 +357,7 @@ export default class Editor {
 
                 Object.entries(value).forEach(([innerKey, innerValue]) => {
                   if (
-                    (!innerKey.includes('HasValues'))
-                    && innerKey !== 'overrides'
+                    (innerKey !== 'overrides')
                     && (innerValue !== 'blank--multiple')
                     && (innerValue !== null)
                   ) {
