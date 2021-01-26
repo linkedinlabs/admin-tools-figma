@@ -176,6 +176,17 @@ svg {
   margin: 0;
   padding: 8px 16px;
   color: $grey02;
+
+  .icon-inline.warning.inverted {
+    display: inline-flex;
+    align-items: center;
+    height: 10px;
+    width: 14px;
+
+    .icon {
+      display: inline-block;
+    }
+  }
 }
 
 .warning {
