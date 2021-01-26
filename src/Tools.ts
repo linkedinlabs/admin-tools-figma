@@ -411,7 +411,7 @@ const deepCopy = (objectToClone: Object) => {
   let clonedObject: Object = null;
 
   if (typeof objectToClone !== 'object' || objectToClone === null) {
-    return objectToClone; // return if objectToClone is not object
+    return objectToClone; // return if objectToClone is not object/array
   }
 
   // create an array or object to hold the values
@@ -446,7 +446,7 @@ const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
   }
 
   Object.entries(unmodifiedObject).forEach(([key, value]) => {
-    // check for inner object first
+    // check for inner object/array first
     if ((typeof value === 'object') && (value !== null)) {
       if (
         modifiedObject[key] === undefined
