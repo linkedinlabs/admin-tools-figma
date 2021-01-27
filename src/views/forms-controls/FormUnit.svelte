@@ -23,6 +23,7 @@
   export let selectWatchChange = false;
   export let value = null;
   export let options = [];
+  export let preserveDirtyProp; // temp way to avoid updates for component with new prop-based updates
 
   const dispatch = createEventDispatcher();
   let originalValue = value;
@@ -49,14 +50,14 @@
     // update the comparison variable
     wasUnlocked = isLocked;
 
-    if ((value !== originalValue) && (value !== 'blank--multiple')) {
+    if (!preserveDirtyProp && (value !== originalValue) && (value !== 'blank--multiple')) {
       isDirty = true;
-    } else {
+    } else if (!preserveDirtyProp) {
       isDirty = false;
     }
 
     // reset based on higher-level update
-    if (resetValue) {
+    if (resetValue && !preserveDirtyProp) {
       originalValue = value;
       isDirty = false;
     }
@@ -76,15 +77,17 @@
     nameId={nameId}
     parentIsLocked={itemIsLocked}
     value={value}
+    hasMultiple={hasMultiple}
   />
 
-  <span class="form-inner-row">
+  <span class="form-inner-row indented">
     {#if kind === 'inputText'}
       <FigmaInput
         className="form-element element-type-text"
         disabled={isLocked || itemIsLocked}
         invertView={invertView}
         nameId={nameId}
+        hasMultiple={hasMultiple}
         placeholder={hasMultiple ? 'multiple…' : placeholder}
         on:saveSignal
         bind:value={value}

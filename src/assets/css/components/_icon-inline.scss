@@ -1,0 +1,57 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ icon button
+// control that expects label text and an icon
+
+@mixin icon-inline(
+  $iconColor: $wl-action-tertiary,
+  $iconSize-px: 12,
+) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  width: em(24);
+  height: em(24);
+  outline: none;
+  border: 0;
+
+  &.hide-text {
+    .text {
+      @include hide-visually;
+    }
+  }
+
+  .icon {
+    display: block;
+    width: em($iconSize-px);
+    height: em($iconSize-px);
+
+    svg {
+      path {
+        fill: $iconColor;
+
+        &.stroke {
+          fill: none;
+          stroke: $iconColor;
+          stroke-width: 1px;
+        }
+      }
+    }
+  }
+}
+
+.icon-inline {
+  @include icon-inline($wl-accent);
+
+  &.inverted {
+    @include icon-inline($wl-accent-invert);
+  }
+
+  &.warning {
+    @include icon-inline($wl-action-destructive);
+
+    &.inverted {
+      @include icon-inline($wl-action-destructive-invert);
+    }
+  }
+}

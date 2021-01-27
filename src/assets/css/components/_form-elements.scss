@@ -28,6 +28,10 @@
     &.text {
       @include type-01;
       color: $wl-type-02;
+
+      label {
+        align-items: center;
+      }
     }
 
     &.actions {

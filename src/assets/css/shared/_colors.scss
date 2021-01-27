@@ -9,6 +9,7 @@ $grey03: #dfdfdf;
 $grey04: #666;
 $blue01: #18a0fb;
 $red01: #f24822;
+$red02: #ce5353;
 
 // re-usable definitions ----- $wl = light workspace
 $wl-canvas: $white;
@@ -32,6 +33,7 @@ $wl-ctrl-secondary-invert: $wl-canvas-invert;
 $wl-ctrl-tertiary: $wl-accent-tertiary;
 $wl-action-primary: $blue01;
 $wl-action-destructive: $red01;
+$wl-action-destructive-invert: $red02;
 $wl-action-secondary: $wl-accent-invert;
 $wl-action-secondary-accent: $wl-accent;
 $wl-action-tertiary: $grey02;

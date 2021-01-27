@@ -435,7 +435,12 @@ export default class Presenter {
           hasKeystop: false,
           keys: [],
           library: 'unassigned',
-          role: 'none',
+          role: 'no-role',
+          labels: {
+            alt: null,
+            visible: null,
+            a11y: null,
+          },
           type: 'component',
           usageStatus: 'production',
           variants,
@@ -453,6 +458,11 @@ export default class Presenter {
               existingComponentData[key] = componentData[key];
             }
           });
+
+          // check for old `role` data and migrate
+          if (existingComponentData.role && (existingComponentData.role === 'none')) {
+            existingComponentData.role = 'no-role';
+          }
 
           // update variants - underlying variants can change, so must always be updated.
           // we use the current `variants` array, flip any ignore/true matches to `true`

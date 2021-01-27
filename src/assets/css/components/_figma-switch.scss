@@ -137,6 +137,7 @@
 
 @mixin figma-switch-label {
   display: flex;
+  align-items: center;
   padding-left: em(36);
   width: 100%;
   user-select: none;

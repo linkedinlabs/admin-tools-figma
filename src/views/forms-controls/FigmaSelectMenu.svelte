@@ -271,7 +271,6 @@
 
 <svelte:window on:keydown={watchKeys} bind:scrollY={scrollY}/>
 <svelte:body on:click={handleClickOutside}/>
-
 <span
   class={className}
   bind:this={selectorContainerElement}
