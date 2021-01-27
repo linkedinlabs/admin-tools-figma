@@ -21,7 +21,7 @@ declare global {
     hasKeystop: boolean,
     keys: Array<'arrows-left-right' | 'arrows-up-down' | 'enter' | 'escape' | 'space'>,
     library: 'unassigned' | 'art-deco' | 'mercado',
-    role: 'no-role' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other',
+    role: 'none' | 'no-role' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other', // 'none' is deprecated
     labels: PresenterAriaLabels,
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
