@@ -459,6 +459,11 @@ export default class Presenter {
             }
           });
 
+          // check for old `role` data and migrate
+          if (existingComponentData.role && (existingComponentData.role === 'none')) {
+            existingComponentData.role = 'no-role';
+          }
+
           // update variants - underlying variants can change, so must always be updated.
           // we use the current `variants` array, flip any ignore/true matches to `true`
           // and then replace the existing bundle with the updated, current bundle
