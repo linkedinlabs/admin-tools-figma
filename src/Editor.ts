@@ -1,5 +1,10 @@
 import Presenter from './Presenter';
-import { getPeerPluginData, setPeerPluginData } from './Tools';
+import {
+  deepCopy,
+  existsInArray,
+  getPeerPluginData,
+  setPeerPluginData,
+} from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /**
@@ -350,9 +355,8 @@ export default class Editor {
                   baseItem as ComponentNode,
                   'specter',
                 );
-
                 if (existingComponentData) {
-                  updatedComponentData = existingComponentData;
+                  updatedComponentData = deepCopy(existingComponentData);
                 }
 
                 Object.entries(value).forEach(([innerKey, innerValue]) => {
@@ -390,13 +394,31 @@ export default class Editor {
                           innerValue.forEach((newVariant) => {
                             if (variant.key === newVariant.key) {
                               variant.ignore = newVariant.ignore;
-                            } else {
+                            } else if (!existsInArray(updatedVariants, newVariant.key, 'key')) {
                               updatedVariants.push(newVariant);
                             }
                           });
                         });
                         updatedComponentData[innerKey] = updatedVariants;
                         /* eslint-enable no-param-reassign */
+                      } else if (value[innerKey]) {
+                        // current bundle has no variants; apply the ones in the bulk editor to
+                        // initiate them in the bundle
+                        const newVariants: Array<{
+                          key: string,
+                          ignore: boolean,
+                        }> = [];
+
+                        // iterate bulk editor variants and add them if not null
+                        value[innerKey].forEach((variant) => {
+                          console.log(variant.key)
+                          const { key, ignore } = variant;
+                          newVariants.push({key, ignore})
+                        })
+                        console.log('here here her')
+
+                        console.log(newVariants)
+                        updatedComponentData[innerKey] = newVariants;
                       }
                     }
                   }
