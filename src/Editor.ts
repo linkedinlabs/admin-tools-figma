@@ -376,7 +376,7 @@ export default class Editor {
                         updatedComponentData[innerKey] = innerValue;
                       }
                     } else {
-                      // remove null entries
+                      // remove null entries (they do not need to be saved to the bundle)
                       /* eslint-disable no-param-reassign */
                       const updatedVariants = updatedComponentData[innerKey];
                       if (updatedVariants !== undefined) {
@@ -390,6 +390,7 @@ export default class Editor {
                         });
 
                         // set the updates, if the variant exists
+                        // (and does not already exist in the array)
                         updatedVariants.forEach((variant) => {
                           innerValue.forEach((newVariant) => {
                             if (variant.key === newVariant.key) {
@@ -402,8 +403,9 @@ export default class Editor {
                         updatedComponentData[innerKey] = updatedVariants;
                         /* eslint-enable no-param-reassign */
                       } else if (value[innerKey]) {
-                        // current bundle has no variants; apply the ones in the bulk editor to
-                        // initiate them in the bundle
+                        // current peer data bundle has no variants; apply the ones in the bulk
+                        // editor to initiate them in the bundle. this is necessary for components
+                        // that have never had variants set before.
                         const newVariants: Array<{
                           key: string,
                           ignore: boolean,
@@ -411,19 +413,23 @@ export default class Editor {
 
                         // iterate bulk editor variants and add them if not null
                         value[innerKey].forEach((variant) => {
-                          console.log(variant.key)
-                          const { key, ignore } = variant;
-                          newVariants.push({key, ignore})
-                        })
-                        console.log('here here her')
+                          const vKey: string = variant.key;
+                          const vIgnore: boolean = variant.ignore;
 
-                        console.log(newVariants)
+                          newVariants.push({
+                            key: vKey,
+                            ignore: vIgnore,
+                          });
+                        });
+
+                        // add them to the updated bundle
                         updatedComponentData[innerKey] = newVariants;
                       }
                     }
                   }
                 });
 
+                // commit the updated data to th peer data bundle
                 if (updatedComponentData) {
                   setPeerPluginData(
                     baseItem as ComponentNode,
