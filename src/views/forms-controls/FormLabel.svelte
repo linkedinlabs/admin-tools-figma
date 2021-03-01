@@ -6,6 +6,7 @@
 
   export let disableActions = false;
   export let disableCopy = false;
+  export let disableLock = false;
   export let hide = false;
   export let invertView = false;
   export let isDirty = false;
@@ -51,10 +52,12 @@
   {#if !disableActions}
     <span class="actions">
       {#if isDirty}<ButtonRestore on:handleRestore/>{/if}
-      <ButtonLock
-        bind:isLocked
-        disabled={parentIsLocked}
-      />
+      {#if !disableLock}
+        <ButtonLock
+          bind:isLocked
+          disabled={parentIsLocked}
+        />
+      {/if}
       {#if value && !disableCopy}
         <ButtonCopy valueToCopy={value}/>
       {/if}

@@ -10,7 +10,7 @@
  * @name PLUGIN_IDENTIFIER
  * @type {string}
  */
-const PLUGIN_IDENTIFIER = 'com.linkedin.figma.admin-tool-plugin';
+const PLUGIN_IDENTIFIER = process.env.PLUGIN_IDENTIFIER || 'com.linkedin.figma.admin-tool-plugin';
 
 /**
  * @description The public-facing name for the plugin. This should match the
@@ -20,7 +20,7 @@ const PLUGIN_IDENTIFIER = 'com.linkedin.figma.admin-tool-plugin';
  * @name PLUGIN_NAME
  * @type {string}
  */
-const PLUGIN_NAME = 'Stapler';
+const PLUGIN_NAME = process.env.PLUGIN_NAME || 'Stapler';
 
 /**
  * @description An object containing the current string constants used as keys in plugin data.

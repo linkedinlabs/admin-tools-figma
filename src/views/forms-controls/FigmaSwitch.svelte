@@ -16,22 +16,22 @@
 
 <style>
   /* components/figma-switch */
+  .switch-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  label {
+    white-space: nowrap;
+    padding-left: 8px;
+  }
+  label.invertView {
+    color: #ccc;
+  }
 </style>
 
-<span class={className}>
-  <input
-    bind:checked={value}
-    class={`switch__toggle${hasMultiple && value === null ? ' has-multiple' : ''}`}
-    disabled={disabled}
-    id={nameId}
-    name={nameId}
-    type="checkbox"
-  >
-  <label
-    class="switch__label"
-    for={nameId}
-  >
-    {#if labelText}
+<div class="switch-wrapper">
+  {#if labelText}
+    <label class:invertView for={nameId}>
       {labelText}
       {#if hasMultiple} 
         <IconInline
@@ -43,6 +43,21 @@
           </svg>
         </IconInline>  
       {/if}
-    {/if} 
-  </label>
-</span>
+    </label>
+  {/if} 
+  <span class={className}>
+    <input
+      bind:checked={value}
+      class={`switch__toggle${hasMultiple && value === null ? ' has-multiple' : ''}`}
+      disabled={disabled}
+      id={nameId}
+      name={nameId}
+      type="checkbox"
+    >
+    <label
+      class="switch__label"
+      for={nameId}
+    >
+    </label>
+  </span>
+</div>

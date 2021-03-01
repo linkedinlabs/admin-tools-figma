@@ -159,7 +159,7 @@ export const keystopKeysOptions = readable(keystopKeysOptionsArray);
 const roleOptionsArray = [
   {
     value: 'no-role',
-    text: 'Undefined…',
+    text: 'None',
     disabled: false,
   },
   {

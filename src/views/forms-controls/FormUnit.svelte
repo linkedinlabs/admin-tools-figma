@@ -4,11 +4,13 @@
   import FigmaInput from './FigmaInput';
   import FigmaSelectMenu from './FigmaSelectMenu';
   import FigmaTextarea from './FigmaTextarea';
+  import FigmaSwitch from './FigmaSwitch';
   import FormLabel from './FormLabel';
 
   export let className = null;
   export let disableActions = false;
   export let disableCopy = false;
+  export let disableLock = false;
   export let hasMultiple = false;
   export let hideLabel = false;
   export let invertView = false;
@@ -68,7 +70,8 @@
   <FormLabel
     on:handleRestore={() => restoreValue()}
     disableActions={disableActions}
-    disableCopy={disableCopy}
+    disableCopy={disableCopy || kind === 'inputSwitch'}
+    disableLock={disableLock}
     hide={hideLabel}
     invertView={invertView}
     isDirty={isDirty}
@@ -114,6 +117,21 @@
         nameId={nameId}
         options={options}
         on:changeSignal
+        bind:value={value}
+        watchChange={selectWatchChange}
+      />
+    {/if}
+
+
+    {#if kind === 'inputSwitch'}
+      <FigmaSwitch
+        className="form-element element-type-switch"
+        disabled={isLocked || itemIsLocked}
+        hasMultiple={hasMultiple}
+        invertView={invertView}
+        nameId={nameId}
+        options={options}
+        on:saveSignal
         bind:value={value}
         watchChange={selectWatchChange}
       />

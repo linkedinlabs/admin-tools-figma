@@ -49,7 +49,7 @@ declare global {
 
   type PresenterAriaLabels = {
     alt: string,
-    visible: string,
+    visible: boolean,
     a11y: string
   }
 
