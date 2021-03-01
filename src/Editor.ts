@@ -1,5 +1,10 @@
 import Presenter from './Presenter';
-import { getPeerPluginData, setPeerPluginData } from './Tools';
+import {
+  deepCopy,
+  existsInArray,
+  getPeerPluginData,
+  setPeerPluginData,
+} from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /**
@@ -350,9 +355,8 @@ export default class Editor {
                   baseItem as ComponentNode,
                   'specter',
                 );
-
                 if (existingComponentData) {
-                  updatedComponentData = existingComponentData;
+                  updatedComponentData = deepCopy(existingComponentData);
                 }
 
                 Object.entries(value).forEach(([innerKey, innerValue]) => {
@@ -372,7 +376,7 @@ export default class Editor {
                         updatedComponentData[innerKey] = innerValue;
                       }
                     } else {
-                      // remove null entries
+                      // remove null entries (they do not need to be saved to the bundle)
                       /* eslint-disable no-param-reassign */
                       const updatedVariants = updatedComponentData[innerKey];
                       if (updatedVariants !== undefined) {
@@ -386,22 +390,46 @@ export default class Editor {
                         });
 
                         // set the updates, if the variant exists
+                        // (and does not already exist in the array)
                         updatedVariants.forEach((variant) => {
                           innerValue.forEach((newVariant) => {
                             if (variant.key === newVariant.key) {
                               variant.ignore = newVariant.ignore;
-                            } else {
+                            } else if (!existsInArray(updatedVariants, newVariant.key, 'key')) {
                               updatedVariants.push(newVariant);
                             }
                           });
                         });
                         updatedComponentData[innerKey] = updatedVariants;
                         /* eslint-enable no-param-reassign */
+                      } else if (value[innerKey]) {
+                        // current peer data bundle has no variants; apply the ones in the bulk
+                        // editor to initiate them in the bundle. this is necessary for components
+                        // that have never had variants set before.
+                        const newVariants: Array<{
+                          key: string,
+                          ignore: boolean,
+                        }> = [];
+
+                        // iterate bulk editor variants and add them if not null
+                        value[innerKey].forEach((variant) => {
+                          const vKey: string = variant.key;
+                          const vIgnore: boolean = variant.ignore;
+
+                          newVariants.push({
+                            key: vKey,
+                            ignore: vIgnore,
+                          });
+                        });
+
+                        // add them to the updated bundle
+                        updatedComponentData[innerKey] = newVariants;
                       }
                     }
                   }
                 });
 
+                // commit the updated data to th peer data bundle
                 if (updatedComponentData) {
                   setPeerPluginData(
                     baseItem as ComponentNode,
