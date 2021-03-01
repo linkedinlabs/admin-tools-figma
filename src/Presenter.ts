@@ -438,7 +438,7 @@ export default class Presenter {
           role: 'no-role',
           labels: {
             alt: null,
-            visible: null,
+            visible: false,
             a11y: null,
           },
           type: 'component',

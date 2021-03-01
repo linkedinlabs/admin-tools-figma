@@ -3,13 +3,13 @@
   
   const defaultLabels = {
     alt: null,
-    visible: null,
+    visible: false,
     a11y: null,
   };
 
   export let invertView = false;
-  export let overrides;
   export let itemId = null;
+  export let overrides;
   export let role;
   export let savedLabels = { ...defaultLabels }; // label data from last save to node metadata
   export let labels = { ...defaultLabels }; // reactive prop from parent
@@ -33,7 +33,7 @@
   {:else}
     <FormUnit
       className="form-row"
-      kind="inputText"
+      kind="inputSwitch"
       labelText="Visible label"
       nameId={`${itemId}-label-visible`}
       placeholder="Leave empty to use a11y label"

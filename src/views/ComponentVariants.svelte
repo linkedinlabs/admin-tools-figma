@@ -68,6 +68,12 @@
   });
 </script>
 
+<style>
+  .inputSwitchSet {
+    padding-left: 8px;
+  }
+</style>
+
 
 <span class="form-row form-unit">
   <FormLabel

@@ -8,8 +8,8 @@
     roleOptions,
   } from './stores';
   import ComponentVariants from './ComponentVariants';
-  import FigmaSwitch from './forms-controls/FigmaSwitch';
   import FormUnit from './forms-controls/FormUnit';
+  import FigmaSwitch from './forms-controls/FigmaSwitch';
   import KeystopKeys from './KeystopKeys';
   import AriaLabels from './AriaLabels';
   import { checkFilterMatch, deepCopy } from '../Tools';
@@ -144,12 +144,13 @@
   </span>
 
   <span class="form-row">
-    <FigmaSwitch
-      className="form-element element-type-switch"
+    <FormUnit 
       disabled={isLocked}
+      disableCopy={true}
       hasMultiple={overrides.includes('hasKeystop')}
       invertView={invertView}
-      labelText="Has a focus stop?"
+      kind="inputSwitch"
+      labelText="Focus stop"
       nameId={`has-keystop-${item.id}`}
       bind:value={item.componentData.hasKeystop}
     />
@@ -171,9 +172,11 @@
       <FigmaSwitch
         className="form-element element-type-switch"
         disabled={isLocked}
+        disableCopy={true}
         hasMultiple={overrides.includes('allowKeystopPassthrough')}
         invertView={invertView}
-        labelText="Allow pass-through focus?"
+        kind="inputSwitch"
+        labelText="Allow passthrough"
         nameId={`allow-keystop-passthrough-${item.id}`}
         bind:value={item.componentData.allowKeystopPassthrough}
       />
