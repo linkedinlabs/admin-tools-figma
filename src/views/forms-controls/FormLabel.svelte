@@ -16,6 +16,7 @@
   export let parentIsLocked = false;
   export let value = null;
   export let hasMultiple;
+  export let a11yField;
 
   // watch parent locking changes to match an item unlock
   $: {
@@ -28,12 +29,26 @@
   label {
     display: flex;
   }
+  .lock {
+    position: absolute;
+    left: 13px;
+  }
 </style>
 
 <span
   class:hidden={hide}
   class={`form-label${invertView ? ' inverted' : ''}${isDirty ? ' dirty' : ''}`}
 >
+  {#if !disableActions && a11yField}
+    <span class="actions lock">
+      {#if !disableLock}
+        <ButtonLock
+          bind:isLocked
+          disabled={parentIsLocked}
+        />
+      {/if}
+    </span>
+  {/if}
   <span class="text">
     <label for={nameId}>
       {@html labelText}
@@ -49,10 +64,10 @@
       {/if}
     </label>
   </span>
-  {#if !disableActions}
+  {#if !disableActions && (!a11yField || labelText === 'Keys')}
     <span class="actions">
       {#if isDirty}<ButtonRestore on:handleRestore/>{/if}
-      {#if !disableLock}
+      {#if !disableLock && !a11yField}
         <ButtonLock
           bind:isLocked
           disabled={parentIsLocked}

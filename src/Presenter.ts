@@ -441,6 +441,11 @@ export default class Presenter {
             visible: false,
             a11y: null,
           },
+          heading: {
+            level: 'no-level',
+            visible: true,
+            invisible: null,
+          },
           type: 'component',
           usageStatus: 'production',
           variants,

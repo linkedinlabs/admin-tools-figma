@@ -9,10 +9,10 @@
   } from './stores';
   import ComponentVariants from './ComponentVariants';
   import FormUnit from './forms-controls/FormUnit';
-  import FigmaSwitch from './forms-controls/FigmaSwitch';
   import KeystopKeys from './KeystopKeys';
   import AriaLabels from './AriaLabels';
-  import { checkFilterMatch, deepCopy } from '../Tools';
+  import AriaHeading from './AriaHeading';
+  import { checkFilterMatch, compareArrays, deepCopy } from '../Tools';
 
   export let invertView = false;
   export let isEditor = false;
@@ -21,6 +21,7 @@
   export let savedItem = null;
   export let isLocked = false;
   export let resetValue = false;
+  export let isAllTab;
 
   const setClasses = (classes, hasMultiple) => {
     if (hasMultiple) {
@@ -29,7 +30,6 @@
     return classes;
   };
 
-  // tktk: need to add equivalent to set value for labels
   const setOptions = (options, currentValue, addNullAllowed) => {
     let finalizedOptions = options;
     if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
@@ -44,14 +44,30 @@
 
     return finalizedOptions;
   };
+
+  const restoreKeys = () => {
+    item.componentData.keys = savedItem.componentData.keys;
+  };
+
 </script>
 
+<style>
+  h3 {
+    margin: 14px 0 6px 19px;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgb(125, 125, 125);
+  }
+</style>
+
 {#if checkFilterMatch($currentFilter, 'design-system')}
+{#if isAllTab}
   <span
     class={`form-row form-header${invertView ? ' invert' : ''}`}
   >
     Design System
   </span>
+  {/if}
 
   {#if (item.componentData.variants && item.componentData.variants.length > 0)}
     <ComponentVariants
@@ -137,54 +153,64 @@
 {/if}
 
 {#if checkFilterMatch($currentFilter, 'interaction')}
-  <span
-    class={`form-row form-header${invertView ? ' invert' : ''}`}
-  >
-    Purpose & Interaction
-  </span>
+  {#if isAllTab}
+    <span class={`form-row form-header${invertView ? ' invert' : ''}`}>
+      Purpose & Interaction
+    </span>
+  {/if}
 
-  <span class="form-row">
-    <FormUnit 
-      disabled={isLocked}
-      disableCopy={true}
-      hasMultiple={overrides.includes('hasKeystop')}
-      invertView={invertView}
-      kind="inputSwitch"
-      labelText="Focus stop"
-      nameId={`has-keystop-${item.id}`}
-      bind:value={item.componentData.hasKeystop}
-    />
-  </span>
+  <h3>Keyboard</h3>
+
+  <FormUnit 
+    className="form-row form-unit fixed-150"
+    itemIsLocked={isLocked}
+    disableCopy={true}
+    hasMultiple={overrides.includes('hasKeystop')}
+    invertView={invertView}
+    kind="inputSwitch"
+    labelText="Focus stop"
+    nameId={`has-keystop-${item.id}`}
+    a11yField={true}
+    bind:value={item.componentData.hasKeystop}
+    isDirty={item.componentData.hasKeystop !== savedItem.componentData.hasKeystop}
+    preserveDirtyProp={true}
+  />
 
   {#if item.componentData.hasKeystop}
+    <FormUnit
+      className="form-row form-unit fixed-150"
+      itemIsLocked={isLocked}
+      disableCopy={true}
+      hasMultiple={overrides.includes('allowKeystopPassthrough')}
+      invertView={invertView}
+      kind="inputSwitch"
+      labelText="Passthrough"
+      nameId={`allow-keystop-passthrough-${item.id}`}
+      a11yField={true}
+      bind:value={item.componentData.allowKeystopPassthrough}
+      isDirty={item.componentData.allowKeystopPassthrough !== savedItem.componentData.allowKeystopPassthrough}
+      preserveDirtyProp={true}
+    />
     <KeystopKeys
       invertView={invertView}
       hasMultiple={overrides.includes('keys')}
       isEditor={isEditor}
       itemId={item.id}
-      bind:keys={item.componentData.keys}
+      itemIsLocked={isLocked}
       options={$keystopKeysOptions}
       optionsInit={$keystopKeysInitOptions}
-      resetValue={resetValue}
       setOptions={setOptions}
+      bind:keys={item.componentData.keys}
+      isDirty={compareArrays(item.componentData.keys, savedItem.componentData.keys)}
+      preserveDirtyProp={true}
+      on:restoreSignal={() => restoreKeys()}
     />
-    <span class="form-row indent">
-      <FigmaSwitch
-        className="form-element element-type-switch"
-        disabled={isLocked}
-        disableCopy={true}
-        hasMultiple={overrides.includes('allowKeystopPassthrough')}
-        invertView={invertView}
-        kind="inputSwitch"
-        labelText="Allow passthrough"
-        nameId={`allow-keystop-passthrough-${item.id}`}
-        bind:value={item.componentData.allowKeystopPassthrough}
-      />
-    </span>
   {/if}
 
+  <h3>Labels</h3>
+
   <FormUnit
-    className="form-row form-unit split-50"
+    className="form-row form-unit fixed-150"
     disableCopy={true}
     hasMultiple={overrides.includes('role')}
     invertView={invertView}
@@ -194,7 +220,9 @@
     nameId={`item-aria-role-${item.id}`}
     options={setOptions($roleOptions, item.componentData.role, isEditor)}
     bind:value={item.componentData.role}
+    isDirty={item.componentData.role !== savedItem.componentData.role}
     preserveDirtyProp={true}
+    a11yField={true}
   />
   <AriaLabels 
     role={item.componentData.role}
@@ -202,7 +230,20 @@
     overrides={overrides}
     isEditor={isEditor}
     itemId={item.id}
+    itemIsLocked={isLocked}
     savedLabels={savedItem.componentData.labels}
     bind:labels={item.componentData.labels}
+  />
+
+  <h3>Heading</h3>
+
+  <AriaHeading 
+    invertView={invertView}
+    overrides={overrides}
+    isEditor={isEditor}
+    itemId={item.id}
+    itemIsLocked={isLocked}
+    savedHeading={savedItem.componentData.heading}
+    bind:heading={item.componentData.heading}
   />
 {/if}

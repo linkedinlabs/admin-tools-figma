@@ -27,12 +27,6 @@
       id: 'interaction',
       type: 'components',
     },
-    // {
-    //   text: 'Labels & Data',
-    //   id: 'labels-data',
-    //   type: 'components',
-    // },
-    // styles menu
     {
       text: 'All',
       id: 'all-styles',

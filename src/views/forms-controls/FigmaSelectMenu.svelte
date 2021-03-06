@@ -267,6 +267,9 @@
 
 <style>
   /* components/figma-select-menu */
+  .new-key {
+    color: rgb(171, 171, 171);
+  }
 </style>
 
 <svelte:window on:keydown={watchKeys} bind:scrollY={scrollY}/>
@@ -284,7 +287,7 @@
       disabled={disabled}
       on:click={() => handleMenuClick()}
     >
-      <span class={`styled-select__button-label${hasMultiple && selected.value === 'blank--multiple' ? ' has-multiple' : ''}`}>
+      <span class={`styled-select__button-label${hasMultiple && selected.value === 'blank--multiple' ? ' has-multiple' : ''}`} class:new-key={value === 'no-key'}>
         {selected.text}
       </span>
       <span class="styled-select__icon"></span>

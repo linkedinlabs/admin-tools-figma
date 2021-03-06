@@ -1,49 +1,43 @@
 <script>
-  import { afterUpdate, beforeUpdate } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import FormUnit from './forms-controls/FormUnit';
-  import { compareArrays, updateArray } from '../Tools';
+  import FormLabel from './forms-controls/FormLabel';
+  import { updateArray } from '../Tools';
+
+  const dispatch = createEventDispatcher();
 
   export let hasMultiple = false;
   export let invertView = false;
   export let isEditor = false;
+  export let itemIsLocked;
   export let itemId = null;
   export let options = null;
   export let optionsInit = null;
-  export let keys = null;
-  export let resetValue = false;
   export let setOptions = null;
+  export let isDirty;
+  export let keys = [];
 
   let newKeyValue = 'no-key';
-  let dirtyKeys = keys ? [...keys] : [];
-  let originalKeys = keys ? [...keys] : [];
+  let isLocked = itemIsLocked;
 
-  const addKey = (keyToAdd) => {
-    // check for existing and add if it does not exist
-    const keyIndex = dirtyKeys.findIndex(key => key === keyToAdd);
-    if (keyIndex < 0) {
-      dirtyKeys.push(keyToAdd);
+  $: if (isLocked) {
+    dispatch('restoreSignal');
+  }
+
+  const addKey = (newKey) => {
+    if (!keys.includes(newKey)) {
+      keys = [...keys, newKey];
     }
     newKeyValue = 'no-key';
   };
 
   const removeKey = (keyToRemove) => {
-    const keyIndex = dirtyKeys.findIndex(key => key === keyToRemove);
+    const keyIndex = keys.findIndex(key => key === keyToRemove);
     if (keyIndex > -1) {
-      dirtyKeys = [
-        ...dirtyKeys.slice(0, keyIndex),
-        ...dirtyKeys.slice(keyIndex + 1),
+      keys = [
+        ...keys.slice(0, keyIndex),
+        ...keys.slice(keyIndex + 1),
       ];
-    }
-  };
-
-  const updateKey = (currentKeys, keyToUpdate, oldKeyIndex) => {
-    const oldKey = currentKeys[oldKeyIndex];
-    if (oldKey !== keyToUpdate) {
-      removeKey(oldKey);
-
-      if (keyToUpdate !== 'no-key') {
-        addKey(keyToUpdate);
-      }
     }
   };
 
@@ -108,68 +102,57 @@
     }
     return modifiedSelectOptions;
   };
-
-  beforeUpdate(() => {
-    // check `keys` against original to see if it was updated on the Figma side
-    if (compareArrays(keys, originalKeys)) {
-      dirtyKeys = keys ? [...keys] : [];
-      originalKeys = keys ? [...keys] : [];
-      resetValue = true;
-    }
-
-    // check `keys` against dirty to see if it was updated in the plugin UI
-    if (compareArrays(keys, dirtyKeys)) {
-      keys = dirtyKeys ? [...dirtyKeys] : [];
-      dirtyKeys = keys ? [...keys] : [];
-      resetValue = true;
-    }
-  });
-
-  afterUpdate(() => {
-    if (resetValue) {
-      resetValue = false;
-    }
-  });
 </script>
 
-{#if isEditor && hasMultiple}
-  <span class="form-row indent text-buffer has-multiple">
-    Multiple key assignments applied…<br />
-    Changes here will override all values on the selected components.
-  </span>
-{/if}
+<span class="form-row form-unit fixed-150">
+  <FormLabel
+    on:handleRestore={() => dispatch('restoreSignal')}
+    disableCopy={true}
+    invertView={invertView}
+    isDirty={isDirty}
+    parentIsLocked={itemIsLocked}
+    bind:isLocked={isLocked}
+    labelText="Keys"
+    hasMultiple={hasMultiple}
+    a11yField={true}
+  />
+</span>
 
-{#each dirtyKeys as dirtyKey, i (dirtyKey)}
+
+{#each keys as key, i (key)}
   <FormUnit
     className="form-row indent"
-    on:deleteSignal={() => removeKey(dirtyKey)}
+    on:deleteSignal={() => removeKey(key)}
     disableActions={true}
     hideLabel={true}
     isDeletable={true}
+    itemIsLocked={isLocked}
+    parentIsLocked={itemIsLocked}
     invertView={invertView}
-    itemIsLocked={false}
     kind="inputSelect"
     labelText="Add focus stop keys"
-    nameId={`item-keystop-key-${dirtyKey}-${itemId}`}
-    options={updateSelect({ keys, type: 'selected', value: dirtyKey })}
-    resetValue={resetValue}
+    nameId={`item-keystop-key-${key}-${itemId}`}
+    options={updateSelect({ keys, type: 'selected', value: key })}
     selectWatchChange={true}
-    on:changeSignal={() => updateKey(originalKeys, dirtyKey, i)}
-    bind:value={dirtyKey}
+    bind:value={key}
+    preserveDirtyProp={true}
   />
 {/each}
-<FormUnit
-  className="form-row indent"
-  disableActions={true}
-  hideLabel={true}
-  invertView={invertView}
-  itemIsLocked={false}
-  kind="inputSelect"
-  labelText="Add focus stop keys"
-  nameId={`item-keystop-key-add-${itemId}`}
-  options={updateSelect({ keys, type: 'init' })}
-  resetValue={resetValue}
-  selectWatchChange={true}
-  on:changeSignal={() => addKey(newKeyValue)}
-  bind:value={newKeyValue}
-/>
+{#if !isLocked}
+  <FormUnit
+    className="form-row indent"
+    disableActions={true}
+    hideLabel={true}
+    invertView={invertView}
+    itemIsLocked={false}
+    parentIsLocked={itemIsLocked}
+    kind="inputSelect"
+    labelText="Add focus stop keys"
+    nameId={`item-keystop-key-add-${itemId}`}
+    options={updateSelect({ keys, type: 'init' })}
+    selectWatchChange={true}
+    on:changeSignal={() => addKey(newKeyValue)}
+    bind:value={newKeyValue}
+    preserveDirtyProp={true}
+  />
+{/if}

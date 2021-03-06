@@ -28,6 +28,11 @@ svg {
   width: 100%;
 }
 
+h3 {
+  margin: 0;
+  padding: 0;
+}
+
 .hide-visually {
   @include hide-visually;
 }
@@ -116,6 +121,25 @@ svg {
                   color: rgba($wl-type-01-invert, 0.8);
                 }
               }
+            }
+          }
+
+          &.form-unit.fixed-150 {
+            flex-wrap: nowrap;
+            padding: 0;
+
+            .form-label {
+              width: 140px;
+              margin-left: 26px;
+              padding-right: 0;
+            }
+
+            .form-inner-row {
+              position: relative;
+            }
+
+            .form-element {
+              flex: auto;
             }
           }
 

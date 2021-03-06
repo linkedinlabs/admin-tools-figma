@@ -464,14 +464,14 @@
                 });
               }
             } else if (editorComponentData[key] !== item.componentData[key]) {
-              if (key === 'labels') {
-                Object.entries(item.componentData.labels).forEach(([labelKey, val]) => {
+              if (['labels', 'heading'].includes(key)) {
+                Object.entries(item.componentData[key]).forEach(([propKey, val]) => {
                   if (
-                    !(!editorComponentData.labels[labelKey] && !val)
-                    && editorComponentData.labels[labelKey] !== val
+                    !(!editorComponentData[key][propKey] && !val)
+                    && editorComponentData[key][propKey] !== val
                   ) {
-                    editorItem.overrides.push(labelKey);
-                    editorComponentData.labels[labelKey] = null;
+                    editorItem.overrides.push(`${key}-${propKey}`);
+                    editorComponentData[key][propKey] = null;
                   }
                 });
               } else {
