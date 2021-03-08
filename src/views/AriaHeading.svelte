@@ -20,6 +20,10 @@
       text: 'None  (iOS/Android)',
       disabled: false,
     }, {
+      value: 'divider--01',
+      text: null,
+      disabled: true,
+    }, {
       value: '1',
       text: '1',
       disabled: false,
