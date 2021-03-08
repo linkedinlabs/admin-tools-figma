@@ -17,7 +17,7 @@
   const levelOptions = [
     {
       value: 'no-level',
-      text: 'None',
+      text: 'None  (iOS/Android)',
       disabled: false,
     }, {
       value: '1',
@@ -78,18 +78,20 @@
     preserveDirtyProp={true}
     a11yField={true}
   />
-  <FormUnit
-    className="form-row form-unit fixed-150"
-    kind="inputText"
-    labelText="Invisible"
-    nameId={`${itemId}-heading-hidden`}
-    placeholder="Leave empty to use visible heading"
-    invertView={invertView}
-    itemIsLocked={itemIsLocked}
-    hasMultiple={overrides.includes('heading-invisible')}
-    isDirty={savedHeading.invisible !== heading.invisible}
-    bind:value={heading.invisible}
-    preserveDirtyProp={true}
-    a11yField={true}
-  />
+  {#if !heading.visible}
+    <FormUnit
+      className="form-row form-unit fixed-150"
+      kind="inputText"
+      labelText="Heading text"
+      nameId={`${itemId}-heading-invisible`}
+      placeholder="e.g. 'Skip for now'"
+      invertView={invertView}
+      itemIsLocked={itemIsLocked}
+      hasMultiple={overrides.includes('heading-invisible')}
+      isDirty={savedHeading.invisible !== heading.invisible}
+      bind:value={heading.invisible}
+      preserveDirtyProp={true}
+      a11yField={true}
+    />
+  {/if}
 {/if}
