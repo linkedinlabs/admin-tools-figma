@@ -86,7 +86,7 @@
     <FormUnit
       className="form-row form-unit fixed-150"
       kind="inputText"
-      labelText="Heading text"
+      labelText="Heading"
       nameId={`${itemId}-heading-invisible`}
       placeholder="e.g. 'Skip for now'"
       invertView={invertView}
