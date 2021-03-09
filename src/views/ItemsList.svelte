@@ -433,7 +433,7 @@
           Object.keys(item.componentData).forEach((key) => {
             if (!Object.keys(editorComponentData).includes(key)) {
               if (key === 'heading') {
-                editorComponentData[key] = {...item.componentData[key]};
+                editorComponentData[key] = { ...item.componentData[key] };
               } else {
                 editorComponentData[key] = typeof editorComponentData[key] === 'object'
                   ? deepCopy(item.componentData[key]) : item.componentData[key];
@@ -470,11 +470,11 @@
             } else if (editorComponentData[key] !== item.componentData[key]) {
               if (['labels', 'heading'].includes(key)) {
                 Object.entries(item.componentData[key]).forEach(([propKey, val]) => {
-                  const hasProperty = editorComponentData[key].hasOwnProperty(propKey);
-                  if (!(!hasProperty && !val)
+                  const hasProperty = Object.keys(editorComponentData[key]).includes(propKey);
+                  if ((hasProperty || val)
                     && editorComponentData[key][propKey] !== val
                   ) {
-                    editorItem.overrides.push(`${ key }-${ propKey }`);
+                    editorItem.overrides.push(`${key}-${propKey}`);
                     editorComponentData[key][propKey] = null;
                   }
                 });

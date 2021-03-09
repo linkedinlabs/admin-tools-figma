@@ -356,105 +356,102 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
     }
     return match;
   };
-  
+
   let isDifferent = false;
-  
+
   if (!array1 && !array2) {
     return isDifferent;
   }
-  
-  if (
-    (!array1 && array2)
-    || (!array2 && array1)
-    ) {
-      isDifferent = true;
-      return isDifferent;
-    }
-    
-    if (array1.length !== array2.length) {
-      isDifferent = true;
-      return isDifferent;
-    }
-    
-    array1.forEach((value) => {
-      const itemIndex = array2.findIndex(foundValue => isMatch(value, foundValue));
-      
-      if (itemIndex < 0) {
-        isDifferent = true;
-      }
-    });
-    
-    if (isDifferent) {
-      return isDifferent;
-    }
-    
-    array2.forEach((value) => {
-      const itemIndex = array1.findIndex(foundValue => isMatch(value, foundValue));
-      
-      if (itemIndex < 0) {
-        isDifferent = true;
-      }
-    });
-    
+
+  if ((!array1 && array2) || (!array2 && array1)) {
+    isDifferent = true;
     return isDifferent;
-  };
-  
-  /**
-   * @description Clones a multi-dimensional object without references.
-   *
-   * @kind function
-   * @name deepCopy
-   *
-   * @param {Object} objectToClone An object to clone.
-   *
-   * @returns {Object} The cloned object, without references.
-   */
-  const deepCopy = (objectToClone: Object) => {
-    let clonedObject: Object = null;
-    
-    if (typeof objectToClone !== 'object' || objectToClone === null) {
-      return objectToClone; // return if objectToClone is not object/array
+  }
+
+  if (array1.length !== array2.length) {
+    isDifferent = true;
+    return isDifferent;
+  }
+
+  array1.forEach((value) => {
+    const itemIndex = array2.findIndex(foundValue => isMatch(value, foundValue));
+
+    if (itemIndex < 0) {
+      isDifferent = true;
     }
-    
-    // create an array or object to hold the values
-    clonedObject = Array.isArray(objectToClone) ? [] : {};
-    
-    Object.keys(objectToClone).forEach((key: string) => {
-      const value: any = objectToClone[key];
-      
-      // recursively copy for nested objects, including arrays
-      clonedObject[key] = deepCopy(value);
-    });
-    
-    return clonedObject;
-  };
-  
-  /**
-   * @description Creates a list of select options specifically for bulk editor.
-   *
-   * @kind function
-   * @name setBulkSelectOptions
-   *
-   * @param {Array} options The original options in the item editor.
-   * @param {string} currentValue The selected value of the options.
-   * @param {string} addNullAllowed A flag for whether to allow a null value in the options.
-   *
-   * @returns {boolean} Returns a new list of options for the bulk editor.
-   */
-  const setBulkSelectOptions = (options, currentValue, addNullAllowed) => {
-    let finalizedOptions = options;
-    if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
-      const nullOption = {
-        value: 'blank--multiple',
-        text: 'multiple…',
-        disabled: false,
-      };
-      finalizedOptions = deepCopy(options);
-      finalizedOptions.unshift(nullOption);
+  });
+
+  if (isDifferent) {
+    return isDifferent;
+  }
+
+  array2.forEach((value) => {
+    const itemIndex = array1.findIndex(foundValue => isMatch(value, foundValue));
+
+    if (itemIndex < 0) {
+      isDifferent = true;
     }
-  
-    return finalizedOptions;
-  };
+  });
+
+  return isDifferent;
+};
+
+/**
+ * @description Clones a multi-dimensional object without references.
+ *
+ * @kind function
+ * @name deepCopy
+ *
+ * @param {Object} objectToClone An object to clone.
+ *
+ * @returns {Object} The cloned object, without references.
+ */
+const deepCopy = (objectToClone: Object) => {
+  let clonedObject: Object = null;
+
+  if (typeof objectToClone !== 'object' || objectToClone === null) {
+    return objectToClone; // return if objectToClone is not object/array
+  }
+
+  // create an array or object to hold the values
+  clonedObject = Array.isArray(objectToClone) ? [] : {};
+
+  Object.keys(objectToClone).forEach((key: string) => {
+    const value: any = objectToClone[key];
+
+    // recursively copy for nested objects, including arrays
+    clonedObject[key] = deepCopy(value);
+  });
+
+  return clonedObject;
+};
+
+/**
+ * @description Creates a list of select options specifically for bulk editor.
+ *
+ * @kind function
+ * @name setBulkSelectOptions
+ *
+ * @param {Array} options The original options in the item editor.
+ * @param {string} currentValue The selected value of the options.
+ * @param {string} addNullAllowed A flag for whether to allow a null value in the options.
+ *
+ * @returns {boolean} Returns a new list of options for the bulk editor.
+ */
+const setBulkSelectOptions = (options, currentValue, addNullAllowed) => {
+  let finalizedOptions = options;
+  if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
+    const nullOption = {
+      value: 'blank--multiple',
+      text: 'multiple…',
+      disabled: false,
+    };
+    finalizedOptions = deepCopy(options);
+    finalizedOptions.unshift(nullOption);
+  }
+
+  return finalizedOptions;
+};
 
 /**
  * @description Compares two multi-dimensional objects. Returns `true` if they are different.
