@@ -12,7 +12,7 @@
   import KeystopKeys from './KeystopKeys';
   import AriaLabels from './AriaLabels';
   import AriaHeading from './AriaHeading';
-  import { checkFilterMatch, compareArrays, deepCopy } from '../Tools';
+  import { checkFilterMatch, compareArrays, setBulkSelectOptions } from '../Tools';
 
   export let invertView = false;
   export let isEditor = false;
@@ -28,21 +28,6 @@
       return `${classes} has-multiple`;
     }
     return classes;
-  };
-
-  const setOptions = (options, currentValue, addNullAllowed) => {
-    let finalizedOptions = options;
-    if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
-      const nullOption = {
-        value: 'blank--multiple',
-        text: 'multiple…',
-        disabled: false,
-      };
-      finalizedOptions = deepCopy(options);
-      finalizedOptions.unshift(nullOption);
-    }
-
-    return finalizedOptions;
   };
 
   const restoreKeys = () => {
@@ -103,7 +88,7 @@
     kind="inputSelect"
     labelText="Library"
     nameId={`item-library-${item.id}`}
-    options={setOptions($libraryOptions, item.componentData.library, isEditor)}
+    options={setBulkSelectOptions($libraryOptions, item.componentData.library, isEditor)}
     resetValue={resetValue}
     bind:value={item.componentData.library}
   />
@@ -118,7 +103,7 @@
       kind="inputSelect"
       labelText="Status"
       nameId={`item-usageStatus-${item.id}`}
-      options={setOptions($libraryStatusOptions, item.componentData.usageStatus, isEditor)}
+      options={setBulkSelectOptions($libraryStatusOptions, item.componentData.usageStatus, isEditor)}
       resetValue={resetValue}
       bind:value={item.componentData.usageStatus}
     />
@@ -199,7 +184,6 @@
       itemIsLocked={isLocked}
       options={$keystopKeysOptions}
       optionsInit={$keystopKeysInitOptions}
-      setOptions={setOptions}
       bind:keys={item.componentData.keys}
       isDirty={compareArrays(item.componentData.keys, savedItem.componentData.keys)}
       preserveDirtyProp={true}
@@ -218,7 +202,7 @@
     kind="inputSelect"
     labelText="Role"
     nameId={`item-aria-role-${item.id}`}
-    options={setOptions($roleOptions, item.componentData.role, isEditor)}
+    options={setBulkSelectOptions($roleOptions, item.componentData.role, isEditor)}
     bind:value={item.componentData.role}
     isDirty={item.componentData.role !== savedItem.componentData.role}
     preserveDirtyProp={true}

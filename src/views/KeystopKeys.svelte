@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import FormUnit from './forms-controls/FormUnit';
   import FormLabel from './forms-controls/FormLabel';
-  import { updateArray } from '../Tools';
+  import { updateArray, setBulkSelectOptions } from '../Tools';
 
   const dispatch = createEventDispatcher();
 
@@ -13,7 +13,6 @@
   export let itemId = null;
   export let options = null;
   export let optionsInit = null;
-  export let setOptions = null;
   export let isDirty;
   export let keys = [];
 
@@ -42,8 +41,8 @@
   };
 
   const updateSelect = (params) => {
-    const keyboardOptions = setOptions(options, 'space', isEditor);
-    const keyboardOptionsInit = setOptions(optionsInit, 'no-key', isEditor);
+    const keyboardOptions = setBulkSelectOptions(options, 'space', isEditor);
+    const keyboardOptionsInit = setBulkSelectOptions(optionsInit, 'no-key', isEditor);
 
     const currentKeys = params.keys;
     const selectType = params.type;

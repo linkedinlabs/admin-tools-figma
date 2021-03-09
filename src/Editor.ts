@@ -360,13 +360,20 @@ export default class Editor {
                 }
 
                 Object.entries(value).forEach(([innerKey, innerValue]) => {
-                  if (
-                    (innerKey !== 'overrides')
-                    && (innerValue !== 'blank--multiple')
-                    && (innerValue !== null)
-                  ) {
+                  if (innerKey !== 'overrides' && !['blank--multiple', null].includes(innerValue)) {
                     if (innerKey !== 'variants') {
-                      if (
+                      if (['labels', 'heading'].includes(innerKey)) {
+                        if (updatedComponentData[innerKey] === undefined) {
+                          updatedComponentData[innerKey] = innerValue;
+                        } else {
+                          const data: Array<Array<string>> = Object.entries(innerValue);
+                          data.forEach(([propKey, propVal]) => {
+                            if (!['blank--multiple', null].includes(propVal)) {
+                              updatedComponentData[innerKey][propKey] = propVal;
+                            }
+                          });
+                        }
+                      } else if (
                         (updatedComponentData[innerKey] === undefined)
                         || (
                           updatedComponentData[innerKey] !== undefined

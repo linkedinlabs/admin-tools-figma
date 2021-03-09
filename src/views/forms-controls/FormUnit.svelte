@@ -143,7 +143,7 @@
 
     {#if a11yField}
       <span class="actions">
-        {#if isDirty}<ButtonRestore on:handleRestore={() => restoreValue()}/>{/if}
+        {#if isDirty && value !== 'blank--multiple'}<ButtonRestore on:handleRestore={() => restoreValue()}/>{/if}
         {#if value && !disableCopy && kind.includes('Text')}
           <ButtonCopy valueToCopy={value}/>
         {/if}

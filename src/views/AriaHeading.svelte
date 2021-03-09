@@ -1,5 +1,7 @@
 <script>
   import FormUnit from './forms-controls/FormUnit';
+  import { setBulkSelectOptions } from '../Tools';
+  import { levelOptions } from './stores';
   
   const defaultHeading = {
     level: 'no-level',
@@ -9,54 +11,19 @@
 
   export let invertView = false;
   export let itemId = null;
+  export let isEditor;
   export let overrides;
   export let itemIsLocked;
   export let savedHeading = { ...defaultHeading };
   export let heading = { ...defaultHeading };
 
-  const levelOptions = [
-    {
-      value: 'no-level',
-      text: 'None  (iOS/Android)',
-      disabled: false,
-    }, {
-      value: 'divider--01',
-      text: null,
-      disabled: true,
-    }, {
-      value: '1',
-      text: '1',
-      disabled: false,
-    }, {
-      value: '2',
-      text: '2',
-      disabled: false,
-    }, {
-      value: '3',
-      text: '3',
-      disabled: false,
-    }, {
-      value: '4',
-      text: '4',
-      disabled: false,
-    }, {
-      value: '5',
-      text: '5',
-      disabled: false,
-    }, {
-      value: '6',
-      text: '6',
-      disabled: false,
-    },
-  ];
-
 </script>
   
-{#if heading && heading.level}
+{#if heading}
   <FormUnit
     className="form-row form-unit fixed-150"
     kind="inputSelect"
-    options={levelOptions}
+    options={setBulkSelectOptions($levelOptions, heading.level, isEditor)}
     labelText="Level"
     nameId={`${itemId}-heading-level`}
     placeholder="Leave empty to use system default"

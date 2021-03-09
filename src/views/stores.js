@@ -289,3 +289,40 @@ const roleOptionsArray = [
   },
 ];
 export const roleOptions = readable(roleOptionsArray);
+
+const levelOptionsArray = [
+  {
+    value: 'no-level',
+    text: 'None  (iOS/Android)',
+    disabled: false,
+  }, {
+    value: 'divider--01',
+    text: null,
+    disabled: true,
+  }, {
+    value: '1',
+    text: '1',
+    disabled: false,
+  }, {
+    value: '2',
+    text: '2',
+    disabled: false,
+  }, {
+    value: '3',
+    text: '3',
+    disabled: false,
+  }, {
+    value: '4',
+    text: '4',
+    disabled: false,
+  }, {
+    value: '5',
+    text: '5',
+    disabled: false,
+  }, {
+    value: '6',
+    text: '6',
+    disabled: false,
+  },
+];
+export const levelOptions = readable(levelOptionsArray);
