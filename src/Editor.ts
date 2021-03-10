@@ -364,15 +364,23 @@ export default class Editor {
                     if (innerKey !== 'variants') {
                       if (['labels', 'heading'].includes(innerKey)) {
                         if (updatedComponentData[innerKey] === undefined) {
-                          updatedComponentData[innerKey] = innerValue;
-                        } else {
-                          const data: Array<Array<string>> = Object.entries(innerValue);
-                          data.forEach(([propKey, propVal]) => {
-                            if (!['blank--multiple', null].includes(propVal)) {
-                              updatedComponentData[innerKey][propKey] = propVal;
-                            }
-                          });
+                          updatedComponentData[innerKey] = innerKey === 'labels' ? {
+                            role: 'no-role',
+                            visible: false,
+                            a11y: null,
+                          }
+                            : {
+                              level: 'no-level',
+                              visible: true,
+                              invisible: null,
+                            };
                         }
+                        const data: Array<Array<string>> = Object.entries(innerValue);
+                        data.forEach(([propKey, propVal]) => {
+                          if (!['blank--multiple', null].includes(propVal)) {
+                            updatedComponentData[innerKey][propKey] = propVal;
+                          }
+                        });
                       } else if (
                         (updatedComponentData[innerKey] === undefined)
                         || (
