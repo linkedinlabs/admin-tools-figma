@@ -124,6 +124,7 @@
         savedItem={originalItem}
         isLocked={isLocked}
         resetValue={resetValue}
+        isAllTab={$currentFilter === 'all-components'}
         on:saveSignal={() => handleSave()}
       />
     {/if}

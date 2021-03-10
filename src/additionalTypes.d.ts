@@ -23,6 +23,7 @@ declare global {
     library: 'unassigned' | 'art-deco' | 'mercado',
     role: 'none' | 'no-role' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other', // 'none' is deprecated
     labels: PresenterAriaLabels,
+    heading: PresenterAriaHeading,
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',
     variants?: Array<{
@@ -51,6 +52,12 @@ declare global {
     alt: string,
     visible: boolean,
     a11y: string
+  }
+
+  type PresenterAriaHeading = {
+    level: string,
+    visible: boolean,
+    invisible: string
   }
 
   // Vendor Declarations

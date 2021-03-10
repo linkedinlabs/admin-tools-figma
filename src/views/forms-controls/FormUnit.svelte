@@ -6,6 +6,8 @@
   import FigmaTextarea from './FigmaTextarea';
   import FigmaSwitch from './FigmaSwitch';
   import FormLabel from './FormLabel';
+  import ButtonCopy from './ButtonCopy';
+  import ButtonRestore from './ButtonRestore';
 
   export let className = null;
   export let disableActions = false;
@@ -26,6 +28,7 @@
   export let value = null;
   export let options = [];
   export let preserveDirtyProp; // temp way to avoid updates for component with new prop-based updates
+  export let a11yField; // temp way for Lynne to use different styling for a11y fields
 
   const dispatch = createEventDispatcher();
   let originalValue = value;
@@ -81,6 +84,7 @@
     parentIsLocked={itemIsLocked}
     value={value}
     hasMultiple={hasMultiple}
+    a11yField={a11yField}
   />
 
   <span class="form-inner-row indented">
@@ -135,6 +139,15 @@
         bind:value={value}
         watchChange={selectWatchChange}
       />
+    {/if}
+
+    {#if a11yField}
+      <span class="actions">
+        {#if isDirty && value !== 'blank--multiple'}<ButtonRestore on:handleRestore={() => restoreValue()}/>{/if}
+        {#if value && !disableCopy && kind.includes('Text')}
+          <ButtonCopy valueToCopy={value}/>
+        {/if}
+      </span>
     {/if}
 
     {#if isDeletable}

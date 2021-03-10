@@ -169,6 +169,7 @@
         savedItem={originalItem}
         resetValue={resetValue}
         overrides={editorItem.overrides}
+        isAllTab={$currentFilter === 'all-components'}
         on:saveSignal={() => handleSave(dirtyItem, editableItemIds)}
       />
     {/if}

@@ -330,6 +330,7 @@ const updateArray = (
   return updatedArray;
 };
 
+
 /**
  * @description Takes two one-dimensional arrays and compare them. Returns `true` if they
  * are different. Order of the array does not matter.
@@ -343,6 +344,7 @@ const updateArray = (
  * @returns {boolean} Returns `true` if the arrays are different, `false` if they have identical
  * values.
  */
+
 const compareArrays = (array1: Array<any>, array2: Array<any>) => {
   // compares two values; uses `deepCompare` if values are an object
   const isMatch = (value1: any, value2: any) => {
@@ -361,10 +363,7 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
     return isDifferent;
   }
 
-  if (
-    (!array1 && array2)
-    || (!array2 && array1)
-  ) {
+  if ((!array1 && array2) || (!array2 && array1)) {
     isDifferent = true;
     return isDifferent;
   }
@@ -425,6 +424,33 @@ const deepCopy = (objectToClone: Object) => {
   });
 
   return clonedObject;
+};
+
+/**
+ * @description Creates a list of select options specifically for bulk editor.
+ *
+ * @kind function
+ * @name setBulkSelectOptions
+ *
+ * @param {Array} options The original options in the item editor.
+ * @param {string} currentValue The selected value of the options.
+ * @param {string} addNullAllowed A flag for whether to allow a null value in the options.
+ *
+ * @returns {boolean} Returns a new list of options for the bulk editor.
+ */
+const setBulkSelectOptions = (options, currentValue, addNullAllowed) => {
+  let finalizedOptions = options;
+  if (addNullAllowed && (currentValue === null || currentValue === 'blank--multiple')) {
+    const nullOption = {
+      value: 'blank--multiple',
+      text: 'multiple…',
+      disabled: false,
+    };
+    finalizedOptions = deepCopy(options);
+    finalizedOptions.unshift(nullOption);
+  }
+
+  return finalizedOptions;
 };
 
 /**
@@ -931,6 +957,7 @@ export {
   matchMasterPeerNode,
   pollWithPromise,
   resizeGUI,
+  setBulkSelectOptions,
   setPeerPluginData,
   updateArray,
 };
