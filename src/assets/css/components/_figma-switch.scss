@@ -20,6 +20,10 @@
   overflow: hidden;
   opacity: 0;
 
+  label {
+    white-space: nowrap;
+  }
+
   &:checked + label,
   &:checked.has-multiple + label {
     &:before {
