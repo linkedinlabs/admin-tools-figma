@@ -50,20 +50,21 @@ export default class Painter {
       const protoObject = Object.getPrototypeOf(sourceNode);
       Object.keys(protoObject).forEach((key: string) => {
         switch (key) {
+          case 'absoluteTransform':
+          case 'children':
           case 'id':
           case 'parent':
-          case 'removed':
-          case 'absoluteTransform':
-          case 'width':
           case 'height':
-          case 'children':
           case 'overlayPositionType':
           case 'overlayBackground':
           case 'overlayBackgroundInteraction':
           case 'mainComponent':
-          case 'scaleFactor':
+          case 'masterComponent':
+          case 'removed':
           case 'reactions':
+          case 'scaleFactor':
           case 'type':
+          case 'width':
             // not writeable; do nothing
             break;
           default: {
