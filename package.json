@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "svelte": "^3.20.1",
-    "unique-names-generator": "^4.1.1"
+    "unique-names-generator": "^4.5.0"
   },
   "author": "Grant Blakeman <gblakeman@linkedin.com>"
 }
