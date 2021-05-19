@@ -82,11 +82,20 @@ export default class Painter {
       sourceNode.parent.insertChild((sourceIndex + 1), newNode);
 
       // re-add children
-      // mysteriously, this actually detaches any childen instances, eliminating the
-      // need for a recursive function
       sourceNode.children.forEach((childNode) => {
         const clonedNode: SceneNode = childNode.clone();
         newNode.appendChild(clonedNode);
+
+        // clone and detach children
+        if (childNode.children) {
+          let newChildFrame: FrameNode = figma.createFrame();
+          newChildFrame = cloneInstanceIntoFrame(newChildFrame, clonedNode);
+
+          if (newChildFrame) {
+            newNode.appendChild(newChildFrame);
+            clonedNode.remove();
+          }
+        }
       });
 
       return newNode;
