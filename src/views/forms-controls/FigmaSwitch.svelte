@@ -18,7 +18,7 @@
   /* components/figma-switch */
 </style>
 
-<div class="switch-wrapper">
+<span class={className}>
   {#if labelText}
     <label class:invertView for={nameId}>
       {labelText}
@@ -34,7 +34,7 @@
       {/if}
     </label>
   {/if} 
-  <span class={className}>
+  <span class="switch__internal">
     <input
       bind:checked={value}
       class={`switch__toggle${hasMultiple && value === null ? ' has-multiple' : ''}`}
@@ -49,4 +49,4 @@
     >
     </label>
   </span>
-</div>
+</span>
