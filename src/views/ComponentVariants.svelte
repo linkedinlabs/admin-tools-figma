@@ -11,13 +11,13 @@
   export let resetValue = false;
   export let variants = null;
 
-  let originalVariants = variants.map(variant => ({ ...variant }));
+  let originalVariants = variants.map((variant) => ({ ...variant }));
   let isDirty = false;
   let isLocked = itemIsLocked;
   let wasUnlocked = false;
 
   const restoreValue = () => {
-    variants = originalVariants.map(variant => ({ ...variant }));
+    variants = originalVariants.map((variant) => ({ ...variant }));
     resetValue = true;
     isDirty = false;
   };
@@ -60,7 +60,7 @@
 
   afterUpdate(() => {
     if (resetValue) {
-      originalVariants = variants.map(variant => ({ ...variant }));
+      originalVariants = variants.map((variant) => ({ ...variant }));
       setOptions(variants, itemId);
       resetValue = false;
       isDirty = false;

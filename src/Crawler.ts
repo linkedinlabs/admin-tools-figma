@@ -116,7 +116,7 @@ export default class Crawler {
             // update the overall list of child nodes, removing the node that was just examined.
             // this array should eventually be empty, breaking the `while` loop
             const innerLayerIndex = innerLayers.findIndex(
-              foundInnerLayer => (foundInnerLayer.id === innerLayer.id),
+              (foundInnerLayer) => (foundInnerLayer.id === innerLayer.id),
             );
             innerLayers = [
               ...innerLayers.slice(0, innerLayerIndex),
@@ -207,12 +207,12 @@ export default class Crawler {
       | RectangleNode
       | StarNode
     > = nodes.filter(
-      node => filterTypes.includes(node.type),
+      (node) => filterTypes.includes(node.type),
     );
 
     // iterate through components to find additional type-matched nodes
     const componentNodes: Array<ComponentNode | InstanceNode> = nodes.filter(
-      node => (
+      (node) => (
         (node.type === 'COMPONENT' || node.type === 'INSTANCE') && node.visible && !node.locked
       ),
     );
@@ -229,12 +229,12 @@ export default class Crawler {
           | RectangleNode
           | StarNode
         > = innerTextNodesUntyped.filter(
-          node => filterTypes.includes(node.type),
+          (node) => filterTypes.includes(node.type),
         );
 
         if (innerTextNodes) {
           // add any type-matched nodes to the overall selection
-          innerTextNodes.forEach(innerTextNode => filteredNodes.push(innerTextNode));
+          innerTextNodes.forEach((innerTextNode) => filteredNodes.push(innerTextNode));
         }
       });
     }

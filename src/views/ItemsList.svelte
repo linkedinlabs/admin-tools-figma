@@ -45,7 +45,7 @@
 
     // find the index of a pre-existing `id` match on the array
     const itemIndex = updatedArray.findIndex(
-      foundItem => (foundItem[itemKey] === item[itemKey]),
+      (foundItem) => (foundItem[itemKey] === item[itemKey]),
     );
 
     // if a match exists
@@ -88,13 +88,13 @@
    * @returns {Object} The modified array.
    */
   const filterByKey = (array, key, value) => {
-    const filteredArray = array.filter(item => item[key] === value);
+    const filteredArray = array.filter((item) => item[key] === value);
     return filteredArray;
   };
 
   const filterByKeys = (array, key1, value1, key2, value2) => {
     const filteredArray = array.filter(
-      item => (item[key1] === value1) && (item[key2] === value2),
+      (item) => (item[key1] === value1) && (item[key2] === value2),
     );
     return filteredArray;
   };
@@ -124,7 +124,7 @@
     let itemIsLocked = false;
 
     // check the store to see if an entry exists
-    const itemIndex = $lockedItems.findIndex(foundId => (foundId === itemId));
+    const itemIndex = $lockedItems.findIndex((foundId) => (foundId === itemId));
 
     // if the index exists, the item is locked
     if (itemIndex > -1) {
@@ -138,7 +138,7 @@
     let itemIsOpen = false;
 
     // check the store to see if an entry exists
-    const itemIndex = $openItems.findIndex(foundId => (foundId === itemId));
+    const itemIndex = $openItems.findIndex((foundId) => (foundId === itemId));
 
     // if the index exists, the item is open
     if (itemIndex > -1) {
@@ -152,7 +152,7 @@
     const addOrRemoveEntry = (itemsArray) => {
       let updatedItemsArray = itemsArray;
       const itemIndex = itemsArray.findIndex(
-        foundId => (foundId === itemId),
+        (foundId) => (foundId === itemId),
       );
 
       // add or remove entry
@@ -171,7 +171,7 @@
     const removeEntry = (itemsArray) => {
       let updatedItemsArray = itemsArray;
       const itemIndex = itemsArray.findIndex(
-        foundId => (foundId === itemId),
+        (foundId) => (foundId === itemId),
       );
 
       // add or remove entry
@@ -266,12 +266,12 @@
         updateItemState(updatedType.id, operationType);
 
         // update the groups
-        const typeGroups = currentGroups.filter(group => group.typeId === type.id);
-        typeGroups.forEach(group => updateItemState(group.id, itemsOperationType));
+        const typeGroups = currentGroups.filter((group) => group.typeId === type.id);
+        typeGroups.forEach((group) => updateItemState(group.id, itemsOperationType));
 
         // set all of the group’s items
-        const typeItems = currentItems.filter(item => item.typeId === type.id);
-        typeItems.forEach(item => updateItemState(item.id, itemsOperationType));
+        const typeItems = currentItems.filter((item) => item.typeId === type.id);
+        typeItems.forEach((item) => updateItemState(item.id, itemsOperationType));
         break;
       }
       default:
@@ -306,8 +306,8 @@
         updateItemState(updatedGroup.id, operationType);
 
         // set all of the group’s items
-        const groupItems = currentItems.filter(item => item.groupId === group.id);
-        groupItems.forEach(item => updateItemState(item.id, itemsOperationType));
+        const groupItems = currentItems.filter((item) => item.groupId === group.id);
+        groupItems.forEach((item) => updateItemState(item.id, itemsOperationType));
         break;
       }
       case 'partialUnlock':
@@ -351,7 +351,7 @@
     currentItems.forEach((item) => {
       // find the index of the locked ID
       const lockedIndex = lockedIdsArray.findIndex(
-        foundId => (foundId === item.id),
+        (foundId) => (foundId === item.id),
       );
 
       if (lockedIndex < 0) {
@@ -455,7 +455,7 @@
                   } else {
                     const compareVariantIndex = 0;
                     const compareVariant = editorComponentData.variants.filter(
-                      editorVariant => editorVariant.key === itemVariant.key,
+                      (editorVariant) => editorVariant.key === itemVariant.key,
                     )[compareVariantIndex];
 
                     // if they are different, set ignore to `null`
@@ -545,7 +545,7 @@
       {#if type.name !== 'Component'}
         <li class="style-type">
           <ItemGroupHeader
-            on:handleUpdate={customEvent => handleTypeUpdate(type, groups, items, customEvent.detail)}
+            on:handleUpdate={(customEvent) => handleTypeUpdate(type, groups, items, customEvent.detail)}
             isLocked={checkIsLocked(type.id)}
             isOpen={checkIsOpen(type.id)}
             isTypeContainer={true}
@@ -559,7 +559,7 @@
         {#each filterByKey(groups, 'typeId', type.id) as group (group.id)}
           <li class="group-type">
             <ItemGroupHeader
-              on:handleUpdate={customEvent => handleGroupUpdate(group, type, items, customEvent.detail)}
+              on:handleUpdate={(customEvent) => handleGroupUpdate(group, type, items, customEvent.detail)}
               isGroupContainer={true}
               isLocked={checkIsLocked(group.id)}
               isOpen={checkIsOpen(group.id)}
@@ -573,7 +573,7 @@
               <li class={`main-item${checkIsOpen(item.id) ? ' expanded' : ''}`}>
                 <ItemGroupHeader
                   on:handleUnlock={() => handleGroupUpdate(group, type, items, 'partialUnlock')}
-                  on:handleUpdate={customEvent => updateItemState(item.id, customEvent.detail)}
+                  on:handleUpdate={(customEvent) => updateItemState(item.id, customEvent.detail)}
                   isLocked={checkIsLocked(item.id)}
                   isOpen={checkIsOpen(item.id)}
                   labelGroupText={item.group}

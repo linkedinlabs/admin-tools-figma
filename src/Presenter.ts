@@ -252,7 +252,7 @@ export default class Presenter {
       }
 
       if (filterType) {
-        items = items.filter(item => item.type === filterType);
+        items = items.filter((item) => item.type === filterType);
       }
     }
 

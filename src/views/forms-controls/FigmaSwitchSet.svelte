@@ -27,7 +27,7 @@
       const compareKey = optionValueKeys[cKeyIndex];
       const valueKey = optionValueKeys[vKeyIndex];
 
-      const valueIndex = value.findIndex(valItem => valItem[compareKey] === option.text);
+      const valueIndex = value.findIndex((valItem) => valItem[compareKey] === option.text);
       if (valueIndex > -1) {
         value[valueIndex][valueKey] = option.value;
       }

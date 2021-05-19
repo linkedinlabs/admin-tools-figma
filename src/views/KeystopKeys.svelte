@@ -31,7 +31,7 @@
   };
 
   const removeKey = (keyToRemove) => {
-    const keyIndex = keys.findIndex(key => key === keyToRemove);
+    const keyIndex = keys.findIndex((key) => key === keyToRemove);
     if (keyIndex > -1) {
       keys = [
         ...keys.slice(0, keyIndex),

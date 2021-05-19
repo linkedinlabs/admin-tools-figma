@@ -243,7 +243,7 @@ const makeNetworkRequest = (options: {
           }
         });
     })
-    .catch(err => console.error(err)); // eslint-disable-line no-console
+    .catch((err) => console.error(err)); // eslint-disable-line no-console
 };
 
 /**
@@ -266,7 +266,7 @@ const existsInArray = (
 ) => {
   let doesExist = false;
   const itemIndex = array.findIndex(
-    foundItem => (foundItem[key] === value),
+    (foundItem) => (foundItem[key] === value),
   );
 
   if (itemIndex > -1) {
@@ -301,7 +301,7 @@ const updateArray = (
 
   // find the index of a pre-existing `id` match on the array
   const itemIndex: number = updatedArray.findIndex(
-    foundItem => (foundItem[itemKey] === item[itemKey]),
+    (foundItem) => (foundItem[itemKey] === item[itemKey]),
   );
 
   // if a match exists
@@ -373,7 +373,7 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
   }
 
   array1.forEach((value) => {
-    const itemIndex = array2.findIndex(foundValue => isMatch(value, foundValue));
+    const itemIndex = array2.findIndex((foundValue) => isMatch(value, foundValue));
 
     if (itemIndex < 0) {
       isDifferent = true;
@@ -385,7 +385,7 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
   }
 
   array2.forEach((value) => {
-    const itemIndex = array1.findIndex(foundValue => isMatch(value, foundValue));
+    const itemIndex = array1.findIndex((foundValue) => isMatch(value, foundValue));
 
     if (itemIndex < 0) {
       isDifferent = true;
@@ -612,7 +612,7 @@ const findTopComponent = (node: any) => {
 const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
   // finds the `index` of self in the parent’s children list
   const indexAtParent = (childNode: any): number => childNode.parent.children.findIndex(
-    child => child.id === childNode.id,
+    (child) => child.id === childNode.id,
   );
 
   // set some defaults

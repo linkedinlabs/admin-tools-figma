@@ -129,7 +129,7 @@ export default class Editor {
       // grab existing style presentation object for comparison
       const extractedStyles = presenter.extractStyles();
       existingItem = extractedStyles.items.filter(
-        item => item.id === updatedItem.id,
+        (item) => item.id === updatedItem.id,
       )[selectIndex];
 
       // kick out if we can't find a match
@@ -145,7 +145,7 @@ export default class Editor {
       // grab existing component presentation object for comparison
       const extractedComponents = presenter.extractComponents();
       existingItem = extractedComponents.items.filter(
-        item => item.id === updatedItem.id,
+        (item) => item.id === updatedItem.id,
       )[selectIndex];
 
       // kick out if we can't find a match
@@ -297,7 +297,7 @@ export default class Editor {
         existingItems.forEach((existingItem) => {
           const selectIndex = 0;
           const baseItem = baseItems.filter(
-            styleOrNode => styleOrNode.id === existingItem.id,
+            (styleOrNode) => styleOrNode.id === existingItem.id,
           )[selectIndex];
           if (
             baseItem
@@ -325,7 +325,7 @@ export default class Editor {
                 updatedDescriptionArray.forEach((updatedDescriptionItem) => {
                   if (updatedDescriptionItem.value) {
                     const existingIndex = existingDescriptionArray.findIndex(
-                      existing => existing.key === updatedDescriptionItem.key,
+                      (existing) => existing.key === updatedDescriptionItem.key,
                     );
 
                     if (existingIndex > -1) {

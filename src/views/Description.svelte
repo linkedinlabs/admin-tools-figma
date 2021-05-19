@@ -165,7 +165,7 @@
 
   const addEntry = (keyValuePair) => {
     const { key, value } = keyValuePair;
-    const keyExists = descriptionArray.filter(item => item.key === key).length !== 0;
+    const keyExists = descriptionArray.filter((item) => item.key === key).length !== 0;
 
     // add new description entry if unique
     if (!keyExists && key && value) {
@@ -181,7 +181,7 @@
   };
 
   const removeEntry = (key) => {
-    const keyIndex = descriptionArray.findIndex(item => item.key === key);
+    const keyIndex = descriptionArray.findIndex((item) => item.key === key);
 
     if (keyIndex > -1) {
       if (!isEditor) {
@@ -206,7 +206,7 @@
         lockedKeys.push(key);
       }
     } else {
-      const keyIndex = lockedKeys.findIndex(foundKey => foundKey === key);
+      const keyIndex = lockedKeys.findIndex((foundKey) => foundKey === key);
       if (keyIndex > -1) {
         // remove it
         lockedKeys = [
@@ -265,7 +265,7 @@
     itemIsLocked={isLocked}
     kind="inputText"
     labelText={!isEditor ? descriptionEntry.key : editorLabel(descriptionEntry.key, descriptionEntry.count)}
-    on:lockUnlockSignal={customEvent => handleLockUnlock(descriptionEntry.key, customEvent.detail)}
+    on:lockUnlockSignal={(customEvent) => handleLockUnlock(descriptionEntry.key, customEvent.detail)}
     nameId={`item-description-${i}-${itemId}`}
     placeholder="Type something…"
     resetValue={resetValue}
