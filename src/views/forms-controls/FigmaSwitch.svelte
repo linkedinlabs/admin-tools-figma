@@ -16,17 +16,6 @@
 
 <style>
   /* components/figma-switch */
-  .switch-wrapper {
-    display: flex;
-    align-items: center;
-  }
-  label {
-    white-space: nowrap;
-    padding-left: 8px;
-  }
-  label.invertView {
-    color: #ccc;
-  }
 </style>
 
 <div class="switch-wrapper">
