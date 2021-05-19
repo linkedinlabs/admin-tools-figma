@@ -330,7 +330,6 @@ const updateArray = (
   return updatedArray;
 };
 
-
 /**
  * @description Takes two one-dimensional arrays and compare them. Returns `true` if they
  * are different. Order of the array does not matter.

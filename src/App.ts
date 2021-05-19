@@ -88,7 +88,6 @@ const setRelaunchCommands = (): void => {
   return null;
 };
 
-
 /**
  * @description A class to handle core app logic and dispatch work to other classes.
  *
