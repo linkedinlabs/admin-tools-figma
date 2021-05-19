@@ -55,16 +55,18 @@ export default class Painter {
           case 'id':
           case 'parent':
           case 'height':
+          case 'horizontalPadding': // deprecated
           case 'overlayPositionType':
           case 'overlayBackground':
           case 'overlayBackgroundInteraction':
           case 'mainComponent':
-          case 'masterComponent':
+          case 'masterComponent': // deprecated
           case 'removed':
           case 'reactions':
           case 'scaleFactor':
           case 'type':
           case 'width':
+          case 'verticalPadding': // deprecated
             // not writeable; do nothing
             break;
           default: {
