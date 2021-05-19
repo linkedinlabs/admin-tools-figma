@@ -3,14 +3,19 @@
 // original source: https://www.figma.com/plugin-docs/figma-components/
 
 @mixin figma-switch-base {
-  position: relative;
   display: flex;
   align-items: center;
-  flex-direction: row;
-  height: em(32);
-  @include type-01;
-  letter-spacing: 0.005em;
-  cursor: default;
+
+  .switch__internal {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height: em(32);
+    @include type-01;
+    letter-spacing: 0.005em;
+    cursor: default;
+  }
 }
 
 @mixin figma-switch-toggle {
