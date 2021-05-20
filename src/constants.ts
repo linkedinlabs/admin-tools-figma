@@ -1,10 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 
 /**
- * @description A unique string to identify the plugin within Figma.
- * Changing one of these keys will break data retrieval or reset data in any
- * `xPluginData` getters/setters and potentially elsewhere.
- * [More info]{@link https://www.figma.com/plugin-docs/api/properties/nodes-setsharedplugindata/}
+ * A unique string to identify the plugin within Figma. Changing one of these keys will break
+ * data retrieval or reset data in any `xPluginData` getters/setters and potentially elsewhere.
+ * [More info]{@link https://www.figma.com/plugin-docs/api/properties/nodes-setsharedplugindata/}.
  *
  * @kind constant
  * @name PLUGIN_IDENTIFIER
@@ -13,8 +12,7 @@
 const PLUGIN_IDENTIFIER = process.env.PLUGIN_IDENTIFIER || 'com.linkedin.figma.admin-tool-plugin';
 
 /**
- * @description The public-facing name for the plugin. This should match the
- * `name` stated in manifset.json.
+ * The public-facing name for the plugin. This should match the `name` stated in manifset.json.
  *
  * @kind constant
  * @name PLUGIN_NAME
@@ -23,7 +21,7 @@ const PLUGIN_IDENTIFIER = process.env.PLUGIN_IDENTIFIER || 'com.linkedin.figma.a
 const PLUGIN_NAME = process.env.PLUGIN_NAME || 'Stapler';
 
 /**
- * @description An object containing the current string constants used as keys in plugin data.
+ * An object containing the current string constants used as keys in plugin data.
  * Changing one of these keys will break data retrieval or reset data in any
  * `xPluginData` getters/setters and potentially elsewhere.
  *
@@ -37,7 +35,7 @@ const DATA_KEYS = {
 };
 
 /**
- * @description An object containing the current string constants used as keys in plugin data.
+ * An object containing the current string constants used as keys in plugin data.
  * Changing one of these keys will break data retrieval or reset data in any
  * `xPluginData` getters/setters and potentially elsewhere.
  *
@@ -51,7 +49,7 @@ const DATA_KEYS_SPECTER = {
 };
 
 /**
- * @description An object containing the current string constants used as keys in plugin data.
+ * An object containing the current string constants used as keys in plugin data.
  * Changing one of these keys will break data retrieval or reset data in any
  * `xPluginData` getters/setters and potentially elsewhere.
  *
@@ -68,7 +66,7 @@ const DATA_KEYS_REALISH = {
 };
 
 /**
- * @description An object containing the available data type assignments. The `id` is
+ * An object containing the available data type assignments. The `id` is
  * used for matching. The `text` is only used as a label.
  *
  * @kind constant
@@ -103,7 +101,7 @@ const ASSIGNMENTS = {
 // timestamp
 
 /**
- * @description An object containing the current string constants the Figma API returns for
+ * An object containing the current string constants the Figma API returns for
  * top-level (`main`) layer and `group` layer types.
  *
  * @kind constant
@@ -119,7 +117,7 @@ const CONTAINER_NODE_TYPES = {
 };
 
 /**
- * @description An object containing snippets of copy (text) to re-use across the plugin’s UI.
+ * An object containing snippets of copy (text) to re-use across the plugin’s UI.
  *
  * @kind constant
  * @name GUI_CONTENT
@@ -133,7 +131,7 @@ const GUI_CONTENT = {
 };
 
 /**
- * @description An object containing `height`/`width` settings for the plugin GUI window.
+ * An object containing `height`/`width` settings for the plugin GUI window.
  *
  * @kind constant
  * @name GUI_SETTINGS

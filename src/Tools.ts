@@ -10,7 +10,7 @@ import {
 
 // --- helper functions
 /**
- * @description An approximation of `forEach` but run in an async manner.
+ * An approximation of `forEach` but run in an async manner.
  *
  * @kind function
  * @name asyncForEach
@@ -31,7 +31,7 @@ const asyncForEach = async (
 };
 
 /**
- * @description An approximation of `setTimeout` but run in an async manner
+ * An approximation of `setTimeout` but run in an async manner
  * with logging to Messenger.
  *
  * @kind function
@@ -40,6 +40,7 @@ const asyncForEach = async (
  * @param {Function} externalCheck The external function to run a check against.
  * The function should resolve to `true`.
  * @param {Object} messenger An initialized instance of the Messenger class for logging (optional).
+ * @param {Function} messenger.log The log function from the Messenger class.
  * @param {string} name The name of the check for logging purposes (optional).
  *
  * @returns {Promise} Returns a promise for resolution.
@@ -67,7 +68,7 @@ const pollWithPromise = (
 };
 
 /**
- * @description Manages the process of passing a network request along to the plugin
+ * Manages the process of passing a network request along to the plugin
  * UI and waiting for the response.
  *
  * @kind function
@@ -76,6 +77,11 @@ const pollWithPromise = (
  * @param {Object} options An object including the request options: The URL the request should
  * go to (`requestUrl`), headers to pass along to the request (optional), an optional request
  * body (`bodyToSend`), and an initialized instance of the Messenger class for logging (optional).
+ * @param {string} options.requestUrl The URL the request should go to.
+ * @param {any} options.headers Headers to pass along to the request (optional).
+ * @param {any} options.bodyToSend An optional request body.
+ * @param {Object} options.messenger An optional initialized instance of the Messenger class.
+ * @param {Object} options.messenger.log The log function from the Messenger class.
  *
  * @returns {Object} Returns the result of the network request (response).
  */
@@ -131,7 +137,7 @@ const asyncNetworkRequest = async (options: {
 };
 
 /**
- * @description Similar to `asyncNetworkRequest`, manages the process for requesting the
+ * Similar to `asyncNetworkRequest`, manages the process for requesting the
  * download of a remote image.
  *
  * @kind function
@@ -139,6 +145,9 @@ const asyncNetworkRequest = async (options: {
  *
  * @param {Object} options An object including the request options: The URL the request should
  * go to (`requestUrl`) and an initialized instance of the Messenger class for logging (optional).
+ * @param {string} options.requestUrl The URL the request should go to.
+ * @param {Object} options.messenger An optional initialized instance of the Messenger class.
+ * @param {Object} options.messenger.log The log function from the Messenger class.
  *
  * @returns {Object} Returns the result of the network request (response).
  */
@@ -205,9 +214,10 @@ const awaitUIReadiness = async (messenger?) => {
 };
 
 /**
- * @description A helper function that uses `fetch` to make a network request.
+ * A helper function that uses `fetch` to make a network request.
  * This helper can only be used from the UI thread. The main thread of the plugin
- * cannot make network requests. From the main thread, use `asyncNetworkRequest`.
+ * cannot make network requests. From the main thread, use `asyncNetworkRequest`. The result
+ * is a message posted to the main thread of the plugin with the results of the `fetch` call.
  *
  * @kind function
  * @name makeNetworkRequest
@@ -215,9 +225,10 @@ const awaitUIReadiness = async (messenger?) => {
  * @param {Object} options The network request options, containing the URL/route for the
  * request (`route`), the `method` of the request (default is `POST`), optional
  * request `headers`, and an optional request body (`bodyToSend`).
- *
- * @returns {null} Posts a message to the main thread of the plugin with the results
- * of the `fetch` call.
+ * @param {string} options.route The URL (or local route) the request should go to.
+ * @param {string} options.method The request method (i.e. GET, POST, etc.).
+ * @param {any} options.headers Headers to pass along to the request (optional).
+ * @param {any} options.bodyToSend An optional request body.
  */
 const makeNetworkRequest = (options: {
   route: string,
@@ -247,7 +258,7 @@ const makeNetworkRequest = (options: {
 };
 
 /**
- * @description A reusable helper function to take an array and check if an item exists
+ * A reusable helper function to take an array and check if an item exists
  * based on a `key`/`value` pair.
  *
  * @kind function
@@ -277,7 +288,7 @@ const existsInArray = (
 };
 
 /**
- * @description A reusable helper function to take an array and add or remove data from it
+ * A reusable helper function to take an array and add or remove data from it
  * based on a top-level key and a defined action.
  *
  * @kind function
@@ -331,7 +342,7 @@ const updateArray = (
 };
 
 /**
- * @description Takes two one-dimensional arrays and compare them. Returns `true` if they
+ * Takes two one-dimensional arrays and compare them. Returns `true` if they
  * are different. Order of the array does not matter.
  *
  * @kind function
@@ -396,7 +407,7 @@ const compareArrays = (array1: Array<any>, array2: Array<any>) => {
 };
 
 /**
- * @description Clones a multi-dimensional object without references.
+ * Clones a multi-dimensional object without references.
  *
  * @kind function
  * @name deepCopy
@@ -426,7 +437,7 @@ const deepCopy = (objectToClone: Object) => {
 };
 
 /**
- * @description Creates a list of select options specifically for bulk editor.
+ * Creates a list of select options specifically for bulk editor.
  *
  * @kind function
  * @name setBulkSelectOptions
@@ -453,7 +464,7 @@ const setBulkSelectOptions = (options, currentValue, addNullAllowed) => {
 };
 
 /**
- * @description Compares two multi-dimensional objects. Returns `true` if they are different.
+ * Compares two multi-dimensional objects. Returns `true` if they are different.
  *
  * @kind function
  * @name deepCompare
@@ -496,7 +507,7 @@ const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
 };
 
 /**
- * @description Takes a node object and traverses parent relationships until the top-level
+ * Takes a node object and traverses parent relationships until the top-level
  * `CONTAINER_NODE_TYPES.frame` node is found. Returns the frame node.
  *
  * @kind function
@@ -523,7 +534,7 @@ const findTopFrame = (node: any) => {
 };
 
 /**
- * @description Reverse iterates the node tree to determine the top-level component instance
+ * Reverse iterates the node tree to determine the top-level component instance
  * (if one exists) for the node. This allows you to easily find a Master Component when dealing
  * with an instance that may be nested within several component instances.
  *
@@ -558,7 +569,7 @@ const findTopInstance = (node: any) => {
 };
 
 /**
- * @description Reverse iterates the node tree to determine the top-level component
+ * Reverse iterates the node tree to determine the top-level component
  * (if one exists) for the node. This allows you to check if a node is part of a component.
  *
  * @kind function
@@ -598,7 +609,7 @@ const findTopComponent = (node: any) => {
 };
 
 /**
- * @description Maps the nesting order of a node within the tree and then uses that “map”
+ * Maps the nesting order of a node within the tree and then uses that “map”
  * as a guide to find the peer node within the an instance’s Master Component.
  *
  * @kind function
@@ -656,7 +667,7 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
 };
 
 /**
- * @description A lookup function to easily retrieve the data namespace used for shared
+ * A lookup function to easily retrieve the data namespace used for shared
  * plugin data. Note: changing this function will potentially make it impossible for existing
  * users to retrieve data saved to nodes before the change.
  *
@@ -693,7 +704,7 @@ const dataNamespace = (pluginName: 'realish' | 'specter' = null): string => {
 };
 
 /**
- * @description A shared helper function to retrieve plugin data on a node from a
+ * A shared helper function to retrieve plugin data on a node from a
  * peer plugin (Realish or Specter).
  *
  * @kind function
@@ -749,7 +760,7 @@ const getPeerPluginData = (
 
 /* eslint-disable jsdoc/require-param-type */
 /**
- * @description A shared helper function to set plugin data on a node for retrieval by
+ * A shared helper function to set plugin data on a node for retrieval by
  * a peer plugin (Realish or Specter).
  *
  * @kind function
@@ -806,7 +817,7 @@ const setPeerPluginData = (
 };
 
 /**
- * @description An async function to load multiple typefaces using Figma’s `loadFontAsync`.
+ * An async function to load multiple typefaces using Figma’s `loadFontAsync`.
  *
  * @kind function
  * @name loadTypefaces
@@ -814,6 +825,7 @@ const setPeerPluginData = (
  * @param {Array} typefaces An array of typefaces to load. Typefaces in the array must be
  * formatted to match Figma’s `FontName` type.
  * @param {Object} messenger An initialized instance of the Messenger class for logging (optional).
+ * @param {Function} messenger.log The log function from the Messenger class.
  *
  * @returns {Promise} Returns a promise for resolution.
  */
@@ -831,12 +843,13 @@ const loadTypefaces = async (
 };
 
 /**
- * @description Resizes the plugin iframe GUI within the Figma app.
+ * Resizes the plugin iframe GUI within the Figma app.
  *
  * @kind function
  * @name resizeGUI
  * @param {string} type A string representing the `type` of GUI to load.
- * @param {Function} ui An instance of `figma.ui` with the GUI pre-loaded.
+ * @param {Object} ui An instance of `figma.ui` with the GUI pre-loaded.
+ * @param {Function} ui.resize An instance of `figma.ui.resize` function.
  *
  * @returns {null}
  */
@@ -853,7 +866,7 @@ const resizeGUI = (
 };
 
 /**
- * @description Checks a node’s `type` to see if it is a `TextNode`.
+ * Checks a node’s `type` to see if it is a `TextNode`.
  *
  * @kind function
  * @name isTextNode
@@ -865,7 +878,7 @@ const resizeGUI = (
 const isTextNode = (node: any): node is TextNode => node.type === 'TEXT';
 
 /**
- * @description Checks if a supplied `assignment` string and `nodeType` is valid (it can be
+ * Checks if a supplied `assignment` string and `nodeType` is valid (it can be
  * matched with an entry in `ASSIGNMENTS`).
  *
  * @kind function
@@ -893,7 +906,7 @@ const isValidAssignment = (assignment: string, nodeType: 'shape' | 'text'): bool
 };
 
 /**
- * @description Checks the `FEATURESET` environment variable from webpack and
+ * Checks the `FEATURESET` environment variable from webpack and
  * determines if the featureset build should be `internal` or not.
  *
  * @kind function
@@ -907,7 +920,7 @@ const isInternal = (): boolean => {
 };
 
 /**
- * @description Checks two supplied filters and returns `true` if they match.
+ * Checks two supplied filters and returns `true` if they match.
  *
  * @kind function
  * @name checkFilterMatch

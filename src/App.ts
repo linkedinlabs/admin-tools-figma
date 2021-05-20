@@ -7,7 +7,7 @@ import { resizeGUI } from './Tools';
 import { DATA_KEYS, GUI_SETTINGS } from './constants';
 
 /**
- * @description A shared helper function to set up in-UI messages and the logger.
+ * A shared helper function to set up in-UI messages and the logger.
  *
  * @kind function
  * @name assemble
@@ -30,7 +30,7 @@ const assemble = (context: any = null) => {
 };
 
 // /**
-//  * @description Triggers Figma’s change watcher by randomly re-naming a node and then returning
+//  * Triggers Figma’s change watcher by randomly re-naming a node and then returning
 //  * it to it’s original name. This is used in the context of applying new data to a main
 //  * component that needs to be re-published in a library. Data updates do not currently
 //  * trigger Figma’s awareness of changes within the component.
@@ -71,7 +71,7 @@ const assemble = (context: any = null) => {
 // };
 
 /**
- * @description Invokes Figma’s `setRelaunchData` on the passed node and (if applicable),
+ * Invokes Figma’s `setRelaunchData` on the passed node and (if applicable),
  * the container component node.
  *
  * @kind function
@@ -89,12 +89,10 @@ const setRelaunchCommands = (): void => {
 };
 
 /**
- * @description A class to handle core app logic and dispatch work to other classes.
+ * A class to handle core app logic and dispatch work to other classes.
  *
  * @class
  * @name App
- *
- * @constructor
  *
  * @property shouldTerminate A boolean that tells us whether or not the GUI should remain open
  * at the end of the plugin’s current task.
@@ -113,7 +111,7 @@ export default class App {
   }
 
   /**
-   * @description Resets the plugin GUI back to the original state or closes it entirely,
+   * Resets the plugin GUI back to the original state or closes it entirely,
    * terminating the plugin.
    *
    * @kind function
@@ -130,7 +128,7 @@ export default class App {
   }
 
   /**
-   * @description Takes a selection and invokes Painter’s `detachInstanceRecursive` to
+   * Takes a selection and invokes Painter’s `detachInstanceRecursive` to
    * detach the top-level component instance and any child instances from their main components.
    *
    * @kind function
@@ -183,7 +181,7 @@ export default class App {
   }
 
   /**
-   * @description Takes a payload with `updatedItem` (edited item params) and `itemIds` (the
+   * Takes a payload with `updatedItem` (edited item params) and `itemIds` (the
    * IDs of items to edit) and passes the params into the Editor class.
    *
    * @kind function
@@ -229,7 +227,7 @@ export default class App {
   }
 
   /**
-   * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
+   * Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
    * components (a frame wrapped around an `InstanceNode`), pulls the description from
    * the lower-level instance and applies it to the top-level component. Any status
    * messages are logged and displayed with toast messages in the Figma UI.
@@ -284,7 +282,7 @@ export default class App {
   }
 
   /**
-   * @description Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
+   * Takes a selection of `ComponentNode`(s) and, assuming they are wrapped
    * components (a frame wrapped around an `InstanceNode`), pulls the name from
    * the lower-level instance and applies it to the top-level component. Any status
    * messages are logged and displayed with toast messages in the Figma UI.
@@ -339,7 +337,7 @@ export default class App {
   }
 
   /**
-   * @description Triggers a UI refresh with the current selection.
+   * Triggers a UI refresh with the current selection.
    *
    * @kind function
    * @name refreshGUI
@@ -427,7 +425,7 @@ export default class App {
   }
 
   /**
-   * @description Resizes the plugin UI based on either a default, or a provided
+   * Resizes the plugin UI based on either a default, or a provided
    * `bodyHeight` in the `payload` object. The object is sent from the UI thread.
    *
    * @kind function
@@ -435,6 +433,8 @@ export default class App {
    *
    * @param {Object} payload Should contain `bodyHeight` as the height of the current
    * contents calculated in the UI.
+   * @param {number} payload.bodyHeight The height (in points) of the current contents calculated
+   * in the UI thread.
    *
    * @returns {Promise} Returns a promise for resolution.
    */
@@ -453,7 +453,7 @@ export default class App {
   }
 
   /**
-   * @description Sets new filter options to `clientStorage` and then triggers a UI refresh.
+   * Sets new filter options to `clientStorage` and then triggers a UI refresh.
    * The saved options are used in the refresh to filter content.
    *
    * @kind function
@@ -462,7 +462,12 @@ export default class App {
    * @param {Object} filters An object with filters to show/hide elements in the UI. Options
    * include `newIsStyles` (whether or not the UI should be editing styles or components),
    * `newIsSelection` (whether or not the UI is watching a selection or loading all available)
-   * styles, and `newFilter` (and optional filter to set).
+   * styles, and `newFilter` (an optional filter to set).
+   * @param {string} filters.newFilter An optional filter to set.
+   * @param {boolean} filters.newIsSelection Whether or not the UI is watching a selection
+   * or loading all available.
+   * @param {boolean} filters.newIsStyles Whether or not the UI should be editing styles
+   * or components.
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
   static async setFilters(
@@ -485,7 +490,7 @@ export default class App {
   }
 
   /**
-   * @description Triggers a UI refresh and then displays the plugin UI.
+   * Triggers a UI refresh and then displays the plugin UI.
    *
    * @kind function
    * @name showToolbar
@@ -500,14 +505,18 @@ export default class App {
   }
 
   /**
-   * @description Displays the plugin GUI within Figma.
+   * Displays the plugin GUI within Figma.
    *
    * @kind function
    * @name showGUI
    *
    * @param {Object} options Can include `size` calling one of the UI sizes defined
-   * in GUI_SETTINGS  and/or an initialized instance of the Messenger class for
+   * in GUI_SETTINGS and/or an initialized instance of the Messenger class for
    * logging (`messenger`). Both are optional.
+   * @param {string} options.size An optional string calling one of the UI sizes
+   * defined in GUI_SETTINGS (currently `default` or `info`).
+   * @param {Object} options.messenger An optional initialized instance of the Messenger class.
+   * @param {Function} options.messenger.log The log function from the Messenger class.
    *
    * @returns {null}
    */

@@ -23,7 +23,7 @@
   };
 
   /**
-   * @description Takes a `currentDescription` string and parses it: splitting each
+   * Takes a `currentDescription` string and parses it: splitting each
    * line into an array, and further splitting each line into a key/value pair using the
    * `:` as the signifier for the end of the key.
    *

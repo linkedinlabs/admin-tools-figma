@@ -21,7 +21,7 @@
   let originalGroups = groups;
 
   /**
-   * @description A reusable helper function to take an array and add or remove data from it
+   * A reusable helper function to take an array and add or remove data from it
    * based on a top-level key and a defined action.
    *
    * @kind function
@@ -75,7 +75,7 @@
   };
 
   /**
-   * @description A reusable helper function to take an array and filter its items by
+   * A reusable helper function to take an array and filter its items by
    * a supplied key. Only the filtered items are returned.
    *
    * @kind function
