@@ -48,20 +48,23 @@ export default class Painter {
       const protoObject = Object.getPrototypeOf(sourceNode);
       Object.keys(protoObject).forEach((key: string) => {
         switch (key) {
+          case 'absoluteTransform':
+          case 'children':
           case 'id':
           case 'parent':
-          case 'removed':
-          case 'absoluteTransform':
-          case 'width':
           case 'height':
-          case 'children':
+          case 'horizontalPadding': // deprecated
           case 'overlayPositionType':
           case 'overlayBackground':
           case 'overlayBackgroundInteraction':
           case 'mainComponent':
-          case 'scaleFactor':
+          case 'masterComponent': // deprecated
+          case 'removed':
           case 'reactions':
+          case 'scaleFactor':
           case 'type':
+          case 'width':
+          case 'verticalPadding': // deprecated
             // not writeable; do nothing
             break;
           default: {
@@ -79,11 +82,20 @@ export default class Painter {
       sourceNode.parent.insertChild((sourceIndex + 1), newNode);
 
       // re-add children
-      // mysteriously, this actually detaches any childen instances, eliminating the
-      // need for a recursive function
       sourceNode.children.forEach((childNode) => {
         const clonedNode: SceneNode = childNode.clone();
         newNode.appendChild(clonedNode);
+
+        // clone and detach children
+        if (childNode.children) {
+          let newChildFrame: FrameNode = figma.createFrame();
+          newChildFrame = cloneInstanceIntoFrame(newChildFrame, clonedNode);
+
+          if (newChildFrame) {
+            newNode.appendChild(newChildFrame);
+            clonedNode.remove();
+          }
+        }
       });
 
       return newNode;
