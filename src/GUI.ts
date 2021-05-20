@@ -13,7 +13,7 @@ const app = new App({
 });
 
 /**
- * @description Posts a message to the main thread with `loaded` set to `true`. Used in the
+ * Posts a message to the main thread with `loaded` set to `true`. Used in the
  * main thread to indicate the GUI is listening.
  *
  * @kind function
@@ -31,7 +31,7 @@ const sendLoadedMsg = (): void => {
 /* process Messages from the plugin */
 
 /**
- * @description Receives objects with the currently selected items/groups/types and
+ * Receives objects with the currently selected items/groups/types and
  * any filters, and passes them along to the Svelte UI class.
  *
  * @kind function
@@ -39,7 +39,21 @@ const sendLoadedMsg = (): void => {
  *
  * @param {Object} selected An object containing `items`, `groups`, and `types` arrays
  * formatted for presentation in the UI.
- * @param {Object} filters An object with filters to show/hide elements in the UI.
+ * @param {Array} selected.items An array of selected items formatted for presentation
+ * in the UI.
+ * @param {Array} selected.groups An array of selected groups formatted for presentation
+ * in the UI.
+ * @param {Array} selected.types An array of selected types formatted for presentation
+ * in the UI.
+ * @param {Object} filters An object with filters to show/hide elements in the UI. Options
+ * include `newIsStyles` (whether or not the UI should be editing styles or components),
+ * `newIsSelection` (whether or not the UI is watching a selection or loading all available)
+ * styles, and `newFilter` (an optional filter to set).
+ * @param {string} filters.newFilter An optional filter to set.
+ * @param {boolean} filters.newIsSelection Whether or not the UI is watching a selection
+ * or loading all available.
+ * @param {boolean} filters.newIsStyles Whether or not the UI should be editing styles
+ * or components.
  * @param {string} sessionKey A rotating key used during the single run of the plugin.
  *
  * @returns {null}
@@ -77,7 +91,7 @@ const updateSelected = (
 };
 
 /**
- * @description Watches for incoming messages from the plugin’s main thread and dispatches
+ * Watches for incoming messages from the plugin’s main thread and dispatches
  * them to the appropriate GUI actions.
  *
  * @kind function
@@ -110,6 +124,8 @@ const watchIncomingMessages = (): void => {
 
     return null;
   };
+
+  return null;
 };
 
 // init GUI

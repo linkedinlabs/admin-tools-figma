@@ -2,7 +2,7 @@ import { getPeerPluginData } from './Tools';
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /**
- * @description Takes a node/style `type` and parses it for use as `typeId` in the
+ * Takes a node/style `type` and parses it for use as `typeId` in the
  * UI groups and type sets.
  *
  * @kind function
@@ -19,7 +19,7 @@ const getTypeId = (type: string) => {
 };
 
 /**
- * @description Set up the `groups` object for the UI Presentation. Items are
+ * Set up the `groups` object for the UI Presentation. Items are
  * separated into groups based on their `groupId`.
  *
  * @kind function
@@ -54,7 +54,7 @@ const setGroups = (
 };
 
 /**
- * @description Set up the `types` object for the UI Presentation. Items are
+ * Set up the `types` object for the UI Presentation. Items are
  * separated into types based on their `typeId`.
  *
  * @kind function
@@ -82,14 +82,12 @@ const setTypes = (allItems: Array<PresenterItem>) => {
 };
 
 /**
- * @description A class to bridge Figma objects and the presentation layer. Extracts styles from
+ * A class to bridge Figma objects and the presentation layer. Extracts styles from
  * the selection (or all found in the document) or extracts nodes from the selection. Filter
  * options set in the UI thread are applied to the resulting presentation array.
  *
  * @class
  * @name Presenter
- *
- * @constructor
  *
  * @property nodes Array of selected items.
  */
@@ -100,7 +98,7 @@ export default class Presenter {
   }
 
   /**
-   * @description Pulls styles from an array of nodes (`isSelection` is enabled) otherwise reads
+   * Pulls styles from an array of nodes (`isSelection` is enabled) otherwise reads
    * all available location styles from the document. An optional filter is applied to the resulting
    * array, and the array is formatted for UI Presentation.
    *
@@ -252,7 +250,7 @@ export default class Presenter {
       }
 
       if (filterType) {
-        items = items.filter(item => item.type === filterType);
+        items = items.filter((item) => item.type === filterType);
       }
     }
 
@@ -269,7 +267,7 @@ export default class Presenter {
   }
 
   /**
-   * @description Pulls unique component nodes from the supplied array of nodes in the constructor.
+   * Pulls unique component nodes from the supplied array of nodes in the constructor.
    * The resulting array is formatted for UI Presentation.
    *
    * @kind function

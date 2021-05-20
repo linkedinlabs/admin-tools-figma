@@ -1,10 +1,8 @@
 /**
- * @description A class to add elements directly onto Figma file frames.
+ * A class to add elements directly onto Figma file frames.
  *
  * @class
  * @name Painter
- *
- * @constructor
  *
  * @property node The TextNode in the Figma file that we want to modify.
  * @property sessionKey The current session identifier.
@@ -18,7 +16,7 @@ export default class Painter {
   }
 
   /**
-   * @description Takes an `InstanceNode` and detaches it (and ALL children) from any linked
+   * Takes an `InstanceNode` and detaches it (and ALL children) from any linked
    * main components (`ComponentNode`. The high-level instance is recreated as a frame, and
    * then all children get cloned and inserted into the instance.
    *
@@ -134,7 +132,7 @@ export default class Painter {
   }
 
   /**
-   * @description Takes a wrapped `ComponentNode` (component wrapped around an instance of another
+   * Takes a wrapped `ComponentNode` (component wrapped around an instance of another
    * component) reads the key (`name` or `description`) from the main component of the wrapped
    * instance and applies it to the outer component.
    *
