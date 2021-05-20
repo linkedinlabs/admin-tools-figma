@@ -6,7 +6,7 @@ import { awaitUIReadiness } from './Tools';
 // GUI management -------------------------------------------------
 
 /**
- * @description Shuts down the plugin and closes the GUI.
+ * Shuts down the plugin and closes the GUI.
  *
  * @kind function
  * @name terminatePlugin
@@ -22,15 +22,20 @@ const terminatePlugin = (): void => {
 // watch for commands -------------------------------------------------
 
 /**
- * @description Takes a unique string (`type`) and calls the corresponding action
+ * Takes a unique string (`type`) and calls the corresponding action
  * in the App class. Also does some housekeeping duties such as pre-loading typefaces
  * and managing the GUI.
  *
  * @kind function
  * @name dispatcher
- * @param {Object} action An object comprised of `type`, a string representing
- * the action received from the GUI and `visual` a boolean indicating if the
- * command came from the GUI or the menu.
+ *
+ * @param {Object} action An object comprised of `type`, a string representing the action received
+ * from the GUI and `visual` a boolean indicating if the command came from the GUI or the menu.
+ * @param {string} action.type A string representing the action received from the GUI.
+ * @param {Object} action.payload Any additional parameters/data to pass to the main thread.
+ * @param {boolean} action.visual Indicates if the command came from the GUI or the menu.
+ * @param {number} action.sessionKey A rotating key used during the single run of the plugin.
+ *
  * @returns {null}
  */
 const dispatcher = async (action: {
@@ -119,7 +124,7 @@ const dispatcher = async (action: {
 export default dispatcher;
 
 /**
- * @description Acts as the main wrapper function for the plugin. Run by default
+ * Acts as the main wrapper function for the plugin. Run by default
  * when Figma calls the plugin.
  *
  * @kind function

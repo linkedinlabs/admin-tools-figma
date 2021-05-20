@@ -1,12 +1,10 @@
 import { PLUGIN_NAME } from './constants';
 
 /**
- * @description A class to handle UI alerts, messages, and logging.
+ * A class to handle UI alerts, messages, and logging.
  *
  * @class
  * @name Messenger
- *
- * @constructor
  *
  * @property event The encompassing event we are logging or applying a message/alert to.
  * @property page The Figma file that will display messages/alerts
@@ -25,7 +23,7 @@ export default class Messenger {
   }
 
   /**
-   * @description Takes a string message and logs it at one of 2 levels (normal or error).
+   * Takes a string message and logs it at one of 2 levels (normal or error).
    *
    * @kind function
    * @name log
@@ -42,7 +40,7 @@ export default class Messenger {
   }
 
   /**
-   * @description Takes a string message and renders it as a Toast in the Figma UI.
+   * Takes a string message and renders it as a Toast in the Figma UI.
    *
    * @kind function
    * @name toast
@@ -57,11 +55,16 @@ export default class Messenger {
   }
 
   /**
-   * @description Handle the result messenging/logging.
+   * Handle the result messenging/logging.
    *
    * @kind function
    * @name handleResult
+   *
    * @param {Object} result The success/error result and accompanying log/toast message(s).
+   * @param {Object} result.messages The object containing any log/toast message(s).
+   * @param {string} result.messages.toast A toast message string.
+   * @param {string} result.messages.log A console log string.
+   * @param {string} result.status The `success` or `error` result.
    */
   handleResult(
     result: {

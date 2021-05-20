@@ -33,7 +33,6 @@
   const restoreKeys = () => {
     item.componentData.keys = savedItem.componentData.keys;
   };
-
 </script>
 
 <style>

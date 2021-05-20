@@ -16,7 +16,6 @@
   export let itemIsLocked;
   export let savedHeading = { ...defaultHeading };
   export let heading = { ...defaultHeading };
-
 </script>
   
 {#if heading}

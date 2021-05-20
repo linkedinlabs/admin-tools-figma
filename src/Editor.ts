@@ -8,7 +8,7 @@ import {
 import { CONTAINER_NODE_TYPES } from './constants';
 
 /**
- * @description Takes a `currentDescription` string and parses it: splitting each
+ * Takes a `currentDescription` string and parses it: splitting each
  * line into an array, and further splitting each line into a key/value pair using the
  * `:` as the signifier for the end of the key.
  *
@@ -72,13 +72,11 @@ const compileDescription = (currentDescriptionArray) => {
 };
 
 /**
- * @description A class to handle applying changes made in the UI editors to the proper Figma
+ * A class to handle applying changes made in the UI editors to the proper Figma
  * node/style parameters or, in the case of nodes, additionally the internal data.
  *
  * @class
  * @name Editor
- *
- * @constructor
  *
  * @property array The item of selected items (either `BaseNode` or `BaseStyle`).
  * @property sessionKey A rotating key used during the single run of the plugin.
@@ -93,7 +91,7 @@ export default class Editor {
   }
 
   /**
-   * @description Applies changes from in the `updatedItem` to the first available node/style
+   * Applies changes from in the `updatedItem` to the first available node/style
    * in the currentSelection.
    *
    * @kind function
@@ -129,7 +127,7 @@ export default class Editor {
       // grab existing style presentation object for comparison
       const extractedStyles = presenter.extractStyles();
       existingItem = extractedStyles.items.filter(
-        item => item.id === updatedItem.id,
+        (item) => item.id === updatedItem.id,
       )[selectIndex];
 
       // kick out if we can't find a match
@@ -145,7 +143,7 @@ export default class Editor {
       // grab existing component presentation object for comparison
       const extractedComponents = presenter.extractComponents();
       existingItem = extractedComponents.items.filter(
-        item => item.id === updatedItem.id,
+        (item) => item.id === updatedItem.id,
       )[selectIndex];
 
       // kick out if we can't find a match
@@ -205,7 +203,7 @@ export default class Editor {
   }
 
   /**
-   * @description Applies changes from in the `updatedItem` to the nodes/styles matching `itemIds`.
+   * Applies changes from in the `updatedItem` to the nodes/styles matching `itemIds`.
    *
    * @kind function
    * @name updateBulk
@@ -297,7 +295,7 @@ export default class Editor {
         existingItems.forEach((existingItem) => {
           const selectIndex = 0;
           const baseItem = baseItems.filter(
-            styleOrNode => styleOrNode.id === existingItem.id,
+            (styleOrNode) => styleOrNode.id === existingItem.id,
           )[selectIndex];
           if (
             baseItem
@@ -325,7 +323,7 @@ export default class Editor {
                 updatedDescriptionArray.forEach((updatedDescriptionItem) => {
                   if (updatedDescriptionItem.value) {
                     const existingIndex = existingDescriptionArray.findIndex(
-                      existing => existing.key === updatedDescriptionItem.key,
+                      (existing) => existing.key === updatedDescriptionItem.key,
                     );
 
                     if (existingIndex > -1) {

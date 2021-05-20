@@ -29,6 +29,7 @@
   "rules": {
     "no-console": "error",
     "no-restricted-globals": "off",
+    "no-undef": "off",
     "no-unused-vars": "off",
     "no-unused-expressions": [
       "error", {

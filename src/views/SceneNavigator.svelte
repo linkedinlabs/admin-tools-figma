@@ -69,7 +69,7 @@
 
   const setCurrentItems = (useStyles) => {
     currentItems = menuItems.filter(
-      item => item.type === (useStyles ? 'styles' : 'components'),
+      (item) => item.type === (useStyles ? 'styles' : 'components'),
     );
   };
 
