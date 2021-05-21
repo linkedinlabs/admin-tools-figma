@@ -111,15 +111,17 @@ const watchIncomingMessages = (): void => {
     },
   ) => {
     const { pluginMessage } = event.data;
-    const { payload } = pluginMessage;
-    const { filters, selected, sessionKey } = payload;
+    if (pluginMessage) {
+      const { payload } = pluginMessage;
+      const { filters, selected, sessionKey } = payload;
 
-    switch (pluginMessage.action) {
-      case 'refreshState':
-        updateSelected(selected, filters, sessionKey);
-        break;
-      default:
-        return null;
+      switch (pluginMessage.action) {
+        case 'refreshState':
+          updateSelected(selected, filters, sessionKey);
+          break;
+        default:
+          return null;
+      }
     }
 
     return null;
