@@ -110,8 +110,8 @@ const watchIncomingMessages = (): void => {
       }
     },
   ) => {
-    if (event && event.data) {
-      const { pluginMessage } = event.data;
+    const { pluginMessage } = event.data;
+    if (pluginMessage) {
       const { payload } = pluginMessage;
       const { filters, selected, sessionKey } = payload;
 
