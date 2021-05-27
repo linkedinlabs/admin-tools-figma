@@ -3,7 +3,7 @@
   
   const defaultLabels = {
     alt: null,
-    visible: false,
+    visible: true,
     a11y: null,
   };
 
