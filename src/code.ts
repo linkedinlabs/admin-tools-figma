@@ -91,6 +91,9 @@ const dispatcher = async (action: {
       case 'detach-instances':
         app.detachInstances(sessionKey);
         break;
+      case 'select-hidden':
+        app.selectHidden(sessionKey);
+        break;
       case 'inherit-description':
         app.inheritDescription(sessionKey);
         break;

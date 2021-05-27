@@ -181,6 +181,37 @@ export default class App {
   }
 
   /**
+   * Takes a selection and selects any hidden layers within.
+   *
+   * @kind function
+   * @name selectHidden
+   *
+   * @returns {null}
+   */
+  selectHidden() {
+    const { messenger, selection } = assemble(figma);
+
+    // handle empty selections
+    if (!selection.length) {
+      messenger.toast('A layer must be selected.');
+      return this.closeOrReset();
+    }
+
+    const hiddenLayers = selection.reduce((acc, item) => {
+      if (!item.visible) {
+        acc.push(item);
+      }
+      const hiddenChildren = item.findAll((layer) => !layer.visible);
+      return acc.concat(hiddenChildren);
+    }, []);
+
+    figma.currentPage.selection = hiddenLayers;
+    messenger.toast(`Success! ${hiddenLayers.length} hidden layers selected.`);
+
+    return this.closeOrReset();
+  }
+
+  /**
    * Takes a payload with `updatedItem` (edited item params) and `itemIds` (the
    * IDs of items to edit) and passes the params into the Editor class.
    *
