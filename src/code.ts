@@ -92,7 +92,7 @@ const dispatcher = async (action: {
         app.detachInstances(sessionKey);
         break;
       case 'select-hidden':
-        app.selectHidden(sessionKey);
+        app.selectHidden();
         break;
       case 'inherit-description':
         app.inheritDescription(sessionKey);
