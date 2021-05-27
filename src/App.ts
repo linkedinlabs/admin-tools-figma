@@ -193,7 +193,7 @@ export default class App {
 
     // handle empty selections
     if (!selection.length) {
-      messenger.toast('A layer must be selected.');
+      messenger.toast('Error: One or more layers must be selected.');
       return this.closeOrReset();
     }
 
