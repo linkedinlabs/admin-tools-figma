@@ -17,6 +17,10 @@
       "command": "detach-instances"
     },
     {
+      "name": "Select Hidden Layers",
+      "command": "select-hidden"
+    },
+    {
       "name": "Inherit Description",
       "command": "inherit-description"
     },
