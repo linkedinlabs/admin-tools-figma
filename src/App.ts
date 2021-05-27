@@ -205,8 +205,12 @@ export default class App {
       return layers.concat(hiddenChildren);
     }, []);
 
-    figma.currentPage.selection = hiddenLayers;
-    messenger.toast(`Success! ${hiddenLayers.length} hidden layers selected.`);
+    if (hiddenLayers.length) {
+      figma.currentPage.selection = hiddenLayers;
+      messenger.toast(`Success! ${hiddenLayers.length} hidden layers selected.`);
+    } else {
+      messenger.toast('There are no hidden layers within your selection.');
+    }
 
     return this.closeOrReset();
   }
