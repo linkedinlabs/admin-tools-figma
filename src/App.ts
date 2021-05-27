@@ -184,11 +184,11 @@ export default class App {
    * Takes a selection and selects any hidden layers within.
    *
    * @kind function
-   * @name selectHidden
+   * @name selectHiddenLayers
    *
    * @returns {null}
    */
-  selectHidden() {
+  selectHiddenLayers() {
     const { messenger, selection } = assemble(figma);
 
     // handle empty selections
@@ -197,12 +197,12 @@ export default class App {
       return this.closeOrReset();
     }
 
-    const hiddenLayers = selection.reduce((acc, item) => {
+    const hiddenLayers = selection.reduce((layers, item) => {
       if (!item.visible) {
-        acc.push(item);
+        layers.push(item);
       }
       const hiddenChildren = item.findAll((layer) => !layer.visible);
-      return acc.concat(hiddenChildren);
+      return layers.concat(hiddenChildren);
     }, []);
 
     figma.currentPage.selection = hiddenLayers;
