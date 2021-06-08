@@ -26,7 +26,7 @@
     "lint:js": "npm run lint:eslint",
     "lint:css": "npm run lint:stylelint",
     "lint:staged": "lint-staged",
-    "genenv:beta": "rsync -a src/ ../beta-stapler-figma/src && npm run build --prefix ../beta-stapler-figma"
+    "genbeta": "rsync -a src/ ../beta-stapler-figma/src && npm run build --prefix ../beta-stapler-figma"
   },
   "lint-staged": {
     "*.{js,jsx,tsx,ts,svelte}": "eslint",
