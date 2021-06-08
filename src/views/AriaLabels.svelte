@@ -12,8 +12,8 @@
   export let itemIsLocked;
   export let overrides;
   export let role;
-  export let savedLabels = { ...defaultLabels }; // label data from last save to node metadata
-  export let labels = { ...defaultLabels }; // reactive prop from parent
+  export let savedLabels = { ...defaultLabels };
+  export let labels = { ...defaultLabels };
 </script>
 
 {#if (labels && role !== 'image-decorative')}

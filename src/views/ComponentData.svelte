@@ -12,7 +12,11 @@
   import KeystopKeys from './KeystopKeys';
   import AriaLabels from './AriaLabels';
   import AriaHeading from './AriaHeading';
-  import { checkFilterMatch, compareArrays, setBulkSelectOptions } from '../Tools';
+  import {
+    checkFilterMatch,
+    compareArrays,
+    setBulkSelectOptions,
+  } from '../Tools';
 
   export let invertView = false;
   export let isEditor = false;
@@ -36,11 +40,12 @@
 </script>
 
 <style>
-  h3 {
-    margin: 14px 0 6px 19px;
+  .a11y-header {
+    margin: 10px 0 0 19px;
     font-size: 11px;
-    font-weight: 500;
-    color: rgb(125, 125, 125);
+    color: rgb(155, 155, 155);
+    display: flex;
+    align-items: center;
   }
 </style>
 
@@ -143,23 +148,21 @@
     </span>
   {/if}
 
-  <h3>Keyboard</h3>
-
-  <FormUnit 
-    className="form-row form-unit fixed-150"
-    itemIsLocked={isLocked}
-    disableCopy={true}
-    hasMultiple={overrides.includes('hasKeystop')}
-    invertView={invertView}
-    kind="inputSwitch"
-    labelText="Focus stop"
-    nameId={`has-keystop-${item.id}`}
-    a11yField={true}
-    bind:value={item.componentData.hasKeystop}
-    isDirty={item.componentData.hasKeystop !== savedItem.componentData.hasKeystop}
-    preserveDirtyProp={true}
-  />
-
+  <span class="a11y-header">Keyboard
+    <FormUnit 
+      className="form-row form-unit fixed-150"
+      itemIsLocked={isLocked}
+      disableCopy={true}
+      hasMultiple={overrides.includes('hasKeystop')}
+      invertView={invertView}
+      kind="inputSwitch"
+      nameId={`has-keystop-${item.id}`}
+      a11yField={true}
+      bind:value={item.componentData.hasKeystop}
+      isDirty={item.componentData.hasKeystop !== savedItem.componentData.hasKeystop}
+      preserveDirtyProp={true}
+    />
+  </span>
   {#if item.componentData.hasKeystop}
     <FormUnit
       className="form-row form-unit fixed-150"
@@ -190,43 +193,73 @@
     />
   {/if}
 
-  <h3>Labels</h3>
+  <span class="a11y-header">Labels
+    <FormUnit
+      className="form-row form-unit fixed-150"
+      kind="inputSwitch"
+      nameId={`has-labels-${item.id}`}
+      invertView={invertView}
+      itemIsLocked={isLocked}
+      hasMultiple={overrides.includes('hasLabels')}
+      isDirty={savedItem.componentData.hasLabels !== item.componentData.hasLabels}
+      bind:value={item.componentData.hasLabels}
+      preserveDirtyProp={true}
+      a11yField={true}
+    />
+  </span>
 
-  <FormUnit
-    className="form-row form-unit fixed-150"
-    disableCopy={true}
-    hasMultiple={overrides.includes('role')}
-    invertView={invertView}
-    itemIsLocked={isLocked}
-    kind="inputSelect"
-    labelText="Role"
-    nameId={`item-aria-role-${item.id}`}
-    options={setBulkSelectOptions($roleOptions, item.componentData.role, isEditor)}
-    bind:value={item.componentData.role}
-    isDirty={item.componentData.role !== savedItem.componentData.role}
-    preserveDirtyProp={true}
-    a11yField={true}
-  />
-  <AriaLabels 
-    role={item.componentData.role}
-    invertView={invertView}
-    overrides={overrides}
-    isEditor={isEditor}
-    itemId={item.id}
-    itemIsLocked={isLocked}
-    savedLabels={savedItem.componentData.labels}
-    bind:labels={item.componentData.labels}
-  />
+  {#if item.componentData.hasLabels}
+    <FormUnit
+      className="form-row form-unit fixed-150"
+      disableCopy={true}
+      hasMultiple={overrides.includes('role')}
+      invertView={invertView}
+      itemIsLocked={isLocked}
+      kind="inputSelect"
+      labelText="Role"
+      nameId={`item-aria-role-${item.id}`}
+      options={setBulkSelectOptions($roleOptions, item.componentData.role, isEditor)}
+      bind:value={item.componentData.role}
+      isDirty={item.componentData.role !== savedItem.componentData.role}
+      preserveDirtyProp={true}
+      a11yField={true}
+    />
+    <AriaLabels 
+      role={item.componentData.role}
+      invertView={invertView}
+      overrides={overrides}
+      isEditor={isEditor}
+      itemId={item.id}
+      itemIsLocked={isLocked}
+      savedLabels={savedItem.componentData.labels}
+      bind:labels={item.componentData.labels}
+    />
+  {/if}
 
-  <h3>Heading</h3>
-
-  <AriaHeading 
-    invertView={invertView}
-    overrides={overrides}
-    isEditor={isEditor}
-    itemId={item.id}
-    itemIsLocked={isLocked}
-    savedHeading={savedItem.componentData.heading}
-    bind:heading={item.componentData.heading}
-  />
+  <span class="a11y-header">
+    Heading
+    <FormUnit
+      className="form-row form-unit fixed-150"
+      kind="inputSwitch"
+      nameId={`has-heading-${item.id}`}
+      invertView={invertView}
+      itemIsLocked={isLocked}
+      hasMultiple={overrides.includes('hasHeading')}
+      isDirty={savedItem.componentData.hasHeading !== item.componentData.hasHeading}
+      bind:value={item.componentData.hasHeading}
+      preserveDirtyProp={true}
+      a11yField={true}
+    />
+  </span>
+  {#if item.componentData.hasHeading}
+    <AriaHeading 
+      invertView={invertView}
+      overrides={overrides}
+      isEditor={isEditor}
+      itemId={item.id}
+      itemIsLocked={isLocked}
+      savedHeading={savedItem.componentData.heading}
+      bind:heading={item.componentData.heading}
+    />
+  {/if}
 {/if}
