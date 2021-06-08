@@ -110,6 +110,13 @@ const dispatcher = async (action: {
       case 'submit-bulk':
         app.handleUpdate(payload, sessionKey);
         break;
+      case 'sendStyleValues':
+        App.displayStyleValues(payload);
+        break;
+      case 'import-token-values':
+        // THROW CSV IMPORT WINDOW
+        App.showGUI({});
+        break;
       case 'tools':
         App.showToolbar(sessionKey);
         break;

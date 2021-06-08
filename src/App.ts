@@ -3,7 +3,7 @@ import Editor from './Editor';
 import Painter from './Painter';
 import Presenter from './Presenter';
 import Messenger from './Messenger';
-import { resizeGUI } from './Tools';
+import { parseStyleValue, resizeGUI } from './Tools';
 import { DATA_KEYS, GUI_SETTINGS } from './constants';
 
 /**
@@ -537,6 +537,50 @@ export default class App {
 
     await App.refreshGUI(sessionKey);
     App.showGUI({ messenger });
+  }
+
+  /**
+   * Draws a colored rectangle for a color swatch.
+   *
+   * @kind function
+   * @name displayStyleValues
+   *
+   * @param {string} styles The unprocessed string of style names and values, in CSV format.
+   */
+  static displayStyleValues(styles) {
+    // quick & dirty CSV parsing - no special parsing
+    function CSVToArray(strData) {
+      return strData.split('\n').map((line) => {
+        const [first, ...rest] = line.split(',');
+        const second = rest.join(',');
+        return [first, second];
+      });
+    }
+
+    // parse CSV & remove header row
+    const parsedValues = CSVToArray(styles).slice(1);
+
+    parsedValues.forEach((style) => {
+      const [styleName, styleValue] = style;
+      const parsedStyleValue = parseStyleValue(styleValue);
+
+      const figmaPaintStyle = figma.createPaintStyle();
+      figmaPaintStyle.name = styleName.replace(/-/gi, '/');
+
+      const styleColor: RGB = {
+        r: parsedStyleValue.r,
+        g: parsedStyleValue.g,
+        b: parsedStyleValue.b,
+      };
+
+      const solidPaint: SolidPaint = {
+        type: 'SOLID',
+        color: styleColor,
+        opacity: parsedStyleValue.a || 1,
+      };
+
+      figmaPaintStyle.paints = [solidPaint];
+    });
   }
 
   /**

@@ -11,6 +11,7 @@
   import ItemsList from './ItemsList';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
+  import StyleImport from './StyleImport';
 
   export let filter = 'all-components';
   export let inspect = 'components';
@@ -41,7 +42,7 @@
     setCurrentFilter(filter);
     sessionKey.set(newSessionKey);
 
-    if (wasBodyHeight !== bodyHeight && selected.items.length > 0) {
+    if (wasBodyHeight !== bodyHeight && selected && selected.items.length > 0) {
       parent.postMessage({
         pluginMessage: {
           action: 'resize',
@@ -67,6 +68,7 @@
   {#if selected && selected.items.length > 0}
     <ItemsList selected={selected}/>
   {:else}
+    <StyleImport />
     <BlankState isStyles={$isStyles}/>
   {/if}
 

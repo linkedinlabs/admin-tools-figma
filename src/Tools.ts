@@ -8,6 +8,8 @@ import {
   PLUGIN_IDENTIFIER,
 } from './constants';
 
+const hexRgb = require('hex-rgb');
+
 // --- helper functions
 /**
  * An approximation of `forEach` but run in an async manner.
@@ -946,6 +948,81 @@ const checkFilterMatch = (
   return isMatch;
 };
 
+const convertHexToDecimal = (hexValue: {
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+}) => {
+  const decimal = {
+    r: (hexValue.r / 255),
+    g: (hexValue.g / 255),
+    b: (hexValue.b / 255),
+    a: hexValue.a,
+  };
+
+  return decimal;
+};
+
+const hexToDecimalRgb = (hexColor: string, opacity?: number): {
+  r: number,
+  g: number,
+  b: number,
+  a: number
+} => {
+  const rgbColor: { red: number, green: number, blue: number, alpha: number } = hexRgb(hexColor);
+
+  const r: number = (rgbColor.red / 255);
+  const g: number = (rgbColor.green / 255);
+  const b: number = (rgbColor.blue / 255);
+  const a: number = rgbColor.alpha || opacity || 1;
+
+  const decimalRgb: {
+    r: number,
+    g: number,
+    b: number,
+    a: number
+  } = {
+    r,
+    g,
+    b,
+    a,
+  };
+
+  return decimalRgb;
+};
+
+const parseStyleValue = (styleValue: string) => {
+  let parsedStyleValue;
+  if (styleValue === 'transparent') {
+    // if value is "transparent"
+    parsedStyleValue = {
+      r: 0,
+      g: 0,
+      b: 0,
+      a: 0,
+    };
+  } else if (styleValue.slice(1, 5) === 'rgba') {
+    // if value is of format "rgba(r, g, b, a)"
+    const colorTuple = styleValue
+      .slice(1, -1) // take off "" marks first
+      .slice(5, -1) // take off rgba and parens
+      .split(',');
+
+    parsedStyleValue = convertHexToDecimal({
+      r: parseInt(colorTuple[0], 10), // int [0, 255]
+      g: parseInt(colorTuple[1], 10),
+      b: parseInt(colorTuple[2], 10),
+      a: parseFloat(colorTuple[3]), // float [0, 1]
+    });
+  } else if (styleValue[0] === '#') {
+    // if value is of format "#xxxxxx"
+    parsedStyleValue = hexToDecimalRgb(styleValue, 1);
+  }
+
+  return parsedStyleValue;
+};
+
 export {
   asyncForEach,
   asyncImageRequest,
@@ -961,12 +1038,14 @@ export {
   findTopFrame,
   findTopInstance,
   getPeerPluginData,
+  hexToDecimalRgb,
   isInternal,
   isTextNode,
   isValidAssignment,
   loadTypefaces,
   makeNetworkRequest,
   matchMasterPeerNode,
+  parseStyleValue,
   pollWithPromise,
   resizeGUI,
   setBulkSelectOptions,
