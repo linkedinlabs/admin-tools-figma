@@ -539,6 +539,23 @@ export default class App {
     App.showGUI({ messenger });
   }
 
+  /** WIP
+   * Triggers a UI refresh and then displays the plugin UI.
+   *
+   * @kind function
+   * @name showTokenImport
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async showTokenImport() {
+    const { messenger } = assemble(figma);
+
+    App.showGUI({
+      size: 'tokenImport',
+      messenger,
+    });
+  }
+
   /**
    * Parses CSV list of style names and values and creates corresponding Figma
    * paint styles in the file.
@@ -602,7 +619,10 @@ export default class App {
    * @returns {null}
    */
   static async showGUI(options: {
-    size?: 'default' | 'info',
+    size?:
+      'default'
+      | 'info'
+      | 'tokenImport',
     messenger?: { log: Function },
   }) {
     const { size, messenger } = options;

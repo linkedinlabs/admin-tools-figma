@@ -114,8 +114,7 @@ const dispatcher = async (action: {
         App.displayStyleValues(payload);
         break;
       case 'import-token-values':
-        // THROW CSV IMPORT WINDOW
-        App.showGUI({});
+        App.showTokenImport();
         break;
       case 'tools':
         App.showToolbar(sessionKey);
