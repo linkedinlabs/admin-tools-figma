@@ -152,7 +152,7 @@ const GUI_SETTINGS = {
   },
   tokenImport: {
     width: 360,
-    height: 250,
+    height: 450,
   },
 };
 
