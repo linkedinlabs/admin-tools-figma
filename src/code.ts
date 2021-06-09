@@ -114,7 +114,7 @@ const dispatcher = async (action: {
         App.displayStyleValues(payload);
         break;
       case 'import-token-values':
-        App.showTokenImport();
+        App.showTokenImport(sessionKey);
         break;
       case 'tools':
         App.showToolbar(sessionKey);

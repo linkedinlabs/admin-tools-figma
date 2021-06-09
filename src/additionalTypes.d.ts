@@ -1,5 +1,9 @@
 declare global {
   // Internal Declarations
+  type PluginViewTypes = 
+    'general'
+    | 'token-import';
+
   type PresenterTypeName =
     'Effect'
     | 'Grid'
@@ -59,6 +63,13 @@ declare global {
     visible: boolean,
     invisible: string
   }
+
+  type PluginOptions = {
+    isSelection: boolean,
+    isStyles: boolean,
+    filter: string,
+    currentView: PluginViewTypes,
+  };
 
   // Vendor Declarations
 

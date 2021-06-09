@@ -71,6 +71,40 @@ const assemble = (context: any = null) => {
 // };
 
 /**
+ * @description Retrieves the current options saved to `clientStorage`. If none exist,
+ * defaults are set.
+ *
+ * @kind function
+ * @name getOptions
+ *
+ * @returns {Object} Returns the options (currently `currentView` and `isMercadoMode`.
+ */
+const getOptions = async (): Promise<PluginOptions> => {
+  // set default options
+  let options: PluginOptions = {
+    isSelection: true,
+    isStyles: true,
+    filter: null,
+    currentView: 'general',
+  };
+
+  // retrieve last used, and use if they exist
+  const lastUsedOptions: PluginOptions = await figma.clientStorage.getAsync(DATA_KEYS.options);
+  if (lastUsedOptions !== undefined) {
+    options = lastUsedOptions;
+  }
+
+  // check for defaults
+  const { currentView }: { currentView: PluginViewTypes } = options;
+
+  if ((currentView === undefined) || (currentView === null)) {
+    options.currentView = 'general';
+  }
+
+  return options;
+};
+
+/**
  * Invokes Figma’s `setRelaunchData` on the passed node and (if applicable),
  * the container component node.
  *
@@ -382,6 +416,9 @@ export default class App {
   static async refreshGUI(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
 
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
     // set default filter
     const filters: {
       newFilter?: string,
@@ -398,11 +435,8 @@ export default class App {
     const presenter = new Presenter({ for: nodes });
 
     // get last-used filters from options
-    const lastUsedOptions: {
-      isSelection: boolean,
-      isStyles: boolean,
-      filter: string,
-    } = await figma.clientStorage.getAsync(DATA_KEYS.options);
+    // retrieve existing options
+    const lastUsedOptions: PluginOptions = await getOptions();
 
     if (lastUsedOptions) {
       // update filters with existing options from storage
@@ -444,6 +478,7 @@ export default class App {
     figma.ui.postMessage({
       action: 'refreshState',
       payload: {
+        currentView: options.currentView,
         filters,
         selected,
         sessionKey,
@@ -456,7 +491,11 @@ export default class App {
       newGUIHeight,
     );
 
-    messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
+    if (options && options.currentView === 'general') {
+      messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
+    } else {
+      messenger.log('Updating the UI with the Token Import');
+    }
   }
 
   /**
@@ -535,6 +574,16 @@ export default class App {
   static async showToolbar(sessionKey: number) {
     const { messenger } = assemble(figma);
 
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
+    // set new view without changing other options
+    options.currentView = 'general';
+
+    // save new options to storage
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    // setup the UI
     await App.refreshGUI(sessionKey);
     App.showGUI({ messenger });
   }
@@ -547,9 +596,20 @@ export default class App {
    *
    * @param {string} sessionKey A rotating key used during the single run of the plugin.
    */
-  static async showTokenImport() {
+  static async showTokenImport(sessionKey: number) {
     const { messenger } = assemble(figma);
 
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
+    // set new view without changing other options
+    options.currentView = 'token-import';
+
+    // save new options to storage
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    // setup the UI
+    await App.refreshGUI(sessionKey);
     App.showGUI({
       size: 'tokenImport',
       messenger,
