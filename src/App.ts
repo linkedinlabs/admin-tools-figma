@@ -540,12 +540,14 @@ export default class App {
   }
 
   /**
-   * Draws a colored rectangle for a color swatch.
+   * Parses CSV list of style names and values and creates corresponding Figma
+   * paint styles in the file.
    *
    * @kind function
    * @name displayStyleValues
    *
-   * @param {string} styles The unprocessed string of style names and values, in CSV format.
+   * @param {string} styles The unprocessed string of style names and values,
+   * in CSV format.
    */
   static displayStyleValues(styles) {
     // quick & dirty CSV parsing - no special parsing
