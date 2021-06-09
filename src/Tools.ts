@@ -978,15 +978,9 @@ const hexToDecimalRgb = (hexColor: string, opacity?: number): {
   const a: number = rgbColor.alpha || opacity || 1;
 
   const decimalRgb: {
-    r: number,
-    g: number,
-    b: number,
-    a: number
+    r: number, g: number, b: number, a: number
   } = {
-    r,
-    g,
-    b,
-    a,
+    r, g, b, a,
   };
 
   return decimalRgb;

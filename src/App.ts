@@ -565,7 +565,7 @@ export default class App {
       const parsedStyleValue = parseStyleValue(styleValue);
 
       const figmaPaintStyle = figma.createPaintStyle();
-      figmaPaintStyle.name = styleName.replace(/-/gi, '/');
+      figmaPaintStyle.name = styleName;
 
       const styleColor: RGB = {
         r: parsedStyleValue.r,

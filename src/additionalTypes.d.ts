@@ -5,8 +5,7 @@ declare global {
     | 'Grid'
     | 'Typography'
     | 'Color & Fill'
-    | 'Component'
-    | 'Style Import';
+    | 'Component';
 
   type PresenterTypeGroup = {
     id: string,
