@@ -62,31 +62,6 @@ const dispatcher = async (action: {
 
   // run the action in the App class based on type
   const runAction = async () => {
-    // retrieve existing options
-    // const lastUsedOptions: {
-    //   action: 'duplicate' | 'replace' | 'new-page',
-    //   translateLocked: boolean,
-    //   languages: Array<string>,
-    // } = await figma.clientStorage.getAsync(DATA_KEYS.options);
-
-    // // make sure the type passed from the menu command exists
-    // const verifyQuickType = (kind: string, quickType: string): boolean => {
-    //   const typeSimplified = quickType.replace(`quick-${kind}-`, '');
-    //   let isVerified = false;
-
-    //   if (typeSimplified === 'assigned') {
-    //     isVerified = true;
-    //     return isVerified;
-    //   }
-
-    //   Object.keys(ASSIGNMENTS).forEach((key) => {
-    //     if (ASSIGNMENTS[key].id === typeSimplified) {
-    //       isVerified = true;
-    //     }
-    //   });
-    //   return isVerified;
-    // };
-
     switch (type) {
       case 'detach-instances':
         app.detachInstances(sessionKey);

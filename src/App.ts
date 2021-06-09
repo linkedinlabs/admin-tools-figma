@@ -418,6 +418,7 @@ export default class App {
 
     // retrieve existing options
     const options: PluginOptions = await getOptions();
+    const { currentView } = options;
 
     // set default filter
     const filters: {
@@ -434,17 +435,13 @@ export default class App {
     const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
     const presenter = new Presenter({ for: nodes });
 
-    // get last-used filters from options
-    // retrieve existing options
-    const lastUsedOptions: PluginOptions = await getOptions();
-
-    if (lastUsedOptions) {
+    if (options) {
       // update filters with existing options from storage
       Object.keys(filters).forEach((key) => {
         let optionKey = key.replace('new', '');
         optionKey = `${optionKey.charAt(0).toLowerCase()}${optionKey.slice(1)}`;
-        if (lastUsedOptions[optionKey] !== undefined) {
-          filters[key] = lastUsedOptions[optionKey];
+        if (options[optionKey] !== undefined) {
+          filters[key] = options[optionKey];
         }
       });
     }
@@ -461,17 +458,21 @@ export default class App {
       selected = presenter.extractComponents();
     }
 
-    // resize the UI based on selection
+    // set UI size based on selection
     let newGUIHeight = GUI_SETTINGS.default.height;
-    if (selected && selected.items && selected.items.length > 0) {
-      const itemTypeHeight = 33;
-      const groupHeight = 49;
-      newGUIHeight = 80 + 31;
-      newGUIHeight += selected.items.length * itemTypeHeight;
-      if (filters.newIsStyles) {
-        newGUIHeight += selected.types.length * itemTypeHeight;
+    if (currentView === 'general') {
+      if (selected && selected.items && selected.items.length > 0) {
+        const itemTypeHeight = 33;
+        const groupHeight = 49;
+        newGUIHeight = 80 + 31;
+        newGUIHeight += selected.items.length * itemTypeHeight;
+        if (filters.newIsStyles) {
+          newGUIHeight += selected.types.length * itemTypeHeight;
+        }
+        newGUIHeight += selected.groups.length * groupHeight;
       }
-      newGUIHeight += selected.groups.length * groupHeight;
+    } else {
+      newGUIHeight = GUI_SETTINGS.tokenImport.height;
     }
 
     // send the updates to the UI
@@ -486,12 +487,16 @@ export default class App {
       },
     });
 
-    figma.ui.resize(
-      GUI_SETTINGS.default.width,
-      newGUIHeight,
-    );
+    // resize UI, if necessary
+    if (currentView === 'general') {
+      figma.ui.resize(
+        GUI_SETTINGS.default.width,
+        newGUIHeight,
+      );
+    }
 
-    if (options && options.currentView === 'general') {
+    // log current action
+    if (currentView === 'general') {
       messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
     } else {
       messenger.log('Updating the UI with the Token Import');
@@ -564,7 +569,7 @@ export default class App {
   }
 
   /**
-   * Triggers a UI refresh and then displays the plugin UI.
+   * Triggers a UI refresh and then displays the General plugin UI.
    *
    * @kind function
    * @name showToolbar
@@ -588,8 +593,8 @@ export default class App {
     App.showGUI({ messenger });
   }
 
-  /** WIP
-   * Triggers a UI refresh and then displays the plugin UI.
+  /**
+   * Triggers a UI refresh and then displays the Token Import UI.
    *
    * @kind function
    * @name showTokenImport
