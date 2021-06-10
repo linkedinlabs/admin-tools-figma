@@ -629,13 +629,12 @@ export default class App {
    */
   static createPaintStyles(styles) {
     // quick & dirty CSV parsing - no special parsing
-    function CSVToArray(strData) {
-      return strData.split('\n').map((line) => {
-        const [first, ...rest] = line.split(',');
-        const second = rest.join(',');
-        return [first, second];
-      });
-    }
+    const CSVToArray = (strData) => strData.split('\n').map((line) => {
+      // since token names won't have commas but values might, split only on the first comma
+      const [first, ...rest] = line.split(',');
+      const second = rest.join(',');
+      return [first, second];
+    });
 
     const { messenger } = assemble(figma);
 
@@ -646,7 +645,7 @@ export default class App {
       const [styleName, styleValue] = style;
       const parsedStyleValue = parseStyleValue(styleValue);
 
-      const figmaPaintStyle = figma.createPaintStyle();
+      const figmaPaintStyle: PaintStyle = figma.createPaintStyle();
       figmaPaintStyle.name = styleName;
 
       const styleColor: RGB = {

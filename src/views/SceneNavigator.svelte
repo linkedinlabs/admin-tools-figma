@@ -52,11 +52,6 @@
       id: 'grid',
       type: 'styles',
     },
-    {
-      text: 'Style Import',
-      id: 'style-import',
-      type: 'styles',
-    },
   ];
 
   const setCurrentFilters = (newIsStyles, newFilter) => {
