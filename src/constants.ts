@@ -150,6 +150,10 @@ const GUI_SETTINGS = {
     width: 200,
     height: 324,
   },
+  tokenImport: {
+    width: 360,
+    height: 450,
+  },
 };
 
 export {

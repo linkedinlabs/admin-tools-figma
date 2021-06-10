@@ -71,6 +71,40 @@ const assemble = (context: any = null) => {
 // };
 
 /**
+ * @description Retrieves the current options saved to `clientStorage`. If none exist,
+ * defaults are set.
+ *
+ * @kind function
+ * @name getOptions
+ *
+ * @returns {Object} Returns the options (currently `currentView` and `isMercadoMode`.
+ */
+const getOptions = async (): Promise<PluginOptions> => {
+  // set default options
+  let options: PluginOptions = {
+    isSelection: true,
+    isStyles: true,
+    filter: null,
+    currentView: 'general',
+  };
+
+  // retrieve last used, and use if they exist
+  const lastUsedOptions: PluginOptions = await figma.clientStorage.getAsync(DATA_KEYS.options);
+  if (lastUsedOptions !== undefined) {
+    options = lastUsedOptions;
+  }
+
+  // check for defaults
+  const { currentView }: { currentView: PluginViewTypes } = options;
+
+  if ((currentView === undefined) || (currentView === null)) {
+    options.currentView = 'general';
+  }
+
+  return options;
+};
+
+/**
  * Invokes Figma’s `setRelaunchData` on the passed node and (if applicable),
  * the container component node.
  *
@@ -382,6 +416,10 @@ export default class App {
   static async refreshGUI(sessionKey: number) {
     const { messenger, selection } = assemble(figma);
 
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+    const { currentView } = options;
+
     // set default filter
     const filters: {
       newFilter?: string,
@@ -397,20 +435,13 @@ export default class App {
     const nodes: Array<SceneNode> = new Crawler({ for: selection }).all();
     const presenter = new Presenter({ for: nodes });
 
-    // get last-used filters from options
-    const lastUsedOptions: {
-      isSelection: boolean,
-      isStyles: boolean,
-      filter: string,
-    } = await figma.clientStorage.getAsync(DATA_KEYS.options);
-
-    if (lastUsedOptions) {
+    if (options) {
       // update filters with existing options from storage
       Object.keys(filters).forEach((key) => {
         let optionKey = key.replace('new', '');
         optionKey = `${optionKey.charAt(0).toLowerCase()}${optionKey.slice(1)}`;
-        if (lastUsedOptions[optionKey] !== undefined) {
-          filters[key] = lastUsedOptions[optionKey];
+        if (options[optionKey] !== undefined) {
+          filters[key] = options[optionKey];
         }
       });
     }
@@ -427,23 +458,28 @@ export default class App {
       selected = presenter.extractComponents();
     }
 
-    // resize the UI based on selection
+    // set UI size based on selection
     let newGUIHeight = GUI_SETTINGS.default.height;
-    if (selected && selected.items && selected.items.length > 0) {
-      const itemTypeHeight = 33;
-      const groupHeight = 49;
-      newGUIHeight = 80 + 31;
-      newGUIHeight += selected.items.length * itemTypeHeight;
-      if (filters.newIsStyles) {
-        newGUIHeight += selected.types.length * itemTypeHeight;
+    if (currentView === 'general') {
+      if (selected && selected.items && selected.items.length > 0) {
+        const itemTypeHeight = 33;
+        const groupHeight = 49;
+        newGUIHeight = 80 + 31;
+        newGUIHeight += selected.items.length * itemTypeHeight;
+        if (filters.newIsStyles) {
+          newGUIHeight += selected.types.length * itemTypeHeight;
+        }
+        newGUIHeight += selected.groups.length * groupHeight;
       }
-      newGUIHeight += selected.groups.length * groupHeight;
+    } else {
+      newGUIHeight = GUI_SETTINGS.tokenImport.height;
     }
 
     // send the updates to the UI
     figma.ui.postMessage({
       action: 'refreshState',
       payload: {
+        currentView: options.currentView,
         filters,
         selected,
         sessionKey,
@@ -451,12 +487,20 @@ export default class App {
       },
     });
 
-    figma.ui.resize(
-      GUI_SETTINGS.default.width,
-      newGUIHeight,
-    );
+    // resize UI, if necessary
+    if (currentView === 'general') {
+      figma.ui.resize(
+        GUI_SETTINGS.default.width,
+        newGUIHeight,
+      );
+    }
 
-    messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
+    // log current action
+    if (currentView === 'general') {
+      messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
+    } else {
+      messenger.log('Updating the UI with the Token Import');
+    }
   }
 
   /**
@@ -525,7 +569,7 @@ export default class App {
   }
 
   /**
-   * Triggers a UI refresh and then displays the plugin UI.
+   * Triggers a UI refresh and then displays the General plugin UI.
    *
    * @kind function
    * @name showToolbar
@@ -535,8 +579,46 @@ export default class App {
   static async showToolbar(sessionKey: number) {
     const { messenger } = assemble(figma);
 
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
+    // set new view without changing other options
+    options.currentView = 'general';
+
+    // save new options to storage
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    // setup the UI
     await App.refreshGUI(sessionKey);
     App.showGUI({ messenger });
+  }
+
+  /**
+   * Triggers a UI refresh and then displays the Token Import UI.
+   *
+   * @kind function
+   * @name showTokenImport
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async showTokenImport(sessionKey: number) {
+    const { messenger } = assemble(figma);
+
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
+    // set new view without changing other options
+    options.currentView = 'token-import';
+
+    // save new options to storage
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    // setup the UI
+    await App.refreshGUI(sessionKey);
+    App.showGUI({
+      size: 'tokenImport',
+      messenger,
+    });
   }
 
   /**
@@ -602,7 +684,10 @@ export default class App {
    * @returns {null}
    */
   static async showGUI(options: {
-    size?: 'default' | 'info',
+    size?:
+      'default'
+      | 'info'
+      | 'tokenImport',
     messenger?: { log: Function },
   }) {
     const { size, messenger } = options;

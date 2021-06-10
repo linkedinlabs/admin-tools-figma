@@ -13,6 +13,7 @@
   import StatusBar from './StatusBar';
   import StyleImport from './StyleImport';
 
+  export let currentView = 'general';
   export let filter = 'all-components';
   export let inspect = 'components';
   export let newSessionKey = null;
@@ -63,14 +64,18 @@
 <!-- core layout -->
 <div bind:offsetHeight={bodyHeight}>
   <FontPreload/>
-  <SceneNavigator />
 
-  {#if selected && selected.items.length > 0}
-    <ItemsList selected={selected}/>
+  {#if currentView === 'general'}
+    <SceneNavigator />
+
+    {#if selected && selected.items.length > 0}
+      <ItemsList selected={selected}/>
+    {:else}
+      <BlankState isStyles={$isStyles}/>
+    {/if}
+
+    <StatusBar numberSelected={selected ? selected.items.length : 0}/>
   {:else}
     <StyleImport />
-    <BlankState isStyles={$isStyles}/>
   {/if}
-
-  <StatusBar numberSelected={selected ? selected.items.length : 0}/>
 </div>
