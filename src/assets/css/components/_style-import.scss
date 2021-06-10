@@ -12,7 +12,7 @@
   }
 
   button {
-    @include figma-button;
+    @include figma-button--primary;
     float: right;
     margin-top: em(10);
   }
