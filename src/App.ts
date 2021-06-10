@@ -71,13 +71,13 @@ const assemble = (context: any = null) => {
 // };
 
 /**
- * @description Retrieves the current options saved to `clientStorage`. If none exist,
+ * Retrieves the current options saved to `clientStorage`. If none exist,
  * defaults are set.
  *
  * @kind function
  * @name getOptions
  *
- * @returns {Object} Returns the options (currently `currentView` and `isMercadoMode`.
+ * @returns {Object} Returns the options (currently `currentView` and `isMercadoMode`).
  */
 const getOptions = async (): Promise<PluginOptions> => {
   // set default options
@@ -90,14 +90,14 @@ const getOptions = async (): Promise<PluginOptions> => {
 
   // retrieve last used, and use if they exist
   const lastUsedOptions: PluginOptions = await figma.clientStorage.getAsync(DATA_KEYS.options);
-  if (lastUsedOptions !== undefined) {
+  if (lastUsedOptions) {
     options = lastUsedOptions;
   }
 
   // check for defaults
   const { currentView }: { currentView: PluginViewTypes } = options;
 
-  if ((currentView === undefined) || (currentView === null)) {
+  if (!currentView) {
     options.currentView = 'general';
   }
 
@@ -493,13 +493,9 @@ export default class App {
         GUI_SETTINGS.default.width,
         newGUIHeight,
       );
-    }
-
-    // log current action
-    if (currentView === 'general') {
       messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
     } else {
-      messenger.log('Updating the UI with the Token Import');
+      messenger.log('Updating the UI with Token Import');
     }
   }
 
@@ -626,12 +622,12 @@ export default class App {
    * paint styles in the file.
    *
    * @kind function
-   * @name displayStyleValues
+   * @name createPaintStyles
    *
    * @param {string} styles The unprocessed string of style names and values,
    * in CSV format.
    */
-  static displayStyleValues(styles) {
+  static createPaintStyles(styles) {
     // quick & dirty CSV parsing - no special parsing
     function CSVToArray(strData) {
       return strData.split('\n').map((line) => {
@@ -640,6 +636,8 @@ export default class App {
         return [first, second];
       });
     }
+
+    const { messenger } = assemble(figma);
 
     // parse CSV & remove header row
     const parsedValues = CSVToArray(styles).slice(1);
@@ -665,6 +663,8 @@ export default class App {
 
       figmaPaintStyle.paints = [solidPaint];
     });
+
+    messenger.toast(`${parsedValues.length} color styles updated.`);
   }
 
   /**

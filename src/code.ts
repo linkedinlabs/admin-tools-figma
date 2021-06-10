@@ -86,7 +86,7 @@ const dispatcher = async (action: {
         app.handleUpdate(payload, sessionKey);
         break;
       case 'sendStyleValues':
-        App.displayStyleValues(payload);
+        App.createPaintStyles(payload);
         break;
       case 'import-token-values':
         App.showTokenImport(sessionKey);

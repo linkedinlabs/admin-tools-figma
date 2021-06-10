@@ -1,24 +1,24 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++ blank state component
 
 @mixin style-import {
-  // display: flex;
-  // flex-direction: row;
-  // justify-content: space-between;
   align-items: center;
   margin: 0;
   padding: em(30) 14% em(0) 14%;
 
-  span {
+  textarea {
     display: block;
+    height: em(300);
+    width: 100%;
+  }
 
-    &.mark {
-      flex-basis: 20%;
-    }
+  button {
+    @include figma-button;
+    float: right;
+    margin-top: em(10);
+  }
 
-    &.text {
-      flex-basis: 65%;
-      @include type-03;
-    }
+  h1 {
+    @include type-03;
   }
 }
 
