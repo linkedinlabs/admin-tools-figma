@@ -77,7 +77,7 @@ const assemble = (context: any = null) => {
  * @kind function
  * @name getOptions
  *
- * @returns {Object} Returns the options (currently `currentView` and `isMercadoMode`.
+ * @returns {Object} Returns the options (currently `currentView` and `isMercadoMode`).
  */
 const getOptions = async (): Promise<PluginOptions> => {
   // set default options
