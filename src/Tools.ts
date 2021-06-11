@@ -948,12 +948,17 @@ const checkFilterMatch = (
   return isMatch;
 };
 
-const convertHexToDecimal = (hexValue: {
-  r: number,
-  g: number,
-  b: number,
-  a: number,
-}) => {
+/**
+ * Converts an rgba color value encoded in hexademical ([0, 255]) to a decimal
+ * value ([0, 1]) for Figma.
+ *
+ * @kind function
+ * @name convertHexToDecimal
+ * @param {RGBA} hexValue A hex value tuple with RGB values from [0, 255].
+ *
+ * @returns {RGBA} RGBA tuple with values from [0, 1].
+ */
+const convertHexToDecimal = (hexValue: RGBA): RGBA => {
   const decimal = {
     r: (hexValue.r / 255),
     g: (hexValue.g / 255),
@@ -964,32 +969,49 @@ const convertHexToDecimal = (hexValue: {
   return decimal;
 };
 
-const hexToDecimalRgb = (hexColor: string, opacity?: number): {
-  r: number,
-  g: number,
-  b: number,
-  a: number
-} => {
-  const rgbColor: { red: number, green: number, blue: number, alpha: number } = hexRgb(hexColor);
+/**
+ * Converts an rgba color value encoded in hexademical ([0, 255]) to a decimal
+ * value ([0, 1]) for Figma.
+ *
+ * @kind function
+ * @name hexToDecimalRgb
+ * @param {string} hexColor A string representation of a hexademical color value (e.g. '#FFFFFF').
+ * @param {number} opacity A value for opacity between [0, 1].
+ *
+ * @returns {RGBA} RGBA tuple with values from [0, 1].
+ */
+const hexToDecimalRgb = (hexColor: string, opacity?: number): RGBA => {
+  const rgbColor: {
+    red: number, green: number, blue: number, alpha: number,
+  } = hexRgb(hexColor, {
+    alpha: opacity,
+  });
 
-  const r: number = (rgbColor.red / 255);
-  const g: number = (rgbColor.green / 255);
-  const b: number = (rgbColor.blue / 255);
-  const a: number = rgbColor.alpha || opacity || 1;
-
-  const decimalRgb: {
-    r: number, g: number, b: number, a: number
-  } = {
+  const {
+    red: r, green: g, blue: b, alpha: a,
+  } = rgbColor;
+  const decimalRgb: RGBA = convertHexToDecimal({
     r, g, b, a,
-  };
+  });
 
   return decimalRgb;
 };
 
-const parseStyleValue = (styleValue: string) => {
+/**
+ * Converts a color value encoded either in hexademical, rgba tuple, or with
+ * value 'transparent' into an RGBA value.
+ *
+ * @kind function
+ * @name parseStyleValue
+ * @param {string} styleValue A string encoding style information in various formats.
+ *
+ * @returns {RGBA} RGBA tuple with 'rgb' values from [0, 255] and 'a' value from [0, 1].
+ */
+const parseStyleValue = (styleValue: string): RGBA => {
   let parsedStyleValue;
+
   if (styleValue === 'transparent') {
-    // if value is "transparent"
+    // if value is the string literal 'transparent'
     parsedStyleValue = {
       r: 0,
       g: 0,

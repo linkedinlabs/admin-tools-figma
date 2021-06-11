@@ -623,9 +623,10 @@ export default class App {
    *
    * @kind function
    * @name createPaintStyles
-   *
    * @param {string} styles The unprocessed string of style names and values,
    * in CSV format.
+   *
+   * @returns {null}
    */
   static createPaintStyles(styles) {
     // quick & dirty CSV parsing - no special parsing
@@ -643,7 +644,7 @@ export default class App {
 
     parsedValues.forEach((style) => {
       const [styleName, styleValue] = style;
-      const parsedStyleValue = parseStyleValue(styleValue);
+      const parsedStyleValue: RGBA = parseStyleValue(styleValue);
 
       const figmaPaintStyle: PaintStyle = figma.createPaintStyle();
       figmaPaintStyle.name = styleName;
@@ -654,16 +655,19 @@ export default class App {
         b: parsedStyleValue.b,
       };
 
+      const opacity = (typeof parsedStyleValue.a === 'number') ? parsedStyleValue.a : 1;
       const solidPaint: SolidPaint = {
         type: 'SOLID',
         color: styleColor,
-        opacity: parsedStyleValue.a || 1,
+        opacity,
       };
 
       figmaPaintStyle.paints = [solidPaint];
     });
 
     messenger.toast(`${parsedValues.length} color styles updated.`);
+
+    return null;
   }
 
   /**
