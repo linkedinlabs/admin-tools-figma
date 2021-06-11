@@ -38,6 +38,7 @@ const sendLoadedMsg = (): void => {
  * @kind function
  * @name updateSelected
  *
+ * @param {string} currentView A string representing what view to show the user in the UI.
  * @param {Object} selected An object containing `items`, `groups`, and `types` arrays
  * formatted for presentation in the UI.
  * @param {Array} selected.items An array of selected items formatted for presentation

@@ -953,12 +953,12 @@ const checkFilterMatch = (
  * value ([0, 1]) for Figma.
  *
  * @kind function
- * @name convertHexToDecimal
- * @param {RGBA} hexValue A hex value tuple with RGB values from [0, 255].
+ * @name convertRgbToDecimal
+ * @param {Object} hexValue RGBA tuple with RGB values from [0, 255].
  *
- * @returns {RGBA} RGBA tuple with values from [0, 1].
+ * @returns {Object} RGBA tuple with values from [0, 1].
  */
-const convertHexToDecimal = (hexValue: RGBA): RGBA => {
+const convertRgbToDecimal = (hexValue: RGBA): RGBA => {
   const decimal = {
     r: (hexValue.r / 255),
     g: (hexValue.g / 255),
@@ -970,15 +970,14 @@ const convertHexToDecimal = (hexValue: RGBA): RGBA => {
 };
 
 /**
- * Converts an rgba color value encoded in hexademical ([0, 255]) to a decimal
- * value ([0, 1]) for Figma.
+ * Converts a string representation of a hex color into RGBA values ([0, 1]) for Figma.
  *
  * @kind function
  * @name hexToDecimalRgb
  * @param {string} hexColor A string representation of a hexademical color value (e.g. '#FFFFFF').
  * @param {number} opacity A value for opacity between [0, 1].
  *
- * @returns {RGBA} RGBA tuple with values from [0, 1].
+ * @returns {Object} RGBA tuple with values from [0, 1].
  */
 const hexToDecimalRgb = (hexColor: string, opacity?: number): RGBA => {
   const rgbColor: {
@@ -990,7 +989,7 @@ const hexToDecimalRgb = (hexColor: string, opacity?: number): RGBA => {
   const {
     red: r, green: g, blue: b, alpha: a,
   } = rgbColor;
-  const decimalRgb: RGBA = convertHexToDecimal({
+  const decimalRgb: RGBA = convertRgbToDecimal({
     r, g, b, a,
   });
 
@@ -1005,7 +1004,7 @@ const hexToDecimalRgb = (hexColor: string, opacity?: number): RGBA => {
  * @name parseStyleValue
  * @param {string} styleValue A string encoding style information in various formats.
  *
- * @returns {RGBA} RGBA tuple with 'rgb' values from [0, 255] and 'a' value from [0, 1].
+ * @returns {Object} RGBA tuple with 'rgb' values from [0, 255] and 'a' value from [0, 1].
  */
 const parseStyleValue = (styleValue: string): RGBA => {
   let parsedStyleValue;
@@ -1025,7 +1024,7 @@ const parseStyleValue = (styleValue: string): RGBA => {
       .slice(5, -1) // take off rgba and parens
       .split(',');
 
-    parsedStyleValue = convertHexToDecimal({
+    parsedStyleValue = convertRgbToDecimal({
       r: parseInt(colorTuple[0], 10), // int [0, 255]
       g: parseInt(colorTuple[1], 10),
       b: parseInt(colorTuple[2], 10),
