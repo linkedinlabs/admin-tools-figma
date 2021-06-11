@@ -67,6 +67,7 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
+    "hex-rgb": "4.1.0",
     "svelte": "^3.38.2",
     "unique-names-generator": "^4.5.0"
   },

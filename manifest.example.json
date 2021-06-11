@@ -27,6 +27,10 @@
     {
       "name": "Inherit Name",
       "command": "inherit-name"
+    },
+    {
+      "name": "Import Token Values",
+      "command": "import-token-values"
     }
   ],
   "relaunchButtons": [
