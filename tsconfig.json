@@ -5,6 +5,10 @@
       "node",
       "@pyoner/svelte-types",
       "@figma/plugin-typings"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@figma"
     ]
   }
 }
