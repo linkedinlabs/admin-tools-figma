@@ -75,7 +75,9 @@
     {/if}
 
     <StatusBar numberSelected={selected ? selected.items.length : 0}/>
-  {:else}
+  {:else if currentView === 'token-import'}
+    <StyleImport />
+  {:else if currentView === 'theme-toggler'}
     <StyleImport />
   {/if}
 </div>

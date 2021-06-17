@@ -91,6 +91,9 @@ const dispatcher = async (action: {
       case 'import-token-values':
         App.showTokenImport(sessionKey);
         break;
+      case 'show-theme-toggler':
+        App.showThemeToggler(sessionKey);
+        break;
       case 'tools':
         App.showToolbar(sessionKey);
         break;

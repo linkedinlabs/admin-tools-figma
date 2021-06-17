@@ -154,6 +154,10 @@ const GUI_SETTINGS = {
     width: 360,
     height: 450,
   },
+  themeToggler: {
+    width: 360,
+    height: 450,
+  },
 };
 
 export {

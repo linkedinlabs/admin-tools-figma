@@ -471,8 +471,10 @@ export default class App {
         }
         newGUIHeight += selected.groups.length * groupHeight;
       }
-    } else {
+    } else if (currentView === 'token-import') {
       newGUIHeight = GUI_SETTINGS.tokenImport.height;
+    } else if (currentView === 'theme-toggler') {
+      newGUIHeight = GUI_SETTINGS.themeToggler.height;
     }
 
     // send the updates to the UI
@@ -618,6 +620,34 @@ export default class App {
   }
 
   /**
+   * Triggers a UI refresh and then displays the Token Import UI.
+   *
+   * @kind function
+   * @name showThemeToggler
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async showThemeToggler(sessionKey: number) {
+    const { messenger } = assemble(figma);
+
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
+    // set new view without changing other options
+    options.currentView = 'theme-toggler';
+
+    // save new options to storage
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    // setup the UI
+    await App.refreshGUI(sessionKey);
+    App.showGUI({
+      size: 'themeToggler',
+      messenger,
+    });
+  }
+
+  /**
    * Parses CSV list of style names and values and creates corresponding Figma
    * paint styles in the file.
    *
@@ -690,7 +720,8 @@ export default class App {
     size?:
       'default'
       | 'info'
-      | 'tokenImport',
+      | 'tokenImport'
+      | 'themeToggler',
     messenger?: { log: Function },
   }) {
     const { size, messenger } = options;
