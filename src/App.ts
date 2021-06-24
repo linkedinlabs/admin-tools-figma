@@ -496,8 +496,10 @@ export default class App {
         newGUIHeight,
       );
       messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
-    } else {
+    } else if (currentView === 'token-import') {
       messenger.log('Updating the UI with Token Import');
+    } else if (currentView === 'theme-toggler') {
+      messenger.log('Updating the UI with Theme Toggler');
     }
   }
 
@@ -620,7 +622,7 @@ export default class App {
   }
 
   /**
-   * Triggers a UI refresh and then displays the Token Import UI.
+   * Triggers a UI refresh and then displays the Theme Toggler UI.
    *
    * @kind function
    * @name showThemeToggler
@@ -645,6 +647,107 @@ export default class App {
       size: 'themeToggler',
       messenger,
     });
+  }
+
+  /**
+   * Toggles the theme of Figma components on the page.
+   *
+   * @kind function
+   * @name toggleTheme
+   *
+  //  * @param {object} toggleInfo Payload with info on what theme to toggle to.
+   *
+   * @returns {null}
+   */
+  static toggleTheme(/* toggleInfo: object */) {
+    const { messenger /* , selection */ } = assemble(figma);
+
+    // IDENTIFY ALL FIGMA COMPONENTS
+    const isConvertingFrame = true;
+    const isConvertingFile = false;
+    let nodes;
+
+    if (isConvertingFrame) {
+      if (figma.currentPage.selection.length > 0) {
+        nodes = figma.currentPage.selection;
+        console.log('nodes');
+        console.log(nodes);
+      } else {
+        messenger.toast('Select a frame to theme');
+      }
+    } else if (isConvertingFile) {
+      // WILL NOT ENTER, for now
+      if (figma.currentPage.children) {
+        nodes = figma.currentPage.children;
+      } else {
+        messenger.toast('Can\'t theme. Nothing found :(');
+      }
+    }
+
+    const instances = [];
+    nodes.forEach((node) => {
+      const nodeInstances = node.findAll((n) => {
+        const isComponentVisible = n.visible;
+        const isComponentTheRightKind = (n.type === 'INSTANCE')
+            || (n.type === 'TEXT')
+            || (n.type === 'VECTOR')
+            || (n.type === 'COMPONENT');
+
+        return isComponentVisible && isComponentTheRightKind;
+      });
+
+      instances.push(nodeInstances);
+    });
+
+    console.log('INSTANCES');
+    console.log(`${instances[0].length} instances found`);
+    console.log(instances[0]);
+
+    instances[0].forEach((instance) => {
+      const {
+        backgroundStyleId,
+        effectStyleId,
+        fillStyleId,
+        strokeStyleId,
+        textStyleId,
+        gridStyleId,
+      } = instance;
+
+      if (backgroundStyleId) {
+        const backgroundStyle = figma.getStyleById(backgroundStyleId);
+        console.log(`${instance.name} backgroundStyleId: ${backgroundStyle.name}`);
+        console.log(backgroundStyle);
+      }
+      if (effectStyleId) {
+        const effectStyle = figma.getStyleById(effectStyleId);
+        console.log(`${instance.name} effectStyleId: ${effectStyle.name}`);
+        console.log(effectStyle);
+      }
+      if (fillStyleId) {
+        const fillStyle = figma.getStyleById(fillStyleId);
+        console.log(`${instance.name} fillStyleId: ${fillStyle.name}`);
+        console.log(fillStyle);
+      }
+      if (strokeStyleId) {
+        const strokeStyle = figma.getStyleById(strokeStyleId);
+        console.log(`${instance.name} strokeStyleId: ${strokeStyle.name}`);
+        console.log(strokeStyle);
+      }
+      if (textStyleId) {
+        const textStyle = figma.getStyleById(textStyleId);
+        console.log(`${instance.name} textStyleId: ${textStyle.name}`);
+        console.log(textStyle);
+      }
+      if (gridStyleId) {
+        const gridStyle = figma.getStyleById(gridStyleId);
+        console.log(`${instance.name} gridStyleId: ${gridStyle.name}`);
+        console.log(gridStyle);
+      }
+    });
+
+    // apply corresponding fillStyleId, backgroundStyleId, textStyleId, etc
+
+    return null;
   }
 
   /**
