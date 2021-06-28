@@ -669,6 +669,47 @@ const matchMasterPeerNode = (node: any, topNode: InstanceNode) => {
 };
 
 /**
+ * Clones an object, which helps you edit Figma nodes that have read-only properties.
+ * (Please see https://www.figma.com/plugin-docs/editing-properties/.)
+ *
+ * // Example: Changing the red channel of the first fill
+ * const fills = clone(rect.fills)
+ * fills[0].color.r = 0.5
+ * rect.fills = fills
+ *
+ * @kind function
+ * @name clone
+ *
+ * @param {object} val The object to clone.
+ *
+ * @returns {object} The cloned object.
+ */
+function clone(val) {
+  const type = typeof val;
+  if (val === null) {
+    return null;
+  } else if (type === 'undefined'
+      || type === 'number'
+      || type === 'string'
+      || type === 'boolean') {
+    return val;
+  } else if (type === 'object') {
+    if (val instanceof Array) {
+      return val.map((x) => clone(x));
+    } else if (val instanceof Uint8Array) {
+      return new Uint8Array(val);
+    } else {
+      const o = {};
+      for (const key in val) {
+        o[key] = clone(val[key]);
+      }
+      return o;
+    }
+  }
+  throw new Error('unknown');
+}
+
+/**
  * A lookup function to easily retrieve the data namespace used for shared
  * plugin data. Note: changing this function will potentially make it impossible for existing
  * users to retrieve data saved to nodes before the change.
@@ -1044,7 +1085,9 @@ export {
   asyncNetworkRequest,
   awaitUIReadiness,
   checkFilterMatch,
+  clone,
   compareArrays,
+  convertRgbToDecimal,
   dataNamespace,
   deepCompare,
   deepCopy,

@@ -95,7 +95,7 @@ const dispatcher = async (action: {
         App.showThemeToggler(sessionKey);
         break;
       case 'toggle-theme':
-        App.toggleTheme(payload);
+        App.toggleTheme(/* payload */);
         break;
       case 'tools':
         App.showToolbar(sessionKey);
