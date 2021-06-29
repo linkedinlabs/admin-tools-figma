@@ -11,7 +11,9 @@
   import ItemsList from './ItemsList';
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
+  import StyleImport from './StyleImport';
 
+  export let currentView = 'general';
   export let filter = 'all-components';
   export let inspect = 'components';
   export let newSessionKey = null;
@@ -41,7 +43,7 @@
     setCurrentFilter(filter);
     sessionKey.set(newSessionKey);
 
-    if (wasBodyHeight !== bodyHeight && selected.items.length > 0) {
+    if (wasBodyHeight !== bodyHeight && selected && selected.items.length > 0) {
       parent.postMessage({
         pluginMessage: {
           action: 'resize',
@@ -62,13 +64,18 @@
 <!-- core layout -->
 <div bind:offsetHeight={bodyHeight}>
   <FontPreload/>
-  <SceneNavigator />
 
-  {#if selected && selected.items.length > 0}
-    <ItemsList selected={selected}/>
+  {#if currentView === 'general'}
+    <SceneNavigator />
+
+    {#if selected && selected.items.length > 0}
+      <ItemsList selected={selected}/>
+    {:else}
+      <BlankState isStyles={$isStyles}/>
+    {/if}
+
+    <StatusBar numberSelected={selected ? selected.items.length : 0}/>
   {:else}
-    <BlankState isStyles={$isStyles}/>
+    <StyleImport />
   {/if}
-
-  <StatusBar numberSelected={selected ? selected.items.length : 0}/>
 </div>

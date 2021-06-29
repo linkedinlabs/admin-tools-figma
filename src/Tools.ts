@@ -8,6 +8,8 @@ import {
   PLUGIN_IDENTIFIER,
 } from './constants';
 
+const hexRgb = require('hex-rgb');
+
 // --- helper functions
 /**
  * An approximation of `forEach` but run in an async manner.
@@ -951,6 +953,96 @@ const checkFilterMatch = (
   return isMatch;
 };
 
+/**
+ * Converts an rgba color value encoded in hexademical ([0, 255]) to a decimal
+ * value ([0, 1]) for Figma.
+ *
+ * @kind function
+ * @name convertRgbToDecimal
+ * @param {Object} hexValue RGBA tuple with RGB values from [0, 255].
+ *
+ * @returns {Object} RGBA tuple with values from [0, 1].
+ */
+const convertRgbToDecimal = (hexValue: RGBA): RGBA => {
+  const decimal = {
+    r: (hexValue.r / 255),
+    g: (hexValue.g / 255),
+    b: (hexValue.b / 255),
+    a: hexValue.a,
+  };
+
+  return decimal;
+};
+
+/**
+ * Converts a string representation of a hex color into RGBA values ([0, 1]) for Figma.
+ *
+ * @kind function
+ * @name hexToDecimalRgb
+ * @param {string} hexColor A string representation of a hexademical color value (e.g. '#FFFFFF').
+ * @param {number} opacity A value for opacity between [0, 1].
+ *
+ * @returns {Object} RGBA tuple with values from [0, 1].
+ */
+const hexToDecimalRgb = (hexColor: string, opacity?: number): RGBA => {
+  const rgbColor: {
+    red: number, green: number, blue: number, alpha: number,
+  } = hexRgb(hexColor, {
+    alpha: opacity,
+  });
+
+  const {
+    red: r, green: g, blue: b, alpha: a,
+  } = rgbColor;
+  const decimalRgb: RGBA = convertRgbToDecimal({
+    r, g, b, a,
+  });
+
+  return decimalRgb;
+};
+
+/**
+ * Converts a color value encoded either in hexademical, rgba tuple, or with
+ * value 'transparent' into an RGBA value.
+ *
+ * @kind function
+ * @name parseStyleValue
+ * @param {string} styleValue A string encoding style information in various formats.
+ *
+ * @returns {Object} RGBA tuple with 'rgb' values from [0, 255] and 'a' value from [0, 1].
+ */
+const parseStyleValue = (styleValue: string): RGBA => {
+  let parsedStyleValue;
+
+  if (styleValue === 'transparent') {
+    // if value is the string literal 'transparent'
+    parsedStyleValue = {
+      r: 0,
+      g: 0,
+      b: 0,
+      a: 0,
+    };
+  } else if (styleValue.slice(1, 5) === 'rgba') {
+    // if value is of format "rgba(r, g, b, a)"
+    const colorTuple = styleValue
+      .slice(1, -1) // take off "" marks first
+      .slice(5, -1) // take off rgba and parens
+      .split(',');
+
+    parsedStyleValue = convertRgbToDecimal({
+      r: parseInt(colorTuple[0], 10), // int [0, 255]
+      g: parseInt(colorTuple[1], 10),
+      b: parseInt(colorTuple[2], 10),
+      a: parseFloat(colorTuple[3]), // float [0, 1]
+    });
+  } else if (styleValue[0] === '#') {
+    // if value is of format "#xxxxxx"
+    parsedStyleValue = hexToDecimalRgb(styleValue, 1);
+  }
+
+  return parsedStyleValue;
+};
+
 export {
   asyncForEach,
   asyncImageRequest,
@@ -966,12 +1058,14 @@ export {
   findTopFrame,
   findTopInstance,
   getPeerPluginData,
+  hexToDecimalRgb,
   isInternal,
   isTextNode,
   isValidAssignment,
   loadTypefaces,
   makeNetworkRequest,
   matchMasterPeerNode,
+  parseStyleValue,
   pollWithPromise,
   resizeGUI,
   setBulkSelectOptions,

@@ -1,0 +1,27 @@
+// ++++++++++++++++++++++++++++++++++++++++++++++ blank state component
+
+@mixin style-import {
+  align-items: center;
+  margin: 0;
+  padding: em(30) 14% em(0) 14%;
+
+  textarea {
+    display: block;
+    height: em(300);
+    width: 100%;
+  }
+
+  button {
+    @include figma-button--primary;
+    float: right;
+    margin-top: em(10);
+  }
+
+  h1 {
+    @include type-03;
+  }
+}
+
+.style-import {
+  @include style-import;
+}
