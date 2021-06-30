@@ -19,14 +19,14 @@
     "start:public": "npm run watch:public",
     "start:internal": "npm run watch:internal",
     "postinstall": "npm run build",
-    "genmanifest": "cp manifest.example.json manifest.json && plugin_id=$(cat '.plugin-id') && sed -i.tmp s/PLUGIN_ID/$plugin_id/ manifest.json && sed -i.tmp 's/PLUGIN_NAME/Stapler/' manifest.json && rm manifest.json.tmp",
+    "genmanifest": "cp manifest.example.json manifest.json && plugin_id=$(cat '.plugin-id') && sed -i.tmp s/PLUGIN_ID/$plugin_id/ manifest.json && plugin_name=$(cat '.plugin-name') && sed -i.tmp \"s/PLUGIN_NAME/$plugin_name/g\" manifest.json && rm manifest.json.tmp",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:eslint": "eslint . --ext .js,.tsx,.ts,.svelte",
     "lint:stylelint": "stylelint './src/assets/css/**/*.scss'",
     "lint:js": "npm run lint:eslint",
     "lint:css": "npm run lint:stylelint",
     "lint:staged": "lint-staged",
-    "genbeta": "rsync -a src/ ../beta-stapler-figma/src && npm run build --prefix ../beta-stapler-figma"
+    "genbeta": "rsync -a --exclude='.*' * ../beta-stapler-figma --delete && npm i --prefix ../beta-stapler-figma && npm run build --prefix ../beta-stapler-figma"
   },
   "lint-staged": {
     "*.{js,jsx,tsx,ts,svelte}": "eslint",
