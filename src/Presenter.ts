@@ -433,12 +433,14 @@ export default class Presenter {
           hasKeystop: false,
           keys: [],
           library: 'unassigned',
+          hasLabels: false,
           role: 'no-role',
           labels: {
             alt: null,
             visible: false,
             a11y: null,
           },
+          hasHeading: false,
           heading: {
             level: 'no-level',
             visible: true,

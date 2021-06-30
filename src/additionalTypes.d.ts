@@ -25,8 +25,10 @@ declare global {
     hasKeystop: boolean,
     keys: Array<'arrows-left-right' | 'arrows-up-down' | 'enter' | 'escape' | 'space'>,
     library: 'unassigned' | 'art-deco' | 'mercado',
+    hasLabels: boolean,
     role: 'none' | 'no-role' | 'button' | 'checkbox' | 'link' | 'option' | 'radio' | 'slider' | 'switch' | 'tab' | 'other', // 'none' is deprecated
     labels: PresenterAriaLabels,
+    hasHeading: boolean,
     heading: PresenterAriaHeading,
     type: 'component' | 'foundation',
     usageStatus: 'alpha' | 'beta' | 'production' | 'planned-deprecation' | 'deprecated',

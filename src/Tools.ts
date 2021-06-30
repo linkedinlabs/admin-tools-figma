@@ -479,6 +479,11 @@ const setBulkSelectOptions = (options, currentValue, addNullAllowed) => {
 const deepCompare = (unmodifiedObject: Object, modifiedObject: Object) => {
   let isDifferent: boolean = false;
 
+  // catches type differences e.g. if either are undefined/null
+  if ((!unmodifiedObject || !modifiedObject) && (unmodifiedObject || modifiedObject)) {
+    return true;
+  }
+
   if (typeof unmodifiedObject !== 'object' || unmodifiedObject === null) {
     return isDifferent;
   }

@@ -36,7 +36,7 @@
   "relaunchButtons": [
     {
       "command": "tools",
-      "name": "Open Stapler",
+      "name": "Open PLUGIN_NAME",
       "multipleSelection": true
     }
   ]

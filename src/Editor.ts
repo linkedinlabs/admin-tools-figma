@@ -364,7 +364,7 @@ export default class Editor {
                         if (updatedComponentData[innerKey] === undefined) {
                           updatedComponentData[innerKey] = innerKey === 'labels' ? {
                             role: 'no-role',
-                            visible: false,
+                            visible: true,
                             a11y: null,
                           }
                             : {

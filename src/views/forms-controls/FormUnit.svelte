@@ -20,7 +20,7 @@
   export let isDirty = false;
   export let itemIsLocked = false;
   export let kind = 'inputText';
-  export let labelText = 'Type something…';
+  export let labelText;
   export let placeholder = null;
   export let nameId = 'text-input-id';
   export let resetValue = false;
@@ -70,22 +70,24 @@
 </script>
 
 <span class={className}>
-  <FormLabel
-    on:handleRestore={() => restoreValue()}
-    disableActions={disableActions}
-    disableCopy={disableCopy || kind === 'inputSwitch'}
-    disableLock={disableLock}
-    hide={hideLabel}
-    invertView={invertView}
-    isDirty={isDirty}
-    bind:isLocked={isLocked}
-    labelText={labelText}
-    nameId={nameId}
-    parentIsLocked={itemIsLocked}
-    value={value}
-    hasMultiple={hasMultiple}
-    a11yField={a11yField}
-  />
+  {#if labelText}
+    <FormLabel
+      on:handleRestore={() => restoreValue()}
+      disableActions={disableActions}
+      disableCopy={disableCopy || kind === 'inputSwitch'}
+      disableLock={disableLock}
+      hide={hideLabel}
+      invertView={invertView}
+      isDirty={isDirty}
+      bind:isLocked={isLocked}
+      labelText={labelText}
+      nameId={nameId}
+      parentIsLocked={itemIsLocked}
+      value={value}
+      hasMultiple={hasMultiple}
+      a11yField={a11yField}
+    />
+  {/if}
 
   <span class="form-inner-row indented">
     {#if kind === 'inputText'}
