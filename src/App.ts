@@ -3,8 +3,15 @@ import Editor from './Editor';
 import Painter from './Painter';
 import Presenter from './Presenter';
 import Messenger from './Messenger';
-import { parseStyleValue, resizeGUI } from './Tools';
+import {
+  parseStyleValue,
+  resizeGUI,
+  clone,
+  convertRgbToDecimal,
+} from './Tools';
 import { DATA_KEYS, GUI_SETTINGS } from './constants';
+
+const allTokens = require('./tokens.json');
 
 /**
  * A shared helper function to set up in-UI messages and the logger.
@@ -471,8 +478,10 @@ export default class App {
         }
         newGUIHeight += selected.groups.length * groupHeight;
       }
-    } else {
+    } else if (currentView === 'token-import') {
       newGUIHeight = GUI_SETTINGS.tokenImport.height;
+    } else if (currentView === 'theme-toggler') {
+      newGUIHeight = GUI_SETTINGS.themeToggler.height;
     }
 
     // send the updates to the UI
@@ -494,8 +503,10 @@ export default class App {
         newGUIHeight,
       );
       messenger.log(`Updating the UI with ${nodes.length} selected ${nodes.length === 1 ? 'node' : 'nodes'}`);
-    } else {
+    } else if (currentView === 'token-import') {
       messenger.log('Updating the UI with Token Import');
+    } else if (currentView === 'theme-toggler') {
+      messenger.log('Updating the UI with Theme Toggler');
     }
   }
 
@@ -618,6 +629,226 @@ export default class App {
   }
 
   /**
+   * Triggers a UI refresh and then displays the Theme Toggler UI.
+   *
+   * @kind function
+   * @name showThemeToggler
+   *
+   * @param {string} sessionKey A rotating key used during the single run of the plugin.
+   */
+  static async showThemeToggler(sessionKey: number) {
+    const { messenger } = assemble(figma);
+
+    // retrieve existing options
+    const options: PluginOptions = await getOptions();
+
+    // set new view without changing other options
+    options.currentView = 'theme-toggler';
+
+    // save new options to storage
+    await figma.clientStorage.setAsync(DATA_KEYS.options, options);
+
+    // setup the UI
+    await App.refreshGUI(sessionKey);
+    App.showGUI({
+      size: 'themeToggler',
+      messenger,
+    });
+  }
+
+  /**
+   * Toggles the theme of Figma components on the page.
+   *
+   * @kind function
+   * @name toggleTheme
+   *
+   * @param {object} toggleInfo Payload with info on what theme to toggle to.
+   *
+   * @returns {null}
+   */
+  static toggleTheme(/* toggleInfo: object */) {
+    const { messenger /* , selection */ } = assemble(figma);
+
+    // FOR NOW...
+    const toggleInfo = {
+      targetSchemeName: 'lightScheme',
+      targetThemeName: 'classic',
+    };
+
+    // IDENTIFY ALL FIGMA COMPONENTS
+    const isConvertingFrame = true;
+    const isConvertingFile = false;
+    let nodes;
+
+    if (isConvertingFrame) {
+      if (figma.currentPage.selection.length > 0) {
+        nodes = figma.currentPage.selection;
+        console.log('nodes');
+        console.log(nodes);
+      } else {
+        messenger.toast('Select a frame to theme');
+      }
+    } else if (isConvertingFile) {
+      // WILL NOT ENTER, for now
+      if (figma.currentPage.children) {
+        nodes = figma.currentPage.children;
+      } else {
+        messenger.toast('Can\'t theme. Nothing found :(');
+      }
+    }
+
+    const instances = [];
+    nodes.forEach((node) => {
+      const nodeInstances = node.findAll((n) => {
+        const isComponentVisible = n.visible;
+        // Not just instances - should be any element with any token style applied to it
+        const isComponentTheRightKindOfNode = (n.type === 'INSTANCE')
+            || (n.type === 'TEXT')
+            || (n.type === 'VECTOR')
+            || (n.type === 'COMPONENT');
+
+        return isComponentVisible && isComponentTheRightKindOfNode;
+      });
+
+      instances.push(nodeInstances);
+    });
+
+    console.log('INSTANCES');
+    console.log(`${instances[0].length} instances found`);
+    console.log(instances[0]);
+
+    instances[0].forEach((instance) => {
+      let newThemeValue;
+
+      const findThemeValue = (style, toggleCommand, allTokensInSystem) => {
+        let styleValueInTargetScheme = undefined;
+        const styleName = style.name.split('/');  // ex. Action / color-action
+        const semanticToken = styleName[styleName.length - 1].trim(); // ex. color-action
+        console.log('semanticToken');
+        console.log(semanticToken);
+        const targetScheme = allTokensInSystem[toggleCommand.targetThemeName][toggleCommand.targetSchemeName];
+        const tokenInfoInTargetScheme = targetScheme[semanticToken];
+
+        console.log('tokenInfoInTargetScheme');
+        console.log(tokenInfoInTargetScheme);
+
+        if (tokenInfoInTargetScheme && tokenInfoInTargetScheme.type === 'ref') {
+          const baseTokenName = tokenInfoInTargetScheme.value; // ex. "white"
+          const baseTokenInfo = targetScheme[baseTokenName]; // ex. style info for "white"
+          styleValueInTargetScheme = baseTokenInfo.value;
+        } else if (tokenInfoInTargetScheme && tokenInfoInTargetScheme.type === 'color') {
+          styleValueInTargetScheme = tokenInfoInTargetScheme.value;
+        } else {
+          messenger.toast('Matching style info not found for element ' + style.name + ' :(');
+        }
+
+        return styleValueInTargetScheme;
+      };
+
+      const {
+        backgroundStyleId,
+        effectStyleId,
+        fillStyleId,
+        strokeStyleId,
+        textStyleId,
+        gridStyleId,
+      } = instance;
+
+      if (backgroundStyleId) {
+        const backgroundStyle = figma.getStyleById(backgroundStyleId);
+        console.log(`${instance.name} backgroundStyleId: ${backgroundStyle.name}`);
+        console.log(backgroundStyle);
+
+        newThemeValue = findThemeValue(backgroundStyle, toggleInfo, allTokens);
+        if (!newThemeValue) return;
+        console.log('newThemeValue for backgroundStyle for ' + instance.name);
+        console.log(newThemeValue);
+
+        // BACKGROUND STYLE SWAP LOGIC
+        // messenger.toast('Style toggled for ' + instance.name);
+      }
+      if (effectStyleId) {
+        const effectStyle = figma.getStyleById(effectStyleId);
+        console.log(`${instance.name} effectStyleId: ${effectStyle.name}`);
+        console.log(effectStyle);
+
+        newThemeValue = findThemeValue(effectStyle, toggleInfo, allTokens);
+        if (!newThemeValue) return;
+        console.log('newThemeValue for effectStyle for ' + instance.name);
+        console.log(newThemeValue);
+
+        // EFFECT STYLE SWAP LOGIC
+        // messenger.toast('Style toggled for ' + instance.name);
+      }
+      if (fillStyleId) {
+        const fillStyle = figma.getStyleById(fillStyleId);
+        console.log(`${instance.name} fillStyleId: ${fillStyle.name}`);
+        console.log(fillStyle);
+
+        newThemeValue = findThemeValue(fillStyle, toggleInfo, allTokens);
+        if (!newThemeValue) return;
+        console.log('newThemeValue for fillStyle for ' + instance.name);
+        console.log(newThemeValue);
+
+        const convertedThemeValue = convertRgbToDecimal(newThemeValue);
+        console.log('convertedThemeValue');
+        console.log(convertedThemeValue);
+
+        const fills = clone(instance.fills);
+        fills[0].color.r = convertedThemeValue.r;
+        fills[0].color.g = convertedThemeValue.g;
+        fills[0].color.b = convertedThemeValue.b;
+        fills[0].opacity = convertedThemeValue.a;
+
+        instance.fills = fills;
+
+        messenger.toast('Style toggled for ' + instance.name);
+      }
+      if (strokeStyleId) {
+        const strokeStyle = figma.getStyleById(strokeStyleId);
+        console.log(`${instance.name} strokeStyleId: ${strokeStyle.name}`);
+        console.log(strokeStyle);
+
+        newThemeValue = findThemeValue(strokeStyle, toggleInfo, allTokens);
+        if (!newThemeValue) return;
+        console.log('newThemeValue for strokeStyle for ' + instance.name);
+        console.log(newThemeValue)
+
+        // STROKE STYLE SWAP LOGIC
+        // messenger.toast('Style toggled for ' + instance.name);
+      }
+      if (textStyleId) {
+        const textStyle = figma.getStyleById(textStyleId);
+        console.log(`${instance.name} textStyleId: ${textStyle.name}`);
+        console.log(textStyle);
+
+        newThemeValue = findThemeValue(textStyle, toggleInfo, allTokens);
+        if (!newThemeValue) return;
+        console.log('newThemeValue for textStyle for ' + instance.name);
+        console.log(newThemeValue);
+
+        // TEXT STYLE SWAP LOGIC
+        // messenger.toast('Text style toggled for ' + instance.name);
+      }
+      if (gridStyleId) {
+        const gridStyle = figma.getStyleById(gridStyleId);
+        console.log(`${instance.name} gridStyleId: ${gridStyle.name}`);
+        console.log(gridStyle);
+
+        newThemeValue = findThemeValue(gridStyle, toggleInfo, allTokens);
+        if (!newThemeValue) return;
+        console.log('newThemeValue for gridStyle for ' + instance.name);
+        console.log(newThemeValue);
+
+        // GRID STYLE SWAP LOGIC
+        // messenger.toast('Grid style toggled for ' + instance.name);
+      }
+    });
+
+    return null;
+  }
+
+  /**
    * Parses CSV list of style names and values and creates corresponding Figma
    * paint styles in the file.
    *
@@ -690,7 +921,8 @@ export default class App {
     size?:
       'default'
       | 'info'
-      | 'tokenImport',
+      | 'tokenImport'
+      | 'themeToggler',
     messenger?: { log: Function },
   }) {
     const { size, messenger } = options;

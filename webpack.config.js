@@ -40,6 +40,9 @@ module.exports = (env, argv) => [{
     }),
     new Dotenv(),
   ],
+  node: {
+    fs: 'empty'
+  }
 },
 {
   mode: argv.mode === 'production' ? 'production' : 'development',

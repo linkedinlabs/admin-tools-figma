@@ -12,6 +12,7 @@
   import SceneNavigator from './SceneNavigator';
   import StatusBar from './StatusBar';
   import StyleImport from './StyleImport';
+  import ThemeToggler from './ThemeToggler';
 
   export let currentView = 'general';
   export let filter = 'all-components';
@@ -75,7 +76,9 @@
     {/if}
 
     <StatusBar numberSelected={selected ? selected.items.length : 0}/>
-  {:else}
+  {:else if currentView === 'token-import'}
     <StyleImport />
+  {:else if currentView === 'theme-toggler'}
+    <ThemeToggler />
   {/if}
 </div>

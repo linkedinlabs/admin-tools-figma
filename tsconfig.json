@@ -6,5 +6,6 @@
       "@pyoner/svelte-types",
       "@figma/plugin-typings"
     ],
-  }
+    "moduleResolution": "node",
+  },
 }

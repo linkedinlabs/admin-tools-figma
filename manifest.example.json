@@ -31,6 +31,10 @@
     {
       "name": "Import Token Values",
       "command": "import-token-values"
+    },
+    {
+      "name": "Theme Toggler",
+      "command": "show-theme-toggler"
     }
   ],
   "relaunchButtons": [

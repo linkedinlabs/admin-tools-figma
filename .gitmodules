@@ -1,0 +1,3 @@
+[submodule "mercado-tokens"]
+	path = mercado-tokens
+	url = https://linkedin.githubprivate.com/multiproduct/mercado-tokens.git

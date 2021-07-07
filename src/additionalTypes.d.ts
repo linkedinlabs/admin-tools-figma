@@ -1,8 +1,9 @@
 declare global {
   // Internal Declarations
-  type PluginViewTypes = 
+  type PluginViewTypes =
     'general'
-    | 'token-import';
+    | 'token-import'
+    | 'theme-toggler';
 
   type PresenterTypeName =
     'Effect'
